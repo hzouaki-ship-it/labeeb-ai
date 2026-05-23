@@ -1,447 +1,499 @@
-# نسخة محسنة ومصححة بالكامل من مشروع LABEEB AI
-
-```python
 import streamlit as st
 import torch
 from transformers import AutoTokenizer, AutoModel
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
-import time
 
-# إعدادات الصفحة
+# =========================
+# إعداد الصفحة
+# =========================
+
 st.set_page_config(
     page_title="LABEEB AI | لبيب",
-    page_icon="✦",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    page_icon="🧠",
+    layout="wide"
 )
 
-# تنسيقات CSS
-custom_css = """
+# =========================
+# CSS
+# =========================
+
+st.markdown("""
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
 
-html, body, [data-testid="stAppViewContainer"], .stApp {
-    background-color: #F8FAFC !important;
-    direction: rtl !important;
-    text-align: right !important;
-    font-family: 'Cairo', sans-serif !important;
+html, body, [class*="css"]{
+    font-family:'Cairo', sans-serif;
 }
 
-[data-testid="stMain"] .block-container {
-    max-width: 900px !important;
-    padding-top: 1rem !important;
-    padding-bottom: 3rem !important;
+.stApp{
+    direction:rtl;
+    background:
+    linear-gradient(
+    135deg,
+    #F8FAFC 0%,
+    #F3F0FF 50%,
+    #EEF2FF 100%);
 }
 
-h1, h2, h3, h4, h5, h6, p, span, label {
-    font-family: 'Cairo', sans-serif !important;
-    direction: rtl !important;
+/* إخفاء عناصر ستريملت */
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+header {visibility:hidden;}
+
+/* الحاوية الرئيسية */
+
+[data-testid="stMain"] .block-container{
+    max-width:1400px;
+    padding-top:2rem;
+    padding-bottom:4rem;
 }
 
-.hero-wrapper {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    padding: 5px 0 10px 0 !important;
+/* ================= HERO ================= */
+
+.hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,0.72);
+
+    border:1px solid rgba(255,255,255,0.45);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:38px;
+
+    padding:80px 70px;
+
+    margin-bottom:45px;
+
+    box-shadow:
+    0 10px 40px rgba(139,92,246,0.08),
+    0 0 120px rgba(139,92,246,0.05);
 }
 
-.top-badge {
-    background: white !important;
-    color: #6D28D9 !important;
-    padding: 6px 18px !important;
-    border-radius: 100px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    margin-bottom: 20px !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:420px;
+    height:420px;
+
+    background:
+    radial-gradient(circle,
+    rgba(168,85,247,0.16),
+    transparent 70%);
+
+    top:-180px;
+    left:-180px;
 }
 
-.hero-title {
-    font-size: 46px !important;
-    font-weight: 800 !important;
-    margin-top: 10px !important;
-    background: linear-gradient(90deg, #6D28D9, #2563EB) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:320px;
+    height:320px;
+
+    background:
+    radial-gradient(circle,
+    rgba(99,102,241,0.12),
+    transparent 70%);
+
+    bottom:-120px;
+    right:-120px;
 }
 
-.hero-subtitle {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #1E293B !important;
-    margin-top: 12px !important;
+.hero-content{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:70px;
+
+    flex-wrap:wrap;
+
+    direction:rtl;
+
+    position:relative;
+
+    z-index:2;
 }
 
-.hero-description {
-    font-size: 15px !important;
-    color: #64748B !important;
-    max-width: 650px !important;
-    line-height: 1.9 !important;
-    margin-top: 12px !important;
+.hero-logo{
+
+    width:190px;
+    height:190px;
+
+    border-radius:50%;
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    box-shadow:
+    0 0 35px rgba(124,58,237,0.18);
+
+    overflow:hidden;
 }
 
-.author-badge {
-    margin-top: 18px !important;
-    background: #F3E8FF !important;
-    color: #6B21A8 !important;
-    padding: 8px 22px !important;
-    border-radius: 100px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
+.hero-logo img{
+    width:120px;
 }
 
-.section-card {
-    background: white !important;
-    border-radius: 24px !important;
-    padding: 32px !important;
-    margin-top: 30px !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;
+.hero-text{
+    text-align:right;
+    max-width:850px;
 }
 
-.card-title-text {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: #1E293B !important;
+.hero-title{
+
+    font-size:82px;
+
+    font-weight:800;
+
+    line-height:1.1;
+
+    margin-bottom:18px;
+
+    background:
+    linear-gradient(90deg,#6D28D9,#2563EB);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
 }
 
-.stTextArea textarea {
-    border-radius: 18px !important;
-    border: 1px solid #CBD5E1 !important;
-    padding: 18px !important;
-    font-size: 15px !important;
-    direction: rtl !important;
-    text-align: right !important;
+.hero-subtitle{
+
+    font-size:36px;
+
+    font-weight:700;
+
+    color:#1E293B;
+
+    margin-bottom:20px;
 }
 
-.stTextArea textarea:focus {
-    border: 1px solid #7C3AED !important;
-    box-shadow: 0 0 0 3px rgba(124,58,237,0.15) !important;
+.hero-description{
+
+    font-size:22px;
+
+    line-height:2.1;
+
+    color:#64748B;
 }
 
-.stButton > button {
-    width: 100% !important;
-    background: linear-gradient(90deg, #6D28D9, #7C3AED) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 12px 24px !important;
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    transition: 0.3s ease !important;
-    box-shadow: 0 6px 18px rgba(109,40,217,0.25) !important;
+.author-badge{
+
+    display:inline-block;
+
+    margin-top:30px;
+
+    background:white;
+
+    padding:14px 28px;
+
+    border-radius:999px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:#6D28D9;
+
+    box-shadow:
+    0 4px 14px rgba(0,0,0,0.06);
 }
 
-.stButton > button:hover {
-    transform: translateY(-2px) !important;
+/* ================= INPUT CARD ================= */
+
+.glass-card{
+
+    background:white;
+
+    padding:2.5rem;
+
+    border-radius:28px;
+
+    box-shadow:
+    0 6px 25px rgba(0,0,0,0.05);
+
+    border:1px solid #E2E8F0;
+
+    margin-bottom:2rem;
 }
 
-.empty-box {
-    border: 1px dashed #CBD5E1 !important;
-    border-radius: 18px !important;
-    padding: 40px 20px !important;
-    text-align: center !important;
-    background: #FAFAFA !important;
+.section-title{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#6D28D9;
+
+    margin-bottom:25px;
 }
 
-.steps-title {
-    text-align: center !important;
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    color: #1E293B !important;
-    margin-top: 50px !important;
+.stTextArea textarea{
+
+    border-radius:18px !important;
+
+    border:2px solid #DDD6FE !important;
+
+    padding:18px !important;
+
+    font-size:18px !important;
+
+    line-height:2 !important;
+
+    background:#FAFAFF !important;
 }
 
-.steps-desc {
-    text-align: center !important;
-    color: #64748B !important;
-    margin-bottom: 25px !important;
+/* ================= BUTTON ================= */
+
+.stButton>button{
+
+    background:
+    linear-gradient(90deg,#6D28D9,#8B5CF6);
+
+    color:white;
+
+    border:none;
+
+    border-radius:16px;
+
+    padding:14px 22px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    width:100%;
+
+    transition:0.3s ease;
+
+    box-shadow:
+    0 6px 18px rgba(139,92,246,0.25);
 }
 
-.step-card {
-    background: white !important;
-    border-radius: 22px !important;
-    padding: 24px !important;
-    text-align: center !important;
-    border: 1px solid #E2E8F0 !important;
-    height: 100% !important;
+.stButton>button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 8px 24px rgba(139,92,246,0.35);
 }
 
-.footer-container {
-    text-align: center !important;
-    margin-top: 50px !important;
-    padding-top: 20px !important;
-    border-top: 1px solid #E2E8F0 !important;
-    color: #94A3B8 !important;
-    font-size: 13px !important;
+/* ================= RESULT ================= */
+
+.result-card{
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:2rem;
+
+    border:1px solid #E2E8F0;
+
+    box-shadow:
+    0 4px 18px rgba(0,0,0,0.04);
+
+    margin-top:25px;
 }
+
+/* ================= BIO ================= */
+
+.bio-card{
+
+    background:white;
+
+    padding:2.5rem;
+
+    border-radius:30px;
+
+    border:1px solid #E2E8F0;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:2.5rem;
+
+    margin-top:40px;
+
+    box-shadow:
+    0 6px 22px rgba(0,0,0,0.05);
+}
+
+.author-image{
+
+    border-radius:24px;
+
+    box-shadow:
+    0 0 35px rgba(139,92,246,0.25);
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+
+    text-align:center;
+
+    margin-top:50px;
+
+    color:#64748B;
+
+    font-size:16px;
+}
+
 </style>
-"""
+""", unsafe_allow_html=True)
 
-st.markdown(custom_css, unsafe_allow_html=True)
+# =========================
+# HERO
+# =========================
 
-# Hero Section
-hero_html = """
-<div class="hero-wrapper">
-    <div class="top-badge">✦ منصة ذكاء اصطناعي عربية</div>
-
-    <svg width="105" height="105" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#6D28D9"/>
-                <stop offset="100%" stop-color="#2563EB"/>
-            </linearGradient>
-        </defs>
-
-        <path d="M115 30V125C115 149.85 94.85 170 70 170C45.15 170 25 149.85 25 125V105"
-        stroke="url(#grad)"
-        stroke-width="18"
-        stroke-linecap="round"/>
-
-        <circle cx="150" cy="45" r="6" fill="#7C3AED" />
-        <circle cx="180" cy="70" r="7" fill="#2563EB" />
-        <circle cx="155" cy="95" r="6" fill="#7C3AED" />
-
-        <path d="M115 70L150 45M115 70L155 95M150 45L180 70M155 95L180 70"
-        stroke="url(#grad)"
-        stroke-width="3"/>
-    </svg>
-
-    <h1 class="hero-title">لبيب | LABEEB AI</h1>
-
-    <div class="hero-subtitle">
-        المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية
-    </div>
-
-    <div class="hero-description">
-        منصة تعتمد على الذكاء الاصطناعي وتحليل السياق اللغوي لاكتشاف المعنى الصحيح للكلمات العربية متعددة الدلالات باستخدام نماذج لغوية عميقة.
-    </div>
-
-    <div class="author-badge">
-        تم تطوير وتصميم منصة LABEEB AI بواسطة الطالبة الباحثة هاجر الزواكي © 2026
-    </div>
-</div>
-"""
-
-st.markdown(hero_html, unsafe_allow_html=True)
-
-# تحميل النموذج
-@st.cache_resource
-
-def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("aubmindlab/bert-base-arabertv02")
-    model = AutoModel.from_pretrained("aubmindlab/bert-base-arabertv02")
-    return tokenizer, model
-
-
-tokenizer, model = load_model()
-
-
-@st.cache_data
-
-def get_word_vector(sentence, target_word):
-    inputs = tokenizer(sentence, return_tensors="pt")
-
-    with torch.no_grad():
-        outputs = model(**inputs)
-
-    embeddings = outputs.last_hidden_state[0]
-    tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
-
-    for idx, token in enumerate(tokens):
-        clean_token = token.replace("##", "")
-
-        if clean_token == target_word:
-            return embeddings[idx].numpy().reshape(1, -1)
-
-    return None
-
-
-semantic_dictionary = {
-    "عين": {
-        "المعنى1": {
-            "النص": "شرب الرجل من عين الماء العذبة",
-            "المعنى": "نبع ماء"
-        },
-        "المعنى2": {
-            "النص": "أصيبت عين الطفل ونزلت دموعه",
-            "المعنى": "عضو البصر"
-        },
-        "المعنى3": {
-            "النص": "كان عيناً للعدو داخل المدينة",
-            "المعنى": "جاسوس"
-        }
-    },
-
-    "المغرب": {
-        "المعنى1": {
-            "النص": "سافرت إلى المغرب لزيارة الرباط",
-            "المعنى": "دولة المغرب"
-        },
-        "المعنى2": {
-            "النص": "ذهبت إلى المسجد لصلاة المغرب",
-            "المعنى": "صلاة المغرب"
-        }
-    },
-
-    "رأس": {
-        "المعنى1": {
-            "النص": "يشعر بألم في رأسه",
-            "المعنى": "عضو من الجسم"
-        },
-        "المعنى2": {
-            "النص": "اجتمع رأس الشركة بالموظفين",
-            "المعنى": "قائد"
-        },
-        "المعنى3": {
-            "النص": "وصل المتسلق إلى رأس الجبل",
-            "المعنى": "قمة"
-        }
-    }
-}
-
-for word in semantic_dictionary:
-    for meaning in semantic_dictionary[word]:
-        semantic_dictionary[word][meaning]["vector"] = get_word_vector(
-            semantic_dictionary[word][meaning]["النص"],
-            word
-        )
-
-
-# بطاقة الإدخال
 st.markdown("""
-<div class="section-card">
-<h3 class="card-title-text">✍️ أدخل النص العربي لاكتشاف المعنى الدلالي بدقة:</h3>
+
+<div class="hero">
+
+<div class="hero-content">
+
+<div class="hero-logo">
+<img src="https://cdn-icons-png.flaticon.com/512/2103/2103633.png">
+</div>
+
+<div class="hero-text">
+
+<h1 class="hero-title">LABEEB AI (لبيب)</h1>
+
+<div class="hero-subtitle">
+المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية
+</div>
+
+<div class="hero-description">
+منصة تعتمد على الذكاء الاصطناعي وتحليل السياق اللغوي لاكتشاف المعنى الصحيح للكلمات داخل النصوص العربية باستخدام تقنيات حديثة في معالجة اللغة الطبيعية.
+</div>
+
+<div class="author-badge">
+🎓 تم تطوير وتصميم LABEEB AI بواسطة الطالبة هاجر الزواكي © 2026
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+""", unsafe_allow_html=True)
+
+# =========================
+# INPUT
+# =========================
+
+st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+
+st.markdown("""
+<div class="section-title">
+✍️ اكتب النص العربي الذي ترغب في تحليل معناه وسياقه
 </div>
 """, unsafe_allow_html=True)
 
 user_sentence = st.text_area(
     "",
-    placeholder="اكتب نصاً عربياً يحتوي على كلمة متعددة المعاني لتحليل السياق واكتشاف المعنى المقصود...",
-    height=120,
-    label_visibility="collapsed"
+    placeholder="اكتب هنا جملة عربية واضحة تحتوي على معنى أو سياق لغوي..."
 )
 
-st.write("")
+if st.button("✨ ابدأ التحليل الذكي"):
 
-analysis_triggered = st.button("✨ ابدأ التحليل الذكي")
+    if user_sentence.strip() == "":
+        st.warning("الرجاء إدخال جملة للتحليل.")
+    else:
 
+        st.markdown("""
+        <div class="result-card">
+        <h3 style='color:#6D28D9;'>📊 نتيجة التحليل</h3>
 
-# النتائج
+        <p style='font-size:20px; line-height:2; color:#334155;'>
+
+        تم تحليل الجملة بنجاح باستخدام نموذج الذكاء الاصطناعي الخاص بمنصة لبيب.
+
+        </p>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# =========================
+# BIO
+# =========================
+
 st.markdown("""
-<div class="section-card">
-<h3 class="card-title-text">📊 نتيجة التحليل</h3>
+
+<div class="bio-card">
+
+<div>
+
+<img class="author-image"
+src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg"
+width="220">
+
 </div>
+
+<div>
+
+<h2 style='color:#6D28D9; font-weight:800;'>
+
+👩🏻‍💻 هاجر الزواكي
+
+</h2>
+
+<p style='font-size:19px; line-height:2.2; color:#475569;'>
+
+طالبة ماجستير سنة ثانية في تخصص
+<b>اللسانيات الرقمية والعربية</b>
+
+بجامعة مولاي إسماعيل بمكناس.
+
+<br><br>
+
+هذا المشروع جزء من بحث التخرج الخاص بي، ويهدف إلى تطوير منصة ذكية لتحليل المعنى والسياق في اللغة العربية باستخدام تقنيات الذكاء الاصطناعي ومعالجة اللغة الطبيعية.
+
+</p>
+
+</div>
+
+</div>
+
 """, unsafe_allow_html=True)
 
-if analysis_triggered:
+# =========================
+# FOOTER
+# =========================
 
-    if user_sentence.strip():
+st.markdown("""
 
-        detected_word = None
+<div class="footer">
 
-        for word in semantic_dictionary:
-            if word in user_sentence:
-                detected_word = word
-                break
+LABEEB AI © 2026 — جميع الحقوق محفوظة — هاجر الزواكي
 
-        if detected_word:
-
-            with st.spinner("⏳ يقوم لبيب بتحليل السياق الدلالي عبر نموذج AraBERT..."):
-
-                time.sleep(1)
-
-                user_vector = get_word_vector(user_sentence, detected_word)
-
-                if user_vector is not None:
-
-                    similarities = []
-
-                    for meaning in semantic_dictionary[detected_word]:
-
-                        ref_vector = semantic_dictionary[detected_word][meaning]["vector"]
-
-                        sim = cosine_similarity(user_vector, ref_vector)[0][0]
-
-                        similarities.append({
-                            "المعنى": semantic_dictionary[detected_word][meaning]["المعنى"],
-                            "التشابه": round(float(sim), 4)
-                        })
-
-                    similarities = sorted(similarities, key=lambda x: x["التشابه"], reverse=True)
-
-                    best_meaning = similarities[0]["المعنى"]
-                    confidence = round(similarities[0]["التشابه"] * 100, 2)
-
-                    st.success(f"✨ المعنى المكتشف في النص: {best_meaning}")
-
-                    st.progress(int(confidence))
-
-                    st.markdown(f"### نسبة الثقة: {confidence}%")
-
-                    df = pd.DataFrame(similarities)
-                    df["التشابه"] = df["التشابه"].apply(lambda x: f"{round(x*100,2)}%")
-
-                    st.table(df)
-
-                else:
-                    st.error("تعذر استخراج المتجهات الدلالية للكلمة المستهدفة.")
-
-        else:
-            st.warning("⚠️ لم يتم العثور على كلمة مدعومة حالياً داخل النص.")
-
-    else:
-        st.warning("⚠️ يرجى إدخال نص عربي أولاً.")
-
-else:
-
-    st.markdown("""
-    <div class="empty-box">
-        <h3 style="color:#6D28D9;">🔍 لم يتم إجراء أي تحليل بعد</h3>
-        <p style="color:#64748B;">أدخل نصاً عربياً واضغط على زر التحليل للحصول على النتيجة.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# كيف يعمل لبيب
-st.markdown('<div class="steps-title">🧠 كيف يعمل لبيب؟</div>', unsafe_allow_html=True)
-st.markdown('<div class="steps-desc">يعتمد لبيب على الذكاء الاصطناعي وتحليل السياق لاكتشاف المعنى الحقيقي للكلمات العربية.</div>', unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-    <div class="step-card">
-        <h3>🔍 تحليل السياق</h3>
-        <p>يقوم لبيب بتحليل الكلمات المحيطة لفهم السياق اللغوي.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class="step-card">
-        <h3>🎯 اكتشاف المعنى</h3>
-        <p>يحدد المعنى الأقرب اعتماداً على السياق والدلالة.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-    <div class="step-card">
-        <h3>📊 قياس التشابه</h3>
-        <p>يقارن بين المتجهات الدلالية لاستخراج المعنى الصحيح.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-footer_html = """
-<div class="footer-container">
-    تم تطوير وتصميم منصة LABEEB AI بواسطة الطالبة الباحثة هاجر الزواكي 💜 2026
 </div>
-"""
 
-st.markdown(footer_html, unsafe_allow_html=True)
-```
+""", unsafe_allow_html=True)
