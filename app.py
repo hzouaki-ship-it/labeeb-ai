@@ -60,10 +60,8 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
 
     backdrop-filter: blur(18px);
 
-    border-radius: 38px;
-
-    padding: 70px 60px;
-
+    border-radius: 45px;
+    padding: 90px 90px;
     margin-bottom: 45px;
 
     box-shadow:
@@ -123,18 +121,27 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
     0 0 90px rgba(124,58,237,0.12);
 
     backdrop-filter:blur(10px);
-}
 .hero-content{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:40px;
-    flex-wrap:wrap;
-}
-.hero-text{
-    text-align:right;
-}
 
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:80px;
+
+    flex-wrap:nowrap;
+
+    direction:ltr;
+.hero-text{
+
+    text-align:right;
+
+    flex:1;
+
+    direction:rtl;
+}
 .hero-title{
     font-size:78px;
     font-weight:800;
@@ -153,15 +160,18 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
     color:#374151;
 
     margin-bottom:18px;
-}
 .hero-description{
-    font-size:22px;
-    line-height:2;
+
+    font-size:24px;
+
+    line-height:2.3;
+
     color:#64748B;
 
     max-width:850px;
-}
 
+    margin-top:15px;
+}
 .author-badge{
     margin-top:25px;
 
