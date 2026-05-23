@@ -24,12 +24,14 @@ html, body, [class*="css"]{
 }
 
 .stApp{
+
     direction:rtl;
+
     background:
     linear-gradient(
     135deg,
     #F8FAFC 0%,
-    #F3F0FF 50%,
+    #F3F0FF 45%,
     #EEF2FF 100%);
 }
 
@@ -39,11 +41,14 @@ html, body, [class*="css"]{
 footer {visibility:hidden;}
 header {visibility:hidden;}
 
-/* الحاوية */
+/* الحاوية الرئيسية */
 
 [data-testid="stMain"] .block-container{
-    max-width:1400px;
-    padding-top:2rem;
+
+    max-width:1450px;
+
+    padding-top:1.5rem;
+
     padding-bottom:4rem;
 }
 
@@ -55,22 +60,27 @@ header {visibility:hidden;}
 
     overflow:hidden;
 
-    background:rgba(255,255,255,0.72);
+    border-radius:40px;
+
+    padding:55px 70px;
+
+    margin-bottom:35px;
+
+    background:
+    linear-gradient(
+    135deg,
+    rgba(255,255,255,0.92),
+    rgba(245,243,255,0.88));
 
     border:1px solid rgba(255,255,255,0.45);
 
-    backdrop-filter:blur(18px);
-
-    border-radius:40px;
-
-    padding:80px 70px;
-
-    margin-bottom:45px;
-
     box-shadow:
-    0 10px 40px rgba(139,92,246,0.08),
-    0 0 120px rgba(139,92,246,0.05);
+    0 10px 35px rgba(139,92,246,0.08);
+
+    backdrop-filter:blur(18px);
 }
+
+/* خلفية متوهجة */
 
 .hero::before{
 
@@ -78,16 +88,16 @@ header {visibility:hidden;}
 
     position:absolute;
 
-    width:420px;
-    height:420px;
+    width:500px;
+    height:500px;
 
     background:
     radial-gradient(circle,
-    rgba(168,85,247,0.15),
+    rgba(168,85,247,0.16),
     transparent 70%);
 
-    top:-180px;
-    left:-180px;
+    top:-220px;
+    left:-220px;
 }
 
 .hero::after{
@@ -96,19 +106,25 @@ header {visibility:hidden;}
 
     position:absolute;
 
-    width:320px;
-    height:320px;
+    width:380px;
+    height:380px;
 
     background:
     radial-gradient(circle,
-    rgba(99,102,241,0.12),
+    rgba(99,102,241,0.14),
     transparent 70%);
 
-    bottom:-120px;
-    right:-120px;
+    bottom:-150px;
+    right:-150px;
 }
 
+/* الهيدر */
+
 .hero-content{
+
+    position:relative;
+
+    z-index:2;
 
     display:flex;
 
@@ -116,21 +132,17 @@ header {visibility:hidden;}
 
     justify-content:center;
 
-    gap:70px;
+    gap:60px;
 
     flex-wrap:wrap;
-
-    direction:rtl;
-
-    position:relative;
-
-    z-index:2;
 }
+
+/* اللوغو */
 
 .hero-logo{
 
-    width:220px;
-    height:220px;
+    width:170px;
+    height:170px;
 
     border-radius:50%;
 
@@ -143,21 +155,21 @@ header {visibility:hidden;}
     justify-content:center;
 
     box-shadow:
-    0 0 35px rgba(139,92,246,0.22);
+    0 0 35px rgba(139,92,246,0.20);
 
     overflow:hidden;
 }
 
 .hero-logo img{
 
-    width:140px;
+    width:120px;
 }
+
+/* النص */
 
 .hero-text{
 
-    text-align:right;
-
-    max-width:850px;
+    text-align:center;
 }
 
 .hero-title{
@@ -168,10 +180,13 @@ header {visibility:hidden;}
 
     line-height:1.1;
 
-    margin-bottom:18px;
+    margin-bottom:8px;
 
     background:
-    linear-gradient(90deg,#6D28D9,#2563EB);
+    linear-gradient(
+    90deg,
+    #4F46E5,
+    #9333EA);
 
     -webkit-background-clip:text;
 
@@ -184,58 +199,109 @@ header {visibility:hidden;}
 
     font-weight:700;
 
-    color:#1E293B;
+    color:#374151;
 
-    margin-bottom:20px;
+    margin-bottom:16px;
 }
 
 .hero-description{
 
-    font-size:24px;
-
-    line-height:2.2;
+    font-size:21px;
 
     color:#64748B;
+
+    line-height:2;
 }
 
 .author-badge{
 
-    display:inline-block;
+    margin-top:22px;
 
-    margin-top:30px;
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
 
     background:white;
 
-    padding:14px 28px;
+    padding:12px 24px;
 
     border-radius:999px;
 
     font-size:18px;
 
-    font-weight:700;
-
-    color:#6D28D9;
+    color:#4B5563;
 
     box-shadow:
-    0 4px 14px rgba(0,0,0,0.06);
+    0 4px 14px rgba(0,0,0,0.05);
 }
 
-/* ================= INPUT ================= */
+/* الزخارف */
+
+.top-pill{
+
+    position:absolute;
+
+    top:20px;
+    right:25px;
+
+    background:white;
+
+    color:#4F46E5;
+
+    padding:10px 24px;
+
+    border-radius:999px;
+
+    font-weight:700;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.05);
+
+    z-index:10;
+}
+
+.dots{
+
+    position:absolute;
+
+    top:25px;
+    left:30px;
+
+    display:grid;
+
+    grid-template-columns:repeat(3,10px);
+
+    gap:8px;
+}
+
+.dots span{
+
+    width:10px;
+    height:10px;
+
+    background:#4F46E5;
+
+    border-radius:50%;
+}
+
+/* ================= INPUT CARD ================= */
 
 .glass-card{
 
     background:white;
 
-    padding:2.5rem;
-
     border-radius:28px;
 
+    padding:35px;
+
     box-shadow:
-    0 6px 25px rgba(0,0,0,0.05);
+    0 6px 22px rgba(0,0,0,0.04);
 
-    border:1px solid #E2E8F0;
+    border:1px solid #ECEBFF;
 
-    margin-bottom:2rem;
+    margin-bottom:25px;
 }
 
 .section-title{
@@ -244,133 +310,253 @@ header {visibility:hidden;}
 
     font-weight:800;
 
-    color:#6D28D9;
+    color:#312E81;
 
     margin-bottom:25px;
+
+    text-align:right;
 }
+
+/* textarea */
 
 .stTextArea textarea{
 
     border-radius:18px !important;
 
-    border:2px solid #DDD6FE !important;
+    border:2px solid #C4B5FD !important;
 
-    padding:18px !important;
+    padding:22px !important;
 
-    font-size:18px !important;
+    font-size:20px !important;
 
     line-height:2 !important;
 
     background:#FAFAFF !important;
 }
 
-/* ================= BUTTON ================= */
+/* الزر */
 
 .stButton>button{
 
     background:
-    linear-gradient(90deg,#6D28D9,#8B5CF6);
+    linear-gradient(
+    90deg,
+    #4338CA,
+    #9333EA);
 
     color:white;
 
     border:none;
 
-    border-radius:16px;
+    border-radius:14px;
 
     padding:14px 22px;
 
-    font-size:18px;
+    font-size:20px;
 
     font-weight:700;
 
-    width:100%;
+    width:270px;
 
     transition:0.3s ease;
 
     box-shadow:
-    0 6px 18px rgba(139,92,246,0.25);
+    0 8px 18px rgba(139,92,246,0.22);
 }
 
 .stButton>button:hover{
 
     transform:translateY(-2px);
-
-    box-shadow:
-    0 8px 24px rgba(139,92,246,0.35);
 }
 
-/* ================= RESULT ================= */
+/* نتيجة التحليل */
 
 .result-card{
 
     background:white;
 
-    border-radius:25px;
+    border-radius:26px;
 
-    padding:2rem;
+    padding:35px;
 
-    border:1px solid #E2E8F0;
+    border:1px solid #ECEBFF;
 
     box-shadow:
-    0 4px 18px rgba(0,0,0,0.04);
+    0 6px 20px rgba(0,0,0,0.04);
 
-    margin-top:25px;
+    margin-bottom:30px;
 }
 
-/* ================= BIO ================= */
+.result-title{
+
+    color:#7C3AED;
+
+    font-size:28px;
+
+    font-weight:800;
+
+    margin-bottom:22px;
+}
+
+/* خطوات لبيب */
+
+.steps-title{
+
+    text-align:center;
+
+    font-size:40px;
+
+    font-weight:800;
+
+    color:#312E81;
+
+    margin-bottom:8px;
+}
+
+.steps-sub{
+
+    text-align:center;
+
+    color:#64748B;
+
+    margin-bottom:35px;
+
+    font-size:19px;
+}
+
+.step-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:24px;
+
+    margin-bottom:35px;
+}
+
+.step-card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:24px;
+
+    border:1px solid #ECEBFF;
+
+    box-shadow:
+    0 6px 20px rgba(0,0,0,0.04);
+
+    text-align:center;
+}
+
+.step-icon{
+
+    font-size:52px;
+
+    margin-bottom:14px;
+}
+
+.step-title{
+
+    font-size:26px;
+
+    font-weight:800;
+
+    color:#4F46E5;
+
+    margin-bottom:10px;
+}
+
+.step-desc{
+
+    color:#64748B;
+
+    line-height:2;
+
+    font-size:17px;
+}
+
+/* بطاقة الباحثة */
 
 .bio-card{
 
     background:white;
 
-    padding:2.5rem;
-
     border-radius:30px;
 
-    border:1px solid #E2E8F0;
+    padding:40px;
+
+    border:1px solid #E9D5FF;
 
     display:flex;
 
     align-items:center;
 
-    gap:2.5rem;
+    justify-content:space-between;
 
-    margin-top:40px;
+    gap:40px;
 
     box-shadow:
-    0 6px 22px rgba(0,0,0,0.05);
+    0 6px 20px rgba(0,0,0,0.04);
+
+    margin-top:40px;
 }
 
 .author-image{
 
-    width:160px;
-
-    height:160px;
+    width:170px;
+    height:170px;
 
     object-fit:cover;
 
     border-radius:50%;
 
-    border:5px solid #E9D5FF;
+    border:6px solid #E9D5FF;
 
     box-shadow:
-    0 0 30px rgba(139,92,246,0.25);
-
-    transition:0.3s ease;
+    0 0 28px rgba(139,92,246,0.18);
 }
 
-.author-image:hover{
+.bio-title{
 
-    transform:scale(1.03);
+    font-size:42px;
+
+    font-weight:800;
+
+    color:#312E81;
+
+    margin-bottom:8px;
 }
 
-/* ================= FOOTER ================= */
+.bio-sub{
+
+    font-size:24px;
+
+    color:#7C3AED;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+}
+
+.bio-desc{
+
+    color:#4B5563;
+
+    line-height:2.2;
+
+    font-size:19px;
+}
+
+/* Footer */
 
 .footer{
 
     text-align:center;
 
-    margin-top:50px;
+    margin-top:45px;
 
     color:#64748B;
 
@@ -386,6 +572,16 @@ st.markdown("""
 
 <div class="hero">
 
+<div class="top-pill">
+✦ منصة ذكية عربية
+</div>
+
+<div class="dots">
+<span></span><span></span><span></span>
+<span></span><span></span><span></span>
+<span></span><span></span><span></span>
+</div>
+
 <div class="hero-content">
 
 <div class="hero-logo">
@@ -394,18 +590,20 @@ st.markdown("""
 
 <div class="hero-text">
 
-<h1 class="hero-title">LABEEB AI (لبيب)</h1>
+<div class="hero-title">
+LABEEB AI (لبيب)
+</div>
 
 <div class="hero-subtitle">
 المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية
 </div>
 
 <div class="hero-description">
-منصة تعتمد على الذكاء الاصطناعي وتحليل السياق اللغوي لاكتشاف المعنى الصحيح للكلمات داخل النصوص العربية باستخدام تقنيات حديثة في معالجة اللغة الطبيعية.
+منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.
 </div>
 
 <div class="author-badge">
-🎓 تم تطوير وتصميم LABEEB AI بواسطة الطالبة هاجر الزواكي © 2026
+🛡️ © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
 </div>
 
 </div>
@@ -421,41 +619,113 @@ st.markdown("""
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
 
 st.markdown("""
-
 <div class="section-title">
 ✍️ اكتب النص العربي الذي ترغب في تحليل معناه وسياقه
+</div>
+""", unsafe_allow_html=True)
+
+text = st.text_area(
+    "",
+    placeholder="اكتب أو ألصق جملة عربية واضحة هنا..."
+)
+
+st.button("✦ ابدأ التحليل الذكي")
+
+st.markdown("""
+<div style='margin-top:12px; color:#64748B; font-size:17px;'>
+🛡️ تحليل آمن ودقيق باستخدام الذكاء الاصطناعي
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# ================= RESULT =================
+
+st.markdown("""
+
+<div class="result-card">
+
+<div class="result-title">
+📊 نتيجة التحليل
+</div>
+
+<div style='text-align:center; padding:30px;'>
+
+<div style='font-size:55px;'>🌀</div>
+
+<div style='font-size:34px; font-weight:800; color:#312E81;'>
+لم يتم إجراء أي تحليل بعد
+</div>
+
+<div style='margin-top:12px; color:#64748B; font-size:19px;'>
+اكتب نصًا في الأعلى ثم اضغط على زر التحليل لعرض النتيجة.
+</div>
+
+</div>
+
 </div>
 
 """, unsafe_allow_html=True)
 
-user_sentence = st.text_area(
-    "",
-    placeholder="اكتب هنا جملة عربية واضحة تحتوي على معنى أو سياق لغوي..."
-)
+# ================= STEPS =================
 
-if st.button("✨ ابدأ التحليل الذكي"):
+st.markdown("""
 
-    if user_sentence.strip() == "":
-        st.warning("الرجاء إدخال جملة للتحليل.")
-    else:
+<div class="steps-title">
+كيف يعمل لبيب؟
+</div>
 
-        st.markdown("""
+<div class="steps-sub">
+يستخدم لبيب الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.
+</div>
 
-        <div class="result-card">
+<div class="step-grid">
 
-        <h3 style='color:#6D28D9;'>📊 نتيجة التحليل</h3>
+<div class="step-card">
 
-        <p style='font-size:20px; line-height:2; color:#334155;'>
+<div class="step-icon">🔎</div>
 
-        تم تحليل الجملة بنجاح باستخدام نموذج الذكاء الاصطناعي الخاص بمنصة لبيب.
+<div class="step-title">
+تحليل السياق
+</div>
 
-        </p>
+<div class="step-desc">
+يحلل بنية الجملة والكلمات المحيطة لفهم السياق اللغوي بدقة.
+</div>
 
-        </div>
+</div>
 
-        """, unsafe_allow_html=True)
+<div class="step-card">
 
-st.markdown('</div>', unsafe_allow_html=True)
+<div class="step-icon">✨</div>
+
+<div class="step-title">
+اكتشاف المعنى
+</div>
+
+<div class="step-desc">
+يحدد المعنى الأقرب اعتمادًا على السياق والدلالة اللغوية.
+</div>
+
+</div>
+
+<div class="step-card">
+
+<div class="step-icon">📊</div>
+
+<div class="step-title">
+قياس التشابه الدلالي
+</div>
+
+<div class="step-desc">
+يستخدم تقنيات متقدمة لقياس التشابه الدلالي وتصنيف النتائج.
+</div>
+
+</div>
+
+</div>
+
+""", unsafe_allow_html=True)
 
 # ================= BIO =================
 
@@ -465,31 +735,26 @@ st.markdown("""
 
 <div>
 
-<img class="author-image"
-src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg">
+<div class="bio-title">
+هاجر الزواكي 👩🏻‍💻
+</div>
+
+<div class="bio-sub">
+طالبة ماستر في اللسانيات الرقمية والعربية
+</div>
+
+<div class="bio-desc">
+مهتمة بالذكاء الاصطناعي ومعالجة اللغة العربية وبناء الأنظمة الدلالية الذكية.
+<br><br>
+أسعى إلى تطوير حلول رقمية حديثة لفهم اللغة العربية وتحليل السياق والمعنى.
+</div>
 
 </div>
 
 <div>
 
-<h2 style='color:#6D28D9; font-weight:800;'>
-
-👩🏻‍💻 هاجر الزواكي
-
-</h2>
-
-<p style='font-size:19px; line-height:2.2; color:#475569;'>
-
-طالبة ماجستير سنة ثانية في تخصص
-<b>اللسانيات الرقمية والعربية</b>
-
-بجامعة مولاي إسماعيل بمكناس.
-
-<br><br>
-
-هذا المشروع جزء من بحث التخرج الخاص بي، ويهدف إلى تطوير منصة ذكية لتحليل المعنى والسياق في اللغة العربية باستخدام تقنيات الذكاء الاصطناعي ومعالجة اللغة الطبيعية.
-
-</p>
+<img class="author-image"
+src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg">
 
 </div>
 
