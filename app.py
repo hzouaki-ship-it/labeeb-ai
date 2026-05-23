@@ -664,9 +664,11 @@ LABEEB AI (لبيب)
 منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.
 </div>
 
-<div class="author-badge">
-🛡️ © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
+st.markdown("""
+<div style='margin-top:12px; color:#64748B; font-size:17px;'>
+تحليل آمن ودقيق باستخدام الذكاء الاصطناعي
 </div>
+""", unsafe_allow_html=True)
 
 </div>
 
