@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import time
 
-# 1. إعدادات الصفحة الأساسية لواجهة المنصة والأبعاد
+# 1. إعدادات الصفحة الأساسية لواجهة المنصة
 st.set_page_config(
     page_title="منصة لبيب LABEEB AI",
     page_icon="🧠",
@@ -13,269 +13,106 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. بناء الأنماط والتنسيقات (CSS) كمتغيرات نصية منفصلة وآمنة تماماً
-css_styles = (
-    "<style>"
-    "@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');"
-    "html, body, [data-testid='stAppViewContainer'], .stApp {"
-    "    background-color: #FAFAFB !important;"
-    "    direction: rtl !important;"
-    "    text-align: right !important;"
-    "    font-family: 'Cairo', sans-serif !important;"
-    "}"
-    "[data-testid='stMain'] .block-container {"
-    "    padding-top: 2rem !important;"
-    "    padding-bottom: 3rem !important;"
-    "    max-width: 820px !important;"
-    "}"
-    "[data-testid='stVerticalBlock'] {"
-    "    gap: 0rem !important;"
-    "}"
-    "h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {"
-    "    font-family: 'Cairo', sans-serif !important;"
-    "    text-align: right !important;"
-    "    direction: rtl !important;"
-    "}"
-    ".hero-white-container {"
-    "    background: #FFFFFF;"
-    "    border: 1px solid #F1F5F9;"
-    "    border-radius: 24px;"
-    "    padding: 35px;"
-    "    text-align: center !important;"
-    "    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);"
-    "    margin-bottom: 25px;"
-    "}"
-    ".logo-flex-center {"
-    "    display: flex;"
-    "    justify-content: center;"
-    "    align-items: center;"
-    "    margin-bottom: 12px;"
-    "}"
-    ".main-hero-title {"
-    "    font-size: 38px !important;"
-    "    font-weight: 800 !important;"
-    "    color: #4C1D95 !important;"
-    "    margin: 0 0 4px 0 !important;"
-    "    text-align: center !important;"
-    "}"
-    ".main-hero-subtitle {"
-    "    font-size: 15px !important;"
-    "    font-weight: 400 !important;"
-    "    color: #64748B !important;"
-    "    margin: 0 0 16px 0 !important;"
-    "    text-align: center !important;"
-    "}"
-    ".main-hero-desc {"
-    "    font-size: 15px !important;"
-    "    color: #1E293B !important;"
-    "    font-weight: 600;"
-    "    margin: 0 auto 20px auto !important;"
-    "    text-align: center !important;"
-    "}"
-    ".academic-bio-box {"
-    "    background-color: #FAF5FF;"
-    "    border: 1px solid #E9D5FF;"
-    "    border-radius: 16px;"
-    "    padding: 20px;"
-    "    margin: 0 auto;"
-    "    max-width: 700px;"
-    "    text-align: center !important;"
-    "}"
-    ".academic-bio-text {"
-    "    font-size: 14.5px !important;"
-    "    color: #3B0764 !important;"
-    "    line-height: 1.8 !important;"
-    "    margin: 0 !important;"
-    "    text-align: center !important;"
-    "}"
-    ".academic-project-note {"
-    "    display: inline-block;"
-    "    font-size: 13px !important;"
-    "    color: #6B21A8 !important;"
-    "    font-weight: 700;"
-    "    margin-top: 10px !important;"
-    "    background: #F3E8FF;"
-    "    padding: 2px 14px;"
-    "    border-radius: 100px;"
-    "}"
-    ".custom-section-card {"
-    "    background: #FFFFFF;"
-    "    border: 1px solid #F1F5F9;"
-    "    border-radius: 24px;"
-    "    padding: 35px;"
-    "    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);"
-    "    margin-top: 25px;"
-    "    margin-bottom: 5px;"
-    "    text-align: right !important;"
-    "}"
-    ".card-icon-title-row {"
-    "    display: flex;"
-    "    align-items: center;"
-    "    justify-content: flex-start;"
-    "    gap: 8px;"
-    "    margin-bottom: 18px;"
-    "}"
-    ".card-title-plain-text {"
-    "    font-size: 16px !important;"
-    "    font-weight: 700 !important;"
-    "    color: #1E293B !important;"
-    "    margin: 0 !important;"
-    "}"
-    ".stTextArea textarea {"
-    "    background-color: #FFFFFF !important;"
-    "    border: 1px solid #E2E8F0 !important;"
-    "    border-radius: 16px !important;"
-    "    padding: 18px !important;"
-    "    font-family: 'Cairo', sans-serif !important;"
-    "    font-size: 14.5px !important;"
-    "    color: #334155 !important;"
-    "    text-align: right !important;"
-    "    direction: rtl !important;"
-    "}"
-    "div.stButton > button {"
-    "    background: #6D28D9 !important;"
-    "    color: white !important;"
-    "    font-family: 'Cairo', sans-serif !important;"
-    "    font-weight: 600 !important;"
-    "    font-size: 14.5px !important;"
-    "    border-radius: 12px !important;"
-    "    border: none !important;"
-    "    padding: 10px 24px !important;"
-    "    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25) !important;"
-    "}"
-    ".dashed-waiting-box {"
-    "    border: 1px dashed #E2E8F0;"
-    "    border-radius: 16px;"
-    "    padding: 35px 20px;"
-    "    text-align: center !important;"
-    "    background: #FAFAFA;"
-    "}"
-    ".waiting-icon {"
-    "    font-size: 34px;"
-    "    color: #6D28D9;"
-    "    background: #F3E8FF;"
-    "    width: 60px;"
-    "    height: 60px;"
-    "    display: inline-flex;"
-    "    align-items: center;"
-    "    justify-content: center;"
-    "    border-radius: 16px;"
-    "    margin-bottom: 14px;"
-    "}"
-    ".waiting-primary-text {"
-    "    color: #6D28D9;"
-    "    font-weight: 700;"
-    "    font-size: 15.5px;"
-    "    margin-bottom: 5px;"
-    "    text-align: center !important;"
-    "}"
-    ".waiting-secondary-text {"
-    "    color: #94A3B8;"
-    "    font-size: 13px;"
-    "    text-align: center !important;"
-    "}"
-    ".steps-central-title {"
-    "    text-align: center !important;"
-    "    font-size: 18px !important;"
-    "    font-weight: 700 !important;"
-    "    color: #1E293B !important;"
-    "    margin-top: 35px !important;"
-    "    margin-bottom: 6px !important;"
-    "}"
-    ".steps-central-desc {"
-    "    text-align: center !important;"
-    "    font-size: 14px !important;"
-    "    color: #64748B !important;"
-    "    margin-bottom: 25px !important;"
-    "}"
-    ".horizontal-step-card {"
-    "    background: #FFFFFF;"
-    "    border: 1px solid #F1F5F9;"
-    "    border-radius: 20px;"
-    "    padding: 24px 18px;"
-    "    text-align: center !important;"
-    "    position: relative;"
-    "    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.005);"
-    "    height: 100%;"
-    "}"
-    ".step-top-number-badge {"
-    "    position: absolute;"
-    "    top: -12px;"
-    "    right: 20px;"
-    "    background: #6D28D9;"
-    "    color: white;"
-    "    width: 24px;"
-    "    height: 24px;"
-    "    border-radius: 50%;"
-    "    display: flex;"
-    "    align-items: center;"
-    "    justify-content: center;"
-    "    font-size: 12px;"
-    "    font-weight: 700;"
-    "}"
-    ".step-inner-icon-round {"
-    "    font-size: 20px;"
-    "    margin-bottom: 10px;"
-    "    background: #F8FAFC;"
-    "    width: 44px;"
-    "    height: 44px;"
-    "    display: inline-flex;"
-    "    align-items: center;"
-    "    justify-content: center;"
-    "    border-radius: 50%;"
-    "}"
-    ".step-inner-title {"
-    "    font-weight: 700;"
-    "    color: #4338CA;"
-    "    font-size: 14px;"
-    "    margin-bottom: 6px;"
-    "    text-align: center !important;"
-    "}"
-    ".step-inner-desc {"
-    "    color: #64748B;"
-    "    font-size: 12.5px;"
-    "    line-height: 1.6;"
-    "    text-align: center !important;"
-    "}"
-    ".academic-footer-area {"
-    "    text-align: center !important;"
-    "    margin-top: 45px;"
-    "    padding-top: 20px;"
-    "    color: #94A3B8 !important;"
-    "    font-size: 13px !important;"
-    "    border-top: 1px solid #E2E8F0;"
-    "}"
-    "</style>"
-)
-st.markdown(css_styles, unsafe_allow_html=True)
+# 2. تحميل محرك الخوارزمية (AraBERT) ومعالجة المتجهات الدلالية
+@st.cache_resource
+def load_model():
+    # استخدام نسخة خفيفة ومستقرة ومخصصة للسيرفرات السحابية ذات الذاكرة المحدودة
+    tokenizer = AutoTokenizer.from_pretrained("aubmindlab/bert-base-arabertv02")
+    model = AutoModel.from_pretrained("aubmindlab/bert-base-arabertv02")
+    return tokenizer, model
 
-# 3. تجميع لوغو الـ SVG بأمان لضمان عدم حدوث أي خطأ في السلسلة النصية
-svg_logo = (
-    '<svg width="130" height="130" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">'
-    '  <defs>'
-    '    <linearGradient id="labeebGradient" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">'
-    '      <stop offset="0%" stop-color="#4C1D95"/>'
-    '      <stop offset="60%" stop-color="#7C3AED"/>'
-    '      <stop offset="100%" stop-color="#C084FC"/>'
-    '    </linearGradient>'
-    '  </defs>'
-    '  <path d="M110 80L140 60M110 80L140 100M140 60L170 80M140 100L170 80M110 80L125 120M140 100L125 120M140 60L120 40" stroke="url(#labeebGradient)" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>'
-    '  <circle cx="110" cy="80" r="5" fill="#4C1D95" />'
-    '  <circle cx="140" cy="60" r="5" fill="#7C3AED" />'
-    '  <circle cx="140" cy="100" r="5" fill="#7C3AED" />'
-    '  <circle cx="170" cy="80" r="6" fill="#C084FC" />'
-    '  <circle cx="125" cy="120" r="4" fill="#6D28D9" />'
-    '  <circle cx="120" cy="40" r="4" fill="#6D28D9" />'
-    '  <path d="M110 45V115C110 134.33 94.33 150 75 150C55.67 150 40 134.33 40 115V100" stroke="url(#labeebGradient)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>'
-    '  <path d="M140 25C140 32 143 35 150 35C143 35 140 38 140 45C140 38 137 35 130 35C137 35 140 32 140 25Z" fill="url(#labeebGradient)"/>'
-    '</svg>'
+try:
+    tokenizer, model = load_model()
+except Exception as e:
+    st.error("حدث خطأ أثناء تحميل النموذج اللغوي، يرجى إعادة تحديث الصفحة.")
+
+def get_word_vector(sentence, target_word):
+    try:
+        inputs = tokenizer(sentence, return_tensors="pt")
+        with torch.no_grad():
+            outputs = model(**inputs)
+        embeddings = outputs.last_hidden_state[0]
+        tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
+        for idx, token in enumerate(tokens):
+            if target_word in token:
+                return embeddings[idx].numpy().reshape(1, -1)
+    except Exception:
+        return None
+    return None
+
+# القاموس الدلالي المرجعي المحاكي لعينات اللفظ المشترك
+semantic_dictionary = {
+    "عين": {
+        "المعنى1": {"النص": "شرب الرجل من عين الماء العذبة", "المعنى": "نبع ماء"},
+        "المعنى2": {"النص": "أصيبت عين الطفل و نزلت دموعه", "المعنى": "عضو من الجسم"},
+        "المعنى3": {"النص": "كان عينًا للعدو داخل المدينة", "المعنى": "جاسوس"}
+    },
+    "المغرب": {
+        "المعنى1": {"النص": "سافرت إلى المغرب لزيارة الرباط", "المعنى": "دولة المغرب"},
+        "المعنى2": {"النص": "ذهبت إلى المسجد لصلاة المغرب", "المعنى": "صلاة المغرب"}
+    },
+    "رأس": {
+        "المعنى1": {"النص": "يشعر بألم في رأسه", "المعنى": "عضو من الجسم"},
+        "المعنى2": {"النص": "اجتمع رأس الشركة بالموظفين", "المعنى": "قائد"},
+        "المعنى3": {"النص": "وصل المتسلق إلى رأس الجبل", "المعنى": "قمة"}
+    }
+}
+
+# بناء المتجهات الدلالية المسبقة لعينات معالجة اللفظ المشترك
+for word in semantic_dictionary:
+    for meaning in semantic_dictionary[word]:
+        if "vector" not in semantic_dictionary[word][meaning]:
+            semantic_dictionary[word][meaning]["vector"] = get_word_vector(
+                semantic_dictionary[word][meaning]["النص"], word
+            )
+
+# 3. بناء واجهة المستخدم باستخدام عناصر Streamlit الأصلية 100% (بدون HTML)
+st.title("🧠 منصة لبيب | LABEEB AI")
+st.subheader("التحليل الدلالي الحواسبّي للنصوص العربية")
+st.caption("تطبيق ذكاء اصطناعي لفك اللبس الدلالي وتحليل المشترك اللفظي باستخدام النماذج اللغوية السياقية.")
+
+# صندوق التعريف الأكاديمي والجامعي للباحثة
+with st.container(border=True):
+    st.markdown("**إعداد الطالبة الباحثة:** هاجر الزواكي")
+    st.write("السنة الثانية من سلك الماجستير، تخصص اللسانيات الرقمية والذكاء الاصطناعي")
+    st.write("كلية الآداب والعلوم الإنسانية، جامعة مولاي إسماعيل، مكناس")
+    st.caption("📌 يندرج هذا المشروع ضمن متطلبات مشروع التخرج (PFE) للعام الجامعي 2025/2026")
+
+st.divider()
+
+# 4. مدخلات فحص العينات اللغوية
+st.write("### ✍️ أدخل الجملة العربية المراد فحصها سياقياً:")
+user_sentence = st.text_area(
+    label="نص الفحص",
+    placeholder="مثال: صليت المغرب في المسجد، أو شربت من عين ماء عذبة...",
+    height=120,
+    label_visibility="collapsed"
 )
 
-# عرض الجزء العلوي للمنصة (Hero Section) والبيانات الأكاديمية المعتمدة
-hero_html = (
-    '<div class="hero-white-container">'
-    '    <div class="logo-flex-center">'
-    + svg_logo +
-    '    </div>'
-    '    <h1 class="main-hero-title">LABEEB AI (لبيب)</h1>'
-    '    <div class="main-hero-subtitle">Semantic Analyzer for Arabic
+st.write("")
+analysis_triggered = st.button("⚡ إطلاق خوارزمية لبيب للتحليل", use_container_width=True)
+
+st.divider()
+
+# 5. عرض النتائج والقرارات الخوارزمية
+st.write("### 📊 نتيجة التحليل والدلالة السياقية:")
+
+if analysis_triggered:
+    if user_sentence.strip():
+        detected_word = None
+        for word in semantic_dictionary:
+            if word in user_sentence:
+                detected_word = word
+                break
+        
+        if detected_word:
+            with st.spinner("⏳ يقوم لبيب بقراءة المؤشرات السياقية عبر نموذج AraBERT اللغوي..."):
+                time.sleep(0.4)
+                user_vector = get_word_vector(user_sentence, detected_word)
+                
+                if user_vector is not None:
+                    similarities = []
+                    for meaning in semantic_dictionary[detected_word]:
+                        ref_vector = semantic_dictionary[detected_word][meaning]["vector"]
+                        if ref_vector is not None:
+                            sim = cosine_similarity(user_vector, ref_vector)[0][0]
