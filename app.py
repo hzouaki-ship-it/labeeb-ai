@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import time
 
-# 1. إعدادات الصفحة الأساسية لواجهة المنصة
+# 1. إعدادات الصفحة الأساسية لواجهة المنصة والأبعاد
 st.set_page_config(
     page_title="منصة لبيب LABEEB AI",
     page_icon="🧠",
@@ -13,38 +13,357 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. تحميل محرك الخوارزمية (AraBERT) ومعالجة المتجهات الدلالية
+# 2. حقن التنسيقات العربية وتأمين بيئة التصميم الشاملة (RTL) دون تداخل الأسطر البرمجية
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+/* ضبط الخلفية الشاملة وتوحيد خط القاهرة لجميع العناصر بالمنصة */
+html, body, [data-testid="stAppViewContainer"], .stApp {
+    background-color: #F9FAFB !important;
+    direction: rtl !important;
+    text-align: right !important;
+    font-family: 'Cairo', sans-serif !important;
+}
+
+/* تحديد أبعاد وحواف الحاوية الرئيسية للموقع */
+[data-testid="stMain"] .block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 850px !important;
+}
+
+/* إلغاء المسافات العمودية العشوائية المفتعلة من محرك ستريمليت تلقائياً */
+[data-testid="stVerticalBlock"] {
+    gap: 0rem !important;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {
+    font-family: 'Cairo', sans-serif !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* ---------------- ترويسة الصفحة (Hero Section) المحدثة ---------------- */
+.hero-outer {
+    margin-left: -4rem;
+    margin-right: -4rem;
+    background: linear-gradient(180deg, #EBF0FF 0%, #F4EFFF 60%, #F9FAFB 100%);
+    padding: 50px 40px 60px 40px;
+    text-align: center !important;
+    position: relative;
+    overflow: hidden;
+    border-bottom-left-radius: 50px 20px;
+    border-bottom-right-radius: 50px 20px;
+}
+
+.hero-dots-left {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    width: 60px;
+    height: 60px;
+    background-image: radial-gradient(#94A3B8 1.5px, transparent 1.5px);
+    background-size: 12px 12px;
+    opacity: 0.4;
+}
+
+.hero-dots-right {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    background-image: radial-gradient(#94A3B8 1.5px, transparent 1.5px);
+    background-size: 12px 12px;
+    opacity: 0.4;
+}
+
+.top-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    color: #6366F1;
+    padding: 4px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.08);
+}
+
+.hero-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.hero-logo-icon {
+    background: #FFFFFF;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.hero-title {
+    font-size: 46px !important;
+    font-weight: 800 !important;
+    color: #5B21B6 !important;
+    margin: 0 !important;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+    margin-top: 14px !important;
+    margin-bottom: 14px !important;
+    text-align: center !important;
+}
+
+.hero-description {
+    font-size: 15px !important;
+    color: #64748B !important;
+    max-width: 650px;
+    margin: 0 auto 24px auto !important;
+    line-height: 1.7;
+    text-align: center !important;
+}
+
+.author-badge {
+    display: inline-block;
+    background: #F3E8FF;
+    color: #6B21A8 !important;
+    padding: 6px 20px;
+    border-radius: 100px;
+    font-size: 13px !important;
+    font-weight: 600;
+    border: 1px solid #E9D5FF;
+}
+
+/* ---------------- بطاقات الأقسام (Section Cards) ---------------- */
+.section-card {
+    background: #FFFFFF;
+    border: 1px solid #F1F5F9;
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.015);
+    margin-top: 30px;
+    margin-bottom: 5px;
+    text-align: right !important;
+}
+
+.card-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.card-title-text {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+    margin: 0 !important;
+}
+
+/* ---------------- مدخلات الكتابة والأزرار التفاعلية ---------------- */
+.stTextArea textarea {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 16px !important;
+    padding: 18px !important;
+    font-family: 'Cairo', sans-serif !important;
+    font-size: 14.5px !important;
+    color: #334155 !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+div.stButton > button {
+    background: #6D28D9 !important;
+    color: white !important;
+    font-family: 'Cairo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14.5px !important;
+    border-radius: 12px !important;
+    border: none !important;
+    padding: 10px 24px !important;
+    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25) !important;
+}
+
+/* ---------------- تهيئة وتنسيق حالة ما قبل التحليل ---------------- */
+.inner-dashed-box {
+    border: 1px dashed #E2E8F0;
+    border-radius: 16px;
+    padding: 40px 20px;
+    text-align: center !important;
+    background: #FAFAFA;
+}
+
+.empty-icon-box {
+    font-size: 36px;
+    color: #6D28D9;
+    background: #F3E8FF;
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    margin-bottom: 16px;
+}
+
+.empty-main-text {
+    color: #6D28D9;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+    text-align: center !important;
+}
+
+.empty-sub-text {
+    color: #94A3B8;
+    font-size: 13.5px;
+    text-align: center !important;
+}
+
+/* ---------------- عناوين قسم الخطوات السفلي ---------------- */
+.steps-section-title {
+    text-align: center !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+    margin-top: 40px !important;
+    margin-bottom: 6px !important;
+}
+
+.steps-section-desc {
+    text-align: center !important;
+    font-size: 14px !important;
+    color: #64748B !important;
+    margin-bottom: 25px !important;
+}
+
+/* ---------------- التصميم الهندسي الأفقي للخطوات التوضيحية ---------------- */
+.step-item-horizontal {
+    background: #FFFFFF;
+    border: 1px solid #F1F5F9;
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center !important;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+    height: 100%;
+}
+
+.step-badge-num-right {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: #6D28D9;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.step-icon-wrapper-center {
+    font-size: 22px;
+    margin-bottom: 12px;
+    background: #F8FAFC;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.step-item-title-center {
+    font-weight: 700;
+    color: #4338CA;
+    font-size: 14.5px;
+    margin-bottom: 8px;
+    text-align: center !important;
+}
+
+.step-item-desc-center {
+    color: #64748B;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center !important;
+}
+
+/* ---------------- تذييل الموقع الأكاديمي ---------------- */
+.footer-container {
+    text-align: center !important;
+    margin-top: 45px;
+    padding-top: 20px;
+    color: #94A3B8 !important;
+    font-size: 13px !important;
+    border-top: 1px solid #E2E8F0;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# 3. عرض ترويسة الواجهة (Hero Section) للمنصة
+st.markdown("""
+<div class="hero-outer">
+    <div class="hero-dots-left"></div>
+    <div class="hero-dots-right"></div>
+    <div class="top-badge">✦ منصة ذكية عربية</div>
+    <div class="hero-logo-container">
+        <div class="hero-logo-icon">🧠</div>
+        <h1 class="hero-title">LABEEB AI (لبيب)</h1>
+    </div>
+    <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
+    <p class="hero-description">
+        منصة تعتمد على الذكاء الاصطناعي لفهم السياق اللغوي واكتشاف المعنى الصحيح للكلمات من خلال تحليل دلالي عميق ودقيق.
+    </p>
+    <div class="author-badge">تصميم وتطوير: هاجر الزواكي © 2026</div>
+</div>
+""", unsafe_allow_html=True)
+
+# 4. استدعاء وتحميل أوزان نموذج المعالجة العميقة (AraBERT)
 @st.cache_resource
 def load_model():
-    # استخدام نسخة خفيفة ومستقرة ومخصصة للسيرفرات السحابية ذات الذاكرة المحدودة
     tokenizer = AutoTokenizer.from_pretrained("aubmindlab/bert-base-arabertv02")
     model = AutoModel.from_pretrained("aubmindlab/bert-base-arabertv02")
     return tokenizer, model
 
-try:
-    tokenizer, model = load_model()
-except Exception as e:
-    st.error("حدث خطأ أثناء تحميل النموذج اللغوي، يرجى إعادة تحديث الصفحة.")
+tokenizer, model = load_model()
 
 def get_word_vector(sentence, target_word):
-    try:
-        inputs = tokenizer(sentence, return_tensors="pt")
-        with torch.no_grad():
-            outputs = model(**inputs)
-        embeddings = outputs.last_hidden_state[0]
-        tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
-        for idx, token in enumerate(tokens):
-            if target_word in token:
-                return embeddings[idx].numpy().reshape(1, -1)
-    except Exception:
-        return None
+    inputs = tokenizer(sentence, return_tensors="pt")
+    with torch.no_grad():
+        outputs = model(**inputs)
+    embeddings = outputs.last_hidden_state[0]
+    tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
+    for idx, token in enumerate(tokens):
+        if target_word in token:
+            return embeddings[idx].numpy().reshape(1, -1)
     return None
 
 # القاموس الدلالي المرجعي المحاكي لعينات اللفظ المشترك
 semantic_dictionary = {
     "عين": {
         "المعنى1": {"النص": "شرب الرجل من عين الماء العذبة", "المعنى": "نبع ماء"},
-        "المعنى2": {"النص": "أصيبت عين الطفل و نزلت دموعه", "المعنى": "عضو من الجسم"},
+        "المعنى2": {"النص": "أصيبت عين الطفل و نزلت دموعه", "المعنى": "عضو البصر"},
         "المعنى3": {"النص": "كان عينًا للعدو داخل المدينة", "المعنى": "جاسوس"}
     },
     "المغرب": {
@@ -66,36 +385,34 @@ for word in semantic_dictionary:
                 semantic_dictionary[word][meaning]["النص"], word
             )
 
-# 3. بناء واجهة المستخدم باستخدام عناصر Streamlit الأصلية 100% (بدون HTML)
-st.title("🧠 منصة لبيب | LABEEB AI")
-st.subheader("التحليل الدلالي الحواسبّي للنصوص العربية")
-st.caption("تطبيق ذكاء اصطناعي لفك اللبس الدلالي وتحليل المشترك اللفظي باستخدام النماذج اللغوية السياقية.")
+# 5. بناء بطاقة مدخلات فحص العينات اللغوية
+st.markdown("""
+<div class="section-card">
+    <div class="card-title-container">
+        <span>✍️</span>
+        <h3 class="card-title-text">أدخل الجملة العربية للتحليل:</h3>
+    </div>
+""", unsafe_allow_html=True)
 
-# صندوق التعريف الأكاديمي والجامعي للباحثة
-with st.container(border=True):
-    st.markdown("**إعداد الطالبة الباحثة:** هاجر الزواكي")
-    st.write("السنة الثانية من سلك الماجستير، تخصص اللسانيات الرقمية والذكاء الاصطناعي")
-    st.write("كلية الآداب والعلوم الإنسانية، جامعة مولاي إسماعيل، مكناس")
-    st.caption("📌 يندرج هذا المشروع ضمن متطلبات مشروع التخرج (PFE) للعام الجامعي 2025/2026")
-
-st.divider()
-
-# 4. مدخلات فحص العينات اللغوية
-st.write("### ✍️ أدخل الجملة العربية المراد فحصها سياقياً:")
 user_sentence = st.text_area(
-    label="نص الفحص",
-    placeholder="مثال: صليت المغرب في المسجد، أو شربت من عين ماء عذبة...",
-    height=120,
+    "",
+    placeholder="اكتب جملة عربية واضحة تحتوي على المعنى والسياق...",
+    height=110,
     label_visibility="collapsed"
 )
 
-st.write("")
-analysis_triggered = st.button("⚡ إطلاق خوارزمية لبيب للتحليل", use_container_width=True)
+st.write("") 
+analysis_triggered = st.button("⚡ إطلاق خوارزمية لبيب للتحليل")
+st.markdown("</div>", unsafe_allow_html=True)
 
-st.divider()
-
-# 5. عرض النتائج والقرارات الخوارزمية
-st.write("### 📊 نتيجة التحليل والدلالة السياقية:")
+# 6. بطاقة موحدة وحاضنة لعرض النتائج وجداول التشابه الجيب تمامي
+st.markdown("""
+<div class="section-card">
+    <div class="card-title-container">
+        <span style="color:#6D28D9;">📊</span>
+        <h3 class="card-title-text" style="color:#6D28D9 !important;">نتيجة التحليل</h3>
+    </div>
+""", unsafe_allow_html=True)
 
 if analysis_triggered:
     if user_sentence.strip():
@@ -107,7 +424,7 @@ if analysis_triggered:
         
         if detected_word:
             with st.spinner("⏳ يقوم لبيب بقراءة المؤشرات السياقية عبر نموذج AraBERT اللغوي..."):
-                time.sleep(0.4)
+                time.sleep(0.5)
                 user_vector = get_word_vector(user_sentence, detected_word)
                 
                 if user_vector is not None:
@@ -116,3 +433,81 @@ if analysis_triggered:
                         ref_vector = semantic_dictionary[detected_word][meaning]["vector"]
                         if ref_vector is not None:
                             sim = cosine_similarity(user_vector, ref_vector)[0][0]
+                            similarities.append({
+                                "المعنى الدلالي": semantic_dictionary[detected_word][meaning]["المعنى"],
+                                "نسبة التشابه السياقي": round(float(sim), 4)
+                            })
+                    
+                    similarities = sorted(similarities, key=lambda x: x["نسبة التشابه السياقي"], reverse=True)
+                    best_meaning = similarities[0]["المعنى الدلالي"]
+                    confidence_percentage = round(similarities[0]["نسبة التشابه السياقي"] * 100, 2)
+                    
+                    st.markdown(f'<p style="font-size: 15px; color: #1E293B; margin-bottom: 8px; text-align: right; direction: rtl;">الكلمة التي تم رصدها وتحليلها تلقائياً: <strong style="color:#6D28D9;">{detected_word}</strong></p>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="background-color: #F0FDF4; border: 1px solid #DCFCE7; padding: 16px; border-radius: 14px; margin: 15px 0; text-align: right; direction: rtl;"><span style="font-size: 16px; font-weight: 700; color: #16A34A;">🎯 القرار النهائي الخوارزمي:</span><p style="font-size: 16px; font-weight: 700; color: #15803D; margin: 6px 0 0 0 !important;">المعنى المقصود والمكتشف في النص هو: ({best_meaning})</p></div>', unsafe_allow_html=True)
+                    st.markdown(f'<p style="font-size: 14.5px; color: #475569; margin-bottom: 20px; text-align: right; direction: rtl;">درجة ثقة الخوارزمية في القرار الحالي: <strong style="color: #6D28D9;">{confidence_percentage}%</strong></p>', unsafe_allow_html=True)
+                    st.markdown('<p style="font-weight: 700; font-size: 14px; color: #1E293B; margin-bottom: 8px; text-align: right; direction: rtl;">📊 جدول معاملات التشابه الجيب تمامي (Cosine Similarity):</p>', unsafe_allow_html=True)
+                    
+                    display_df = pd.DataFrame(similarities)
+                    display_df["نسبة التشابه السياقي"] = display_df["نسبة التشابه السياقي"].apply(lambda x: f"{round(x*100, 2)}%")
+                    st.table(display_df)
+                else:
+                    st.error("عذراً، واجه النظام خطأ غير متوقع أثناء استخراج متجهات الكلمة المستهدفة.")
+        else:
+            st.warning("⚠️ لم يتم العثور في النص على أي من الكلمات المشتركة المدعومة حالياً بالقاموس المرجعي (عين، المغرب، رأس).")
+    else:
+        st.warning("⚠️ فضلاً، يرجى كتابة جملة عربية أولاً ليتمكن لبيب من معالجتها وفحص سياقها الدلالي.")
+else:
+    st.markdown("""
+    <div class="inner-dashed-box">
+        <div class="empty-icon-box">🔍</div>
+        <div class="empty-main-text">لم يتم إجراء أي تحليل بعد</div>
+        <div class="empty-sub-text">اكتب جملة عربية واضحة واضغط على زر التحليل للحصول على النتيجة هنا.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# 7. قسم "كيف يعمل لبيب؟" المطور أفقياً عبر أعمدة لضمان التراصف جنباً إلى جنب بشكل مثالي
+st.markdown('<div class="steps-section-title">🧠 كيف يعمل لبيب؟</div>', unsafe_allow_html=True)
+st.markdown('<div class="steps-section-desc">يستخدم لبيب الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها الحقيقي في السياق.</div>', unsafe_allow_html=True)
+
+# توليد 3 أعمدة أفقية لتنظيم واجهة الخطوات بصرياً بجانب بعضها
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    <div class="step-item-horizontal">
+        <div class="step-badge-num-right">1</div>
+        <div class="step-icon-wrapper-center" style="color: #6D28D9;">🔍</div>
+        <div class="step-item-title-center">تحليل السياق</div>
+        <div class="step-item-desc-center">يحلل لبيب الجملة والكلمات المحيطة لفهم السياق اللغوي بدقة.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="step-item-horizontal">
+        <div class="step-badge-num-right">2</div>
+        <div class="step-icon-wrapper-center" style="color: #EC4899;">🎯</div>
+        <div class="step-item-title-center">اكتشاف المعنى</div>
+        <div class="step-item-desc-center">يحدد المعنى الأقرب اعتماداً على السياق والدلالة اللغوية المخزنة.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+    <div class="step-item-horizontal">
+        <div class="step-badge-num-right">3</div>
+        <div class="step-icon-wrapper-center" style="color: #3B82F6;">📊</div>
+        <div class="step-item-title-center">قياس التشابه الدلالي</div>
+        <div class="step-item-desc-center">يستخدم نماذج لغوية متقدمة لقياس التشابه الدلالي وتصنيف النتائج.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# 8. تذييل الموقع والتوثيق الأكاديمي الشامل للمشروع
+st.markdown("""
+<div class="footer-container">
+    تم تطوير وتصميم منصة LABEEB AI بواسطة هاجر الزواكي 💜 2026<br>
+    جميع الحقوق محفوظة
+</div>
+""", unsafe_allow_html=True)
