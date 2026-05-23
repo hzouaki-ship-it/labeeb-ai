@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # 2. حقن التنسيقات العربية وتأمين بيئة التصميم الشاملة (RTL) دون تداخل الأسطر البرمجية
-st.markdown("""
+custom_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
 
@@ -31,11 +31,6 @@ html, body, [data-testid="stAppViewContainer"], .stApp {
     padding-top: 2rem !important;
     padding-bottom: 3rem !important;
     max-width: 850px !important;
-}
-
-/* إلغاء المسافات العمودية العشوائية المفتعلة من محرك ستريمليت تلقائياً */
-[data-testid="stVerticalBlock"] {
-    gap: 0rem !important;
 }
 
 h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {
@@ -103,7 +98,7 @@ h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {
     padding: 35px;
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.015);
     margin-top: 30px;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
     text-align: right !important;
 }
 
@@ -145,6 +140,7 @@ div.stButton > button {
     border: none !important;
     padding: 10px 24px !important;
     box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25) !important;
+    width: 100% !important;
 }
 
 /* ---------------- تهيئة وتنسيق حالة ما قبل التحليل ---------------- */
@@ -265,10 +261,11 @@ div.stButton > button {
     border-top: 1px solid #E2E8F0;
 }
 </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
 
-# 3. عرض ترويسة الواجهة (Hero Section) المحدثة بالشعار الحر الجديد بدون إطار
-st.markdown("""
+# 3. عرض ترويسة الواجهة (Hero Section) المصححة بالكامل بالشعار الجديد الصافي
+hero_html = """
 <div style="text-align: center; padding: 30px 0 15px 0;">
     <div class="top-badge">✦ منصة ذكية عربية</div>
     <br>
@@ -290,7 +287,6 @@ st.markdown("""
         <path d="M115 30V125C115 149.85 94.85 170 70 170C45.15 170 25 149.85 25 125V105" stroke="url(#labeebGrad)" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M155 15C155 21 158 24 164 24C158 24 155 27 155 33C155 27 152 24 146 24C152 24 155 21 155 15Z" fill="url(#labeebGrad)"/>
     </svg>
-    
     <h1 class="hero-title" style="margin-top: 15px !important;">LABEEB AI (لبيب)</h1>
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
     <p class="hero-description">
@@ -298,7 +294,8 @@ st.markdown("""
     </p>
     <div class="author-badge">تصميم وتطوير الباحثة: هاجر الزواكي © 2026</div>
 </div>
-""", unsafe_allow_html=True)
+"""
+st.markdown(hero_html, unsafe_allow_html=True)
 
 # 4. استدعاء وتحميل أوزان نموذج المعالجة العميقة (AraBERT)
 @st.cache_resource
@@ -347,13 +344,14 @@ for word in semantic_dictionary:
             )
 
 # 5. بناء بطاقة مدخلات فحص العينات اللغوية
-st.markdown("""
+input_card_start = """
 <div class="section-card">
     <div class="card-title-container">
         <span>✍️</span>
         <h3 class="card-title-text">أدخل الجملة العربية للتحليل:</h3>
     </div>
-""", unsafe_allow_html=True)
+"""
+st.markdown(input_card_start, unsafe_allow_html=True)
 
 user_sentence = st.text_area(
     "",
@@ -367,13 +365,14 @@ analysis_triggered = st.button("⚡ إطلاق خوارزمية لبيب للت�
 st.markdown("</div>", unsafe_allow_html=True)
 
 # 6. بطاقة موحدة وحاضنة لعرض النتائج وجداول التشابه الجيب تمامي
-st.markdown("""
+result_card_start = """
 <div class="section-card">
     <div class="card-title-container">
         <span style="color:#6D28D9;">📊</span>
         <h3 class="card-title-text" style="color:#6D28D9 !important;">نتيجة التحليل</h3>
     </div>
-""", unsafe_allow_html=True)
+"""
+st.markdown(result_card_start, unsafe_allow_html=True)
 
 if analysis_triggered:
     if user_sentence.strip():
@@ -418,13 +417,14 @@ if analysis_triggered:
     else:
         st.warning("⚠️ فضلاً، يرجى كتابة جملة عربية أولاً ليتمكن لبيب من معالجتها وفحص سياقها الدلالي.")
 else:
-    st.markdown("""
+    empty_state_html = """
     <div class="inner-dashed-box">
         <div class="empty-icon-box">🔍</div>
         <div class="empty-main-text">لم يتم إجراء أي تحليل بعد</div>
         <div class="empty-sub-text">اكتب جملة عربية واضحة واضغط على زر التحليل للحصول على النتيجة هنا.</div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(empty_state_html, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -432,43 +432,46 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown('<div class="steps-section-title">🧠 كيف يعمل لبيب؟</div>', unsafe_allow_html=True)
 st.markdown('<div class="steps-section-desc">يستخدم لبيب الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها الحقيقي في السياق.</div>', unsafe_allow_html=True)
 
-# توليد 3 أعمدة أفقية لتنظيم واجهة الخطوات بصرياً بجانب بعضها
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("""
+    step_1_html = """
     <div class="step-item-horizontal">
         <div class="step-badge-num-right">1</div>
         <div class="step-icon-wrapper-center" style="color: #6D28D9;">🔍</div>
         <div class="step-item-title-center">تحليل السياق</div>
         <div class="step-item-desc-center">يحلل لبيب الجملة والكلمات المحيطة لفهم السياق اللغوي بدقة.</div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(step_1_html, unsafe_allow_html=True)
 
 with col2:
-    st.markdown("""
+    step_2_html = """
     <div class="step-item-horizontal">
         <div class="step-badge-num-right">2</div>
         <div class="step-icon-wrapper-center" style="color: #EC4899;">🎯</div>
         <div class="step-item-title-center">اكتشاف المعنى</div>
         <div class="step-item-desc-center">يحدد المعنى الأقرب اعتماداً على السياق والدلالة اللغوية المخزنة.</div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(step_2_html, unsafe_allow_html=True)
 
 with col3:
-    st.markdown("""
+    step_3_html = """
     <div class="step-item-horizontal">
         <div class="step-badge-num-right">3</div>
         <div class="step-icon-wrapper-center" style="color: #3B82F6;">📊</div>
         <div class="step-item-title-center">قياس التشابه الدلالي</div>
         <div class="step-item-desc-center">يستخدم نماذج لغوية متقدمة لقياس التشابه الدلالي وتصنيف النتائج.</div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(step_3_html, unsafe_allow_html=True)
 
 # 8. تذييل الموقع والتوثيق الأكاديمي الشامل للمشروع
-st.markdown("""
+footer_html = """
 <div class="footer-container">
     تم تطوير وتصميم منصة LABEEB AI بواسطة هاجر الزواكي 💜 2026<br>
     جميع الحقوق محفوظة
 </div>
-""", unsafe_allow_html=True)
+"""
+st.markdown(footer_html, unsafe_allow_html=True)
