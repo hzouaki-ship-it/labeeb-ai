@@ -77,22 +77,39 @@ HERO
     margin-bottom:35px;
 }
 
-/* HERO LOGO */
+/* =========================================
+CREATIVE LOGO
+========================================= */
 
-.hero-logo{
+.labeeb-orb{
 
-    width:90px;
+    position:relative;
 
-    height:90px;
+    width:120px;
+
+    height:120px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:0 auto 25px auto;
+}
+
+.orb-core{
+
+    width:85px;
+
+    height:85px;
 
     border-radius:50%;
-
-    margin:0 auto 24px auto;
 
     background:
     linear-gradient(
     135deg,
-    #7C3AED,
+    #6D28D9,
     #4F46E5);
 
     display:flex;
@@ -108,12 +125,42 @@ HERO
     font-weight:800;
 
     box-shadow:
-    0 0 35px rgba(109,40,217,0.25);
+    0 0 35px rgba(109,40,217,0.35);
+
+    position:relative;
+
+    z-index:2;
+}
+
+.orb-ring{
+
+    position:absolute;
+
+    width:115px;
+
+    height:115px;
+
+    border-radius:50%;
+
+    border:2px dashed rgba(109,40,217,0.28);
+
+    animation:spinOrb 16s linear infinite;
+}
+
+@keyframes spinOrb{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
 }
 
 .hero-title{
 
-    font-size:56px;
+    font-size:54px;
 
     font-weight:800;
 
@@ -127,7 +174,7 @@ HERO
 
     -webkit-text-fill-color:transparent;
 
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
 .hero-subtitle{
@@ -147,7 +194,7 @@ HERO
 
     color:#64748B;
 
-    max-width:700px;
+    max-width:680px;
 
     margin:0 auto 24px auto;
 
@@ -174,7 +221,7 @@ HERO
 }
 
 /* =========================================
-GLASS CARD
+CARDS
 ========================================= */
 
 .glass-card{
@@ -256,7 +303,7 @@ BUTTON
 }
 
 /* =========================================
-RESULTS
+RESULT
 ========================================= */
 
 .result-status-empty{
@@ -327,7 +374,7 @@ thead tr th{
 }
 
 /* =========================================
-HOW IT WORKS
+STEPS
 ========================================= */
 
 .section-main-title{
@@ -482,7 +529,7 @@ FOOTER
 """, unsafe_allow_html=True)
 
 # =========================================
-# قاعدة البيانات
+# قاعدة البيانات الدلالية
 # =========================================
 
 semantic_db = {
@@ -527,12 +574,16 @@ st.markdown("""
 
 <div class="hero-container">
 
-    <div class="hero-logo">
-        ل
+    <div class="labeeb-orb">
+
+        <div class="orb-core">ل</div>
+
+        <div class="orb-ring"></div>
+
     </div>
 
     <div class="hero-title">
-        LABEEB AI
+        LABEEB AI (لبيب)
     </div>
 
     <div class="hero-subtitle">
@@ -540,12 +591,11 @@ st.markdown("""
     </div>
 
     <div class="hero-desc">
-        منصة ذكية تعتمد على الذكاء الاصطناعي لتحليل المعاني والسياقات
-        الدلالية للألفاظ المشتركة داخل النصوص العربية.
+        منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم المعنى والسياق الدلالي للألفاظ المشتركة في اللغة العربية.
     </div>
 
     <div class="badge-student">
-        تطوير وتصميم: هاجر الزواكي
+        © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
     </div>
 
 </div>
@@ -553,7 +603,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================================
-# الإدخال
+# INPUT
 # =========================================
 
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
@@ -579,7 +629,7 @@ st.markdown(
 st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================
-# النتائج
+# RESULTS
 # =========================================
 
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
@@ -689,7 +739,7 @@ else:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================
-# كيف يعمل لبيب
+# HOW IT WORKS
 # =========================================
 
 st.markdown(
@@ -760,7 +810,7 @@ with c3:
     """, unsafe_allow_html=True)
 
 # =========================================
-# الباحثة
+# RESEARCHER
 # =========================================
 
 st.markdown("""
