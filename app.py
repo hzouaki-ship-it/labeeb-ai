@@ -289,8 +289,7 @@ st.markdown("""
 <div class="hero-container">
    <div class="hero-logo-wrapper">
     <img class="hero-logo-image"
-    src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
-</div>
+src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png"</div>
     <div class="hero-logo-glow"></div>
     <div class="hero-title">LABEEB AI (لبيب)</div>
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
