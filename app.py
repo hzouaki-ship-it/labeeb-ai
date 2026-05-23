@@ -573,8 +573,7 @@ st.markdown("""
 </div>
 
 <img class="author-image"
-src="https://i.imgur.com/T4v9K8N.png">
-
+src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg">
 </div>
 
 """, unsafe_allow_html=True)
