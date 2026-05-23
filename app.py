@@ -122,21 +122,16 @@ header {visibility:hidden;}
 
 .hero-content{
 
-    position:relative;
-
-    z-index:2;
-
     display:flex;
 
     align-items:center;
 
     justify-content:center;
 
-    gap:60px;
+    gap:90px;
 
     flex-wrap:wrap;
 }
-
 /* اللوغو */
 
 .hero-logo{
@@ -174,13 +169,15 @@ header {visibility:hidden;}
 
 .hero-title{
 
-    font-size:88px;
+    font-size:78px;
 
-    font-weight:800;
+    font-weight:700;
+
+    letter-spacing:1px;
 
     line-height:1.1;
 
-    margin-bottom:8px;
+    margin-bottom:14px;
 
     background:
     linear-gradient(
@@ -192,7 +189,6 @@ header {visibility:hidden;}
 
     -webkit-text-fill-color:transparent;
 }
-
 .hero-subtitle{
 
     font-size:38px;
@@ -203,14 +199,17 @@ header {visibility:hidden;}
 
     margin-bottom:16px;
 }
-
 .hero-description{
 
-    font-size:21px;
+    font-size:24px;
 
     color:#64748B;
 
-    line-height:2;
+    line-height:2.2;
+
+    max-width:900px;
+
+    margin:auto;
 }
 
 .author-badge{
@@ -294,7 +293,7 @@ header {visibility:hidden;}
 
     border-radius:28px;
 
-    padding:35px;
+    padding:28px;
 
     box-shadow:
     0 6px 22px rgba(0,0,0,0.04);
@@ -315,13 +314,9 @@ header {visibility:hidden;}
     margin-bottom:25px;
 
     text-align:right;
-}
-
-/* textarea */
-
 .stTextArea textarea{
 
-    border-radius:18px !important;
+    border-radius:20px !important;
 
     border:2px solid #C4B5FD !important;
 
@@ -331,9 +326,10 @@ header {visibility:hidden;}
 
     line-height:2 !important;
 
-    background:#FAFAFF !important;
-}
+    background:#FCFCFF !important;
 
+    min-height:160px !important;
+}
 /* الزر */
 
 .stButton>button{
@@ -481,7 +477,7 @@ header {visibility:hidden;}
 /* بطاقة الباحثة */
 
 .bio-card{
-
+    text-align:right;
     background:white;
 
     border-radius:30px;
@@ -562,7 +558,27 @@ header {visibility:hidden;}
 
     font-size:16px;
 }
+/* Hover Effects */
 
+.step-card,
+.glass-card,
+.result-card,
+.bio-card,
+.hero{
+
+    transition:0.35s ease;
+}
+
+.step-card:hover,
+.glass-card:hover,
+.result-card:hover,
+.bio-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 30px rgba(139,92,246,0.10);
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -603,7 +619,7 @@ LABEEB AI (لبيب)
 </div>
 
 <div class="author-badge">
-🛡️ © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
+ © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
 </div>
 
 </div>
@@ -633,7 +649,7 @@ st.button("✦ ابدأ التحليل الذكي")
 
 st.markdown("""
 <div style='margin-top:12px; color:#64748B; font-size:17px;'>
-🛡️ تحليل آمن ودقيق باستخدام الذكاء الاصطناعي
+ تحليل آمن ودقيق باستخدام الذكاء الاصطناعي
 </div>
 """, unsafe_allow_html=True)
 
