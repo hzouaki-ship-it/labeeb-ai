@@ -13,175 +13,269 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. حقن التنسيقات العربية وتأمين واجهة المستخدم (RTL) دون أي تداخل في الأسطر
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+# 2. بناء الأنماط والتنسيقات (CSS) كمتغيرات نصية منفصلة وآمنة تماماً
+css_styles = (
+    "<style>"
+    "@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');"
+    "html, body, [data-testid='stAppViewContainer'], .stApp {"
+    "    background-color: #FAFAFB !important;"
+    "    direction: rtl !important;"
+    "    text-align: right !important;"
+    "    font-family: 'Cairo', sans-serif !important;"
+    "}"
+    "[data-testid='stMain'] .block-container {"
+    "    padding-top: 2rem !important;"
+    "    padding-bottom: 3rem !important;"
+    "    max-width: 820px !important;"
+    "}"
+    "[data-testid='stVerticalBlock'] {"
+    "    gap: 0rem !important;"
+    "}"
+    "h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {"
+    "    font-family: 'Cairo', sans-serif !important;"
+    "    text-align: right !important;"
+    "    direction: rtl !important;"
+    "}"
+    ".hero-white-container {"
+    "    background: #FFFFFF;"
+    "    border: 1px solid #F1F5F9;"
+    "    border-radius: 24px;"
+    "    padding: 35px;"
+    "    text-align: center !important;"
+    "    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);"
+    "    margin-bottom: 25px;"
+    "}"
+    ".logo-flex-center {"
+    "    display: flex;"
+    "    justify-content: center;"
+    "    align-items: center;"
+    "    margin-bottom: 12px;"
+    "}"
+    ".main-hero-title {"
+    "    font-size: 38px !important;"
+    "    font-weight: 800 !important;"
+    "    color: #4C1D95 !important;"
+    "    margin: 0 0 4px 0 !important;"
+    "    text-align: center !important;"
+    "}"
+    ".main-hero-subtitle {"
+    "    font-size: 15px !important;"
+    "    font-weight: 400 !important;"
+    "    color: #64748B !important;"
+    "    margin: 0 0 16px 0 !important;"
+    "    text-align: center !important;"
+    "}"
+    ".main-hero-desc {"
+    "    font-size: 15px !important;"
+    "    color: #1E293B !important;"
+    "    font-weight: 600;"
+    "    margin: 0 auto 20px auto !important;"
+    "    text-align: center !important;"
+    "}"
+    ".academic-bio-box {"
+    "    background-color: #FAF5FF;"
+    "    border: 1px solid #E9D5FF;"
+    "    border-radius: 16px;"
+    "    padding: 20px;"
+    "    margin: 0 auto;"
+    "    max-width: 700px;"
+    "    text-align: center !important;"
+    "}"
+    ".academic-bio-text {"
+    "    font-size: 14.5px !important;"
+    "    color: #3B0764 !important;"
+    "    line-height: 1.8 !important;"
+    "    margin: 0 !important;"
+    "    text-align: center !important;"
+    "}"
+    ".academic-project-note {"
+    "    display: inline-block;"
+    "    font-size: 13px !important;"
+    "    color: #6B21A8 !important;"
+    "    font-weight: 700;"
+    "    margin-top: 10px !important;"
+    "    background: #F3E8FF;"
+    "    padding: 2px 14px;"
+    "    border-radius: 100px;"
+    "}"
+    ".custom-section-card {"
+    "    background: #FFFFFF;"
+    "    border: 1px solid #F1F5F9;"
+    "    border-radius: 24px;"
+    "    padding: 35px;"
+    "    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);"
+    "    margin-top: 25px;"
+    "    margin-bottom: 5px;"
+    "    text-align: right !important;"
+    "}"
+    ".card-icon-title-row {"
+    "    display: flex;"
+    "    align-items: center;"
+    "    justify-content: flex-start;"
+    "    gap: 8px;"
+    "    margin-bottom: 18px;"
+    "}"
+    ".card-title-plain-text {"
+    "    font-size: 16px !important;"
+    "    font-weight: 700 !important;"
+    "    color: #1E293B !important;"
+    "    margin: 0 !important;"
+    "}"
+    ".stTextArea textarea {"
+    "    background-color: #FFFFFF !important;"
+    "    border: 1px solid #E2E8F0 !important;"
+    "    border-radius: 16px !important;"
+    "    padding: 18px !important;"
+    "    font-family: 'Cairo', sans-serif !important;"
+    "    font-size: 14.5px !important;"
+    "    color: #334155 !important;"
+    "    text-align: right !important;"
+    "    direction: rtl !important;"
+    "}"
+    "div.stButton > button {"
+    "    background: #6D28D9 !important;"
+    "    color: white !important;"
+    "    font-family: 'Cairo', sans-serif !important;"
+    "    font-weight: 600 !important;"
+    "    font-size: 14.5px !important;"
+    "    border-radius: 12px !important;"
+    "    border: none !important;"
+    "    padding: 10px 24px !important;"
+    "    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25) !important;"
+    "}"
+    ".dashed-waiting-box {"
+    "    border: 1px dashed #E2E8F0;"
+    "    border-radius: 16px;"
+    "    padding: 35px 20px;"
+    "    text-align: center !important;"
+    "    background: #FAFAFA;"
+    "}"
+    ".waiting-icon {"
+    "    font-size: 34px;"
+    "    color: #6D28D9;"
+    "    background: #F3E8FF;"
+    "    width: 60px;"
+    "    height: 60px;"
+    "    display: inline-flex;"
+    "    align-items: center;"
+    "    justify-content: center;"
+    "    border-radius: 16px;"
+    "    margin-bottom: 14px;"
+    "}"
+    ".waiting-primary-text {"
+    "    color: #6D28D9;"
+    "    font-weight: 700;"
+    "    font-size: 15.5px;"
+    "    margin-bottom: 5px;"
+    "    text-align: center !important;"
+    "}"
+    ".waiting-secondary-text {"
+    "    color: #94A3B8;"
+    "    font-size: 13px;"
+    "    text-align: center !important;"
+    "}"
+    ".steps-central-title {"
+    "    text-align: center !important;"
+    "    font-size: 18px !important;"
+    "    font-weight: 700 !important;"
+    "    color: #1E293B !important;"
+    "    margin-top: 35px !important;"
+    "    margin-bottom: 6px !important;"
+    "}"
+    ".steps-central-desc {"
+    "    text-align: center !important;"
+    "    font-size: 14px !important;"
+    "    color: #64748B !important;"
+    "    margin-bottom: 25px !important;"
+    "}"
+    ".horizontal-step-card {"
+    "    background: #FFFFFF;"
+    "    border: 1px solid #F1F5F9;"
+    "    border-radius: 20px;"
+    "    padding: 24px 18px;"
+    "    text-align: center !important;"
+    "    position: relative;"
+    "    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.005);"
+    "    height: 100%;"
+    "}"
+    ".step-top-number-badge {"
+    "    position: absolute;"
+    "    top: -12px;"
+    "    right: 20px;"
+    "    background: #6D28D9;"
+    "    color: white;"
+    "    width: 24px;"
+    "    height: 24px;"
+    "    border-radius: 50%;"
+    "    display: flex;"
+    "    align-items: center;"
+    "    justify-content: center;"
+    "    font-size: 12px;"
+    "    font-weight: 700;"
+    "}"
+    ".step-inner-icon-round {"
+    "    font-size: 20px;"
+    "    margin-bottom: 10px;"
+    "    background: #F8FAFC;"
+    "    width: 44px;"
+    "    height: 44px;"
+    "    display: inline-flex;"
+    "    align-items: center;"
+    "    justify-content: center;"
+    "    border-radius: 50%;"
+    "}"
+    ".step-inner-title {"
+    "    font-weight: 700;"
+    "    color: #4338CA;"
+    "    font-size: 14px;"
+    "    margin-bottom: 6px;"
+    "    text-align: center !important;"
+    "}"
+    ".step-inner-desc {"
+    "    color: #64748B;"
+    "    font-size: 12.5px;"
+    "    line-height: 1.6;"
+    "    text-align: center !important;"
+    "}"
+    ".academic-footer-area {"
+    "    text-align: center !important;"
+    "    margin-top: 45px;"
+    "    padding-top: 20px;"
+    "    color: #94A3B8 !important;"
+    "    font-size: 13px !important;"
+    "    border-top: 1px solid #E2E8F0;"
+    "}"
+    "</style>"
+)
+st.markdown(css_styles, unsafe_allow_html=True)
 
-/* توحيد خط القاهرة وضبط الاتجاه العام للموقع من اليمين إلى اليسار */
-html, body, [data-testid="stAppViewContainer"], .stApp {
-    background-color: #FAFAFB !important;
-    direction: rtl !important;
-    text-align: right !important;
-    font-family: 'Cairo', sans-serif !important;
-}
+# 3. تجميع لوغو الـ SVG بأمان لضمان عدم حدوث أي خطأ في السلسلة النصية
+svg_logo = (
+    '<svg width="130" height="130" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    '  <defs>'
+    '    <linearGradient id="labeebGradient" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">'
+    '      <stop offset="0%" stop-color="#4C1D95"/>'
+    '      <stop offset="60%" stop-color="#7C3AED"/>'
+    '      <stop offset="100%" stop-color="#C084FC"/>'
+    '    </linearGradient>'
+    '  </defs>'
+    '  <path d="M110 80L140 60M110 80L140 100M140 60L170 80M140 100L170 80M110 80L125 120M140 100L125 120M140 60L120 40" stroke="url(#labeebGradient)" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>'
+    '  <circle cx="110" cy="80" r="5" fill="#4C1D95" />'
+    '  <circle cx="140" cy="60" r="5" fill="#7C3AED" />'
+    '  <circle cx="140" cy="100" r="5" fill="#7C3AED" />'
+    '  <circle cx="170" cy="80" r="6" fill="#C084FC" />'
+    '  <circle cx="125" cy="120" r="4" fill="#6D28D9" />'
+    '  <circle cx="120" cy="40" r="4" fill="#6D28D9" />'
+    '  <path d="M110 45V115C110 134.33 94.33 150 75 150C55.67 150 40 134.33 40 115V100" stroke="url(#labeebGradient)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>'
+    '  <path d="M140 25C140 32 143 35 150 35C143 35 140 38 140 45C140 38 137 35 130 35C137 35 140 32 140 25Z" fill="url(#labeebGradient)"/>'
+    '</svg>'
+)
 
-/* تحديد أبعاد وحواف الحاوية الرئيسية للموقع */
-[data-testid="stMain"] .block-container {
-    padding-top: 2rem !important;
-    padding-bottom: 3rem !important;
-    max-width: 820px !important;
-}
-
-/* إلغاء المسافات العمودية العشوائية المفتعلة من محرك ستريمليت تلقائياً */
-[data-testid="stVerticalBlock"] {
-    gap: 0rem !important;
-}
-
-h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {
-    font-family: 'Cairo', sans-serif !important;
-    text-align: right !important;
-    direction: rtl !important;
-}
-
-/* ---------------- ترويسة الصفحة (Hero Section) ---------------- */
-.hero-white-container {
-    background: #FFFFFF;
-    border: 1px solid #F1F5F9;
-    border-radius: 24px;
-    padding: 35px;
-    text-align: center !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
-    margin-bottom: 25px;
-}
-
-.logo-flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.main-hero-title {
-    font-size: 38px !important;
-    font-weight: 800 !important;
-    color: #4C1D95 !important;
-    margin: 0 0 4px 0 !important;
-    text-align: center !important;
-}
-
-.main-hero-subtitle {
-    font-size: 15px !important;
-    font-weight: 400 !important;
-    color: #64748B !important;
-    margin: 0 0 16px 0 !important;
-    text-align: center !important;
-    letter-spacing: 0.5px;
-}
-
-.main-hero-desc {
-    font-size: 15px !important;
-    color: #1E293B !important;
-    font-weight: 600;
-    margin: 0 auto 20px auto !important;
-    text-align: center !important;
-}
-
-/* صندوق البيو والتعريف الأكاديمي والجامعي للباحثة */
-.academic-bio-box {
-    background-color: #FAF5FF;
-    border: 1px solid #E9D5FF;
-    border-radius: 16px;
-    padding: 20px;
-    margin: 0 auto;
-    max-width: 700px;
-    text-align: center !important;
-}
-
-.academic-bio-text {
-    font-size: 14.5px !important;
-    color: #3B0764 !important;
-    line-height: 1.8 !important;
-    margin: 0 !important;
-    text-align: center !important;
-}
-
-.academic-project-note {
-    display: inline-block;
-    font-size: 13px !important;
-    color: #6B21A8 !important;
-    font-weight: 700;
-    margin-top: 10px !important;
-    background: #F3E8FF;
-    padding: 2px 14px;
-    border-radius: 100px;
-}
-
-/* ---------------- بطاقات الأقسام (Section Cards) ---------------- */
-.custom-section-card {
-    background: #FFFFFF;
-    border: 1px solid #F1F5F9;
-    border-radius: 24px;
-    padding: 35px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
-    margin-top: 25px;
-    margin-bottom: 5px;
-    text-align: right !important;
-}
-
-.card-icon-title-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    margin-bottom: 18px;
-}
-
-.card-title-plain-text {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    color: #1E293B !important;
-    margin: 0 !important;
-}
-
-/* ---------------- مدخلات الكتابة والأزرار التفاعلية ---------------- */
-.stTextArea textarea {
-    background-color: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 16px !important;
-    padding: 18px !important;
-    font-family: 'Cairo', sans-serif !important;
-    font-size: 14.5px !important;
-    color: #334155 !important;
-    text-align: right !important;
-    direction: rtl !important;
-}
-
-div.stButton > button {
-    background: #6D28D9 !important;
-    color: white !important;
-    font-family: 'Cairo', sans-serif !important;
-    font-weight: 600 !important;
-    font-size: 14.5px !important;
-    border-radius: 12px !important;
-    border: none !important;
-    padding: 10px 24px !important;
-    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25) !important;
-}
-
-/* ---------------- تهيئة وتنسيق حالة ما قبل التحليل ---------------- */
-.dashed-waiting-box {
-    border: 1px dashed #E2E8F0;
-    border-radius: 16px;
-    padding: 35px 20px;
-    text-align: center !important;
-    background: #FAFAFA;
-}
-
-.waiting-icon {
-    font-size: 34px;
-    color: #6D28D9;
-    background: #F3E8FF;
-    width: 60px;
-    height: 60px;
-    display: inline-flex;
+# عرض الجزء العلوي للمنصة (Hero Section) والبيانات الأكاديمية المعتمدة
+hero_html = (
+    '<div class="hero-white-container">'
+    '    <div class="logo-flex-center">'
+    + svg_logo +
+    '    </div>'
+    '    <h1 class="main-hero-title">LABEEB AI (لبيب)</h1>'
+    '    <div class="main-hero-subtitle">Semantic Analyzer for Arabic
