@@ -4,51 +4,72 @@ from transformers import AutoTokenizer, AutoModel
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 
-# إعدادات الصفحة
+# 1. إعدادات الصفحة
 st.set_page_config(
     page_title="منصة لبيب AI - للطالبة هاجر الزوكي",
     page_icon="🧠",
     layout="centered"
 )
 
-# حقن كود CSS لقلب اتجاه المنصة بالكامل من اليمين إلى اليسار (RTL) وتنسيق الخطوط
+# 2. حقن كود CSS صارم لقلب اتجاه المنصة بالكامل (RTL) وتنسيق كافة العناصر
 st.markdown("""
     <style>
-    /* قلب اتجاه الواجهة بالكامل */
-    html, body, [data-testid="stAppViewContainer"], .stApp {
-        direction: RTL;
-        text-align: right;
+    /* قلب اتجاه الواجهة بالكامل واستدراك الحاويات الرئيسية */
+    html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMain"] {
+        direction: RTL !important;
+        text-align: right !important;
     }
     
-    /* ضبط صناديق الإدخال والمقاييس لتتحاذى لليمين */
-    div[data-testid="stTextArea"] textarea {
-        direction: RTL;
-        text-align: right;
-    }
-    div[data-testid="stMetricValue"] {
-        text-align: right;
-    }
-    div[data-testid="stMetricLabel"] {
-        text-align: right;
+    /* ضبط العنوان وكل النصوص لتتحاذى جهة اليمين تلقائياً */
+    h1, h2, h3, h4, h5, h6, p, span, label {
+        text-align: right !important;
+        direction: RTL !important;
     }
     
-    /* تنسيق الجداول لتظهر باتجاه عربي صحيح */
+    /* إجبار صندوق إدخال النص (المربع والنص الداخلي والمؤشر) على اليمين */
+    .stTextArea textarea {
+        direction: RTL !important;
+        text-align: right !important;
+    }
+    
+    /* محاذاة النص الإرشادي (Placeholder) داخل صندوق النص */
+    .stTextArea textarea::placeholder {
+        text-align: right !important;
+        direction: RTL !important;
+    }
+
+    /* ضبط اتجاه وزر التحليل ليتموضع بشكل متناسق */
+    div.stButton {
+        text-align: right !important;
+    }
+    
+    /* ضبط المقاييس الرقمية (Metrics) وتنبيهات النظام */
+    [data-testid="stMetricValue"], [data-testid="stMetricLabel"], [data-testid="stMetric"] {
+        text-align: right !important;
+        direction: RTL !important;
+    }
+    
+    /* تنسيق الجداول (DataFrame) لتظهر من اليمين إلى اليسار بشكل سليم */
+    .stDataFrame, [data-testid="stDataFrameData"] {
+        direction: RTL !important;
+        text-align: right !important;
+    }
+    
     .stDataFrame table {
-        direction: RTL;
-        text-align: right;
+        direction: RTL !important;
     }
     
-    /* محاذاة التنبيهات ونصوص المعلومات */
+    /* ضبط صناديق التنبيه (الأزرق والأخضر والأصفر) */
     div[data-testid="stAlert"] {
-        direction: RTL;
-        text-align: right;
+        direction: RTL !important;
+        text-align: right !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# تصميم الواجهة العلوية
+# 3. تصميم الواجهة العلوية (محاذاة مركزية أنيقة للترويسة)
 st.markdown("""
-<div style='text-align: center;'>
+<div style='text-align: center; direction: RTL;'>
     <h1 style='color:#7C3AED; margin-bottom: 0;'>🧠 LABEEB AI (لبيب)</h1>
     <h3 style='color:#CBD5E1; margin-top: 5px;'>Arabic Semantic Analyzer</h3>
     <p style='color:#94A3B8; font-size:18px; font-weight: bold;'>“منصة ذكية لتحليل المعنى والسياق في اللغة العربية”</p>
@@ -107,7 +128,7 @@ for word in semantic_dictionary:
                 word
             )
 
-# إدخل المستخدم
+# إدخال المستخدم
 st.subheader("✍️ أدخل الجملة العربية للفحص:")
 user_sentence = st.text_area(
     "",
