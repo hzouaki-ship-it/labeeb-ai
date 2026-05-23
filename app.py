@@ -45,40 +45,6 @@ h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {
 }
 
 /* ---------------- ترويسة الصفحة (Hero Section) المحدثة ---------------- */
-.hero-outer {
-    margin-left: -4rem;
-    margin-right: -4rem;
-    background: linear-gradient(180deg, #EBF0FF 0%, #F4EFFF 60%, #F9FAFB 100%);
-    padding: 50px 40px 60px 40px;
-    text-align: center !important;
-    position: relative;
-    overflow: hidden;
-    border-bottom-left-radius: 50px 20px;
-    border-bottom-right-radius: 50px 20px;
-}
-
-.hero-dots-left {
-    position: absolute;
-    top: 30px;
-    left: 40px;
-    width: 60px;
-    height: 60px;
-    background-image: radial-gradient(#94A3B8 1.5px, transparent 1.5px);
-    background-size: 12px 12px;
-    opacity: 0.4;
-}
-
-.hero-dots-right {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    width: 60px;
-    height: 60px;
-    background-image: radial-gradient(#94A3B8 1.5px, transparent 1.5px);
-    background-size: 12px 12px;
-    opacity: 0.4;
-}
-
 .top-badge {
     display: inline-flex;
     align-items: center;
@@ -88,32 +54,12 @@ h1, h2, h3, h4, h5, h6, p, span, label, table, th, td {
     border-radius: 100px;
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 24px;
+    margin-bottom: 15px;
     box-shadow: 0 2px 6px rgba(99, 102, 241, 0.08);
 }
 
-.hero-logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    margin-bottom: 12px;
-}
-
-.hero-logo-icon {
-    background: #FFFFFF;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
 .hero-title {
-    font-size: 46px !important;
+    font-size: 42px !important;
     font-weight: 800 !important;
     color: #5B21B6 !important;
     margin: 0 !important;
@@ -321,21 +267,36 @@ div.stButton > button {
 </style>
 """, unsafe_allow_html=True)
 
-# 3. عرض ترويسة الواجهة (Hero Section) للمنصة
+# 3. عرض ترويسة الواجهة (Hero Section) المحدثة بالشعار الحر الجديد بدون إطار
 st.markdown("""
-<div class="hero-outer">
-    <div class="hero-dots-left"></div>
-    <div class="hero-dots-right"></div>
+<div style="text-align: center; padding: 30px 0 15px 0;">
     <div class="top-badge">✦ منصة ذكية عربية</div>
-    <div class="hero-logo-container">
-        <div class="hero-logo-icon">🧠</div>
-        <h1 class="hero-title">LABEEB AI (لبيب)</h1>
-    </div>
+    <br>
+    <svg width="140" height="140" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="labeebGrad" x1="40" y1="40" x2="160" y2="160" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4C1D95"/>
+                <stop offset="50%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#2563EB"/>
+            </linearGradient>
+        </defs>
+        <path d="M115 70L150 45M115 70L155 95M150 45L185 70M155 95L185 70M115 70L135 120M155 95L135 120M150 45L130 25" stroke="url(#labeebGrad)" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+        <circle cx="115" cy="70" r="5.5" fill="#4C1D95" />
+        <circle cx="150" cy="45" r="5.5" fill="#7C3AED" />
+        <circle cx="155" cy="95" r="5.5" fill="#7C3AED" />
+        <circle cx="185" cy="70" r="6.5" fill="#2563EB" />
+        <circle cx="135" cy="120" r="4.5" fill="#6D28D9" />
+        <circle cx="130" cy="25" r="4.5" fill="#4C1D95" />
+        <path d="M115 30V125C115 149.85 94.85 170 70 170C45.15 170 25 149.85 25 125V105" stroke="url(#labeebGrad)" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M155 15C155 21 158 24 164 24C158 24 155 27 155 33C155 27 152 24 146 24C152 24 155 21 155 15Z" fill="url(#labeebGrad)"/>
+    </svg>
+    
+    <h1 class="hero-title" style="margin-top: 15px !important;">LABEEB AI (لبيب)</h1>
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
     <p class="hero-description">
         منصة تعتمد على الذكاء الاصطناعي لفهم السياق اللغوي واكتشاف المعنى الصحيح للكلمات من خلال تحليل دلالي عميق ودقيق.
     </p>
-    <div class="author-badge">تصميم وتطوير: هاجر الزواكي © 2026</div>
+    <div class="author-badge">تصميم وتطوير الباحثة: هاجر الزواكي © 2026</div>
 </div>
 """, unsafe_allow_html=True)
 
