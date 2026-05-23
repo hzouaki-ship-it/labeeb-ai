@@ -6,80 +6,95 @@ import pandas as pd
 
 # 1. إعدادات الصفحة
 st.set_page_config(
-    page_title="منصة لبيب AI - للطالبة هاجر الزوكي",
+    page_title="منصة لبيب AI - هاجر الزوكي",
     page_icon="🧠",
     layout="centered"
 )
 
-# 2. حقن كود CSS صارم لقلب اتجاه المنصة بالكامل (RTL) وتنسيق كافة العناصر
+# 2. حقن CSS متطور (للثيم الفاتح، الخط العربي Tajawal، والمحاذاة الشاملة)
 st.markdown("""
     <style>
-    /* قلب اتجاه الواجهة بالكامل واستدراك الحاويات الرئيسية */
-    html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMain"] {
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+
+    /* تطبيق الخط والاتجاه والخلفية الفاتحة على كامل التطبيق */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        background-color: #F8FAFC !important; /* لون خلفية فاتح جداً ومريح */
         direction: RTL !important;
         text-align: right !important;
-    }
-    
-    /* ضبط العنوان وكل النصوص لتتحاذى جهة اليمين تلقائياً */
-    h1, h2, h3, h4, h5, h6, p, span, label {
-        text-align: right !important;
-        direction: RTL !important;
-    }
-    
-    /* إجبار صندوق إدخال النص (المربع والنص الداخلي والمؤشر) على اليمين */
-    .stTextArea textarea {
-        direction: RTL !important;
-        text-align: right !important;
-    }
-    
-    /* محاذاة النص الإرشادي (Placeholder) داخل صندوق النص */
-    .stTextArea textarea::placeholder {
-        text-align: right !important;
-        direction: RTL !important;
+        font-family: 'Tajawal', sans-serif !important;
     }
 
-    /* ضبط اتجاه وزر التحليل ليتموضع بشكل متناسق */
-    div.stButton {
+    /* تنسيق كافة العناوين والنصوص */
+    h1, h2, h3, h4, p, span, label, .stMarkdown {
+        font-family: 'Tajawal', sans-serif !important;
+        color: #1E293B !important; /* لون نص داكن مائل للزرقة */
         text-align: right !important;
     }
-    
-    /* ضبط المقاييس الرقمية (Metrics) وتنبيهات النظام */
-    [data-testid="stMetricValue"], [data-testid="stMetricLabel"], [data-testid="stMetric"] {
-        text-align: right !important;
-        direction: RTL !important;
-    }
-    
-    /* تنسيق الجداول (DataFrame) لتظهر من اليمين إلى اليسار بشكل سليم */
-    .stDataFrame, [data-testid="stDataFrameData"] {
-        direction: RTL !important;
-        text-align: right !important;
-    }
-    
-    .stDataFrame table {
-        direction: RTL !important;
-    }
-    
-    /* ضبط صناديق التنبيه (الأزرق والأخضر والأصفر) */
-    div[data-testid="stAlert"] {
+
+    /* تنسيق صندوق إدخال النص */
+    .stTextArea textarea {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        font-size: 16px !important;
+        color: #0F172A !important;
         direction: RTL !important;
         text-align: right !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* تنسيق زر التحليل */
+    div.stButton > button {
+        background-color: #7C3AED !important; /* اللون البنفسجي الخاص بلبيب */
+        color: white !important;
+        font-family: 'Tajawal', sans-serif !important;
+        font-weight: bold !important;
+        border-radius: 10px !important;
+        border: none !important;
+        padding: 0.5rem 2rem !important;
+        width: 100% !important;
+        transition: 0.3s !important;
+    }
+    div.stButton > button:hover {
+        background-color: #6D28D9 !important;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    /* تنسيق الجداول لتناسب الثيم الفاتح */
+    .stDataFrame {
+        background-color: white !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* تنسيق صندوق التعريف الشخصي في الأسفل */
+    .bio-box {
+        background-color: #F1F5F9;
+        border-right: 5px solid #7C3AED;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 40px;
+        font-size: 15px;
+        line-height: 1.8;
+        color: #334155;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. تصميم الواجهة العلوية (محاذاة مركزية أنيقة للترويسة)
+# 3. ترويسة المنصة (Header)
 st.markdown("""
 <div style='text-align: center; direction: RTL;'>
-    <h1 style='color:#7C3AED; margin-bottom: 0;'>🧠 LABEEB AI (لبيب)</h1>
-    <h3 style='color:#CBD5E1; margin-top: 5px;'>Arabic Semantic Analyzer</h3>
-    <p style='color:#94A3B8; font-size:18px; font-weight: bold;'>“منصة ذكية لتحليل المعنى والسياق في اللغة العربية”</p>
-    <p style='color:#7C3AED; font-size:16px; font-weight: bold; margin-top: 15px;'>صُممت هذه المنصة بواسطة الطالبة: هاجر الزوكي</p>
+    <h1 style='color:#7C3AED !important; font-size: 45px; margin-bottom: 0;'>🧠 LABEEB AI (لبيب)</h1>
+    <h3 style='color:#64748B !important; margin-top: 5px; font-weight: 500;'>المحلل الدلالي الرقمي العربي</h3>
+    <p style='color:#7C3AED !important; font-size: 18px; font-weight: 500;'>“منصة ذكية مدعومة بالذكاء الاصطناعي لفهم سياق اللغة العربية”</p>
 </div>
 """, unsafe_allow_html=True)
 
 st.write("---")
 
-# تحميل AraBERT
+# 4. محرك الذكاء الاصطناعي (AraBERT)
 @st.cache_resource
 def load_model():
     tokenizer = AutoTokenizer.from_pretrained("aubmindlab/bert-base-arabertv02")
@@ -88,14 +103,12 @@ def load_model():
 
 tokenizer, model = load_model()
 
-# استخراج المتجه الدلالي
 def get_word_vector(sentence, target_word):
     inputs = tokenizer(sentence, return_tensors="pt")
     with torch.no_grad():
         outputs = model(**inputs)
     embeddings = outputs.last_hidden_state[0]
     tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
-    
     for idx, token in enumerate(tokens):
         if target_word in token:
             return embeddings[idx].numpy().reshape(1, -1)
@@ -119,24 +132,18 @@ semantic_dictionary = {
     }
 }
 
-# إنشاء المتجهات المرجعية
+# حساب المتجهات المرجعية
 for word in semantic_dictionary:
     for meaning in semantic_dictionary[word]:
         if "vector" not in semantic_dictionary[word][meaning]:
             semantic_dictionary[word][meaning]["vector"] = get_word_vector(
-                semantic_dictionary[word][meaning]["النص"],
-                word
+                semantic_dictionary[word][meaning]["النص"], word
             )
 
-# إدخال المستخدم
-st.subheader("✍️ أدخل الجملة العربية للفحص:")
-user_sentence = st.text_area(
-    "",
-    placeholder="مثال: صليت المغرب في المسجد، أو اجتمع رأس الشركة بالموظفين...",
-    height=100
-)
+# 5. منطقة التفاعل
+st.markdown("<h4 style='margin-bottom:10px;'>✍️ أدخل الجملة المراد تحليلها:</h4>", unsafe_allow_html=True)
+user_sentence = st.text_area("", placeholder="مثال: ذهبت لصلاة المغرب... أو: شربت من عين الماء...", height=100)
 
-# زر التحليل
 if st.button("⚡ إطلاق خوارزمية لبيب للتحليل"):
     if user_sentence:
         detected_word = None
@@ -144,60 +151,26 @@ if st.button("⚡ إطلاق خوارزمية لبيب للتحليل"):
             if word in user_sentence:
                 detected_word = word
                 break
-
+        
         if detected_word:
-            st.info(f"🔍 **ذكاء لبيب:** تم اكتشاف الكلمة متعددة المعنى تلقائياً: **{detected_word}**")
+            st.info(f"✅ **تم اكتشاف الكلمة:** ({detected_word})")
             user_vector = get_word_vector(user_sentence, detected_word)
-            similarities = []
-
+            
             if user_vector is not None:
+                similarities = []
                 for meaning in semantic_dictionary[detected_word]:
-                    reference_vector = semantic_dictionary[detected_word][meaning]["vector"]
-                    if reference_vector is not None:
-                        similarity = cosine_similarity(user_vector, reference_vector)[0][0]
+                    ref_vector = semantic_dictionary[detected_word][meaning]["vector"]
+                    if ref_vector is not None:
+                        sim = cosine_similarity(user_vector, ref_vector)[0][0]
                         similarities.append({
                             "المعنى الدلالي": semantic_dictionary[detected_word][meaning]["المعنى"],
-                            "نسبة التشابه السياقي": round(float(similarity), 4)
+                            "نسبة القوة السياقية": f"{round(float(sim)*100, 2)}%"
                         })
-
-                if similarities:
-                    df = pd.DataFrame(similarities)
-                    st.write("### 📊 نتائج التحليل الدلالي الرقمي:")
-                    st.dataframe(df, use_container_width=True)
-
-                    best_meaning = max(similarities, key=lambda x: x["نسبة التشابه السياقي"])
-                    st.write("---")
-                    st.write("### 🎯 القرار الدلالي النهائي لمنصة لبيب:")
-                    st.success(f"المعنى المقصود والمكتشف في النص هو: **{best_meaning['المعنى الدلالي']}**")
-
-                    confidence = best_meaning["نسبة التشابه السياقي"] * 100
-                    st.metric(label="درجة ثقة النموذج في القرار", value=f"{confidence:.2f}%")
-
-                    # التفسير التحليلي
-                    st.write("### 🧠 التفسير التحليلي للسياق:")
-                    actual_meaning = best_meaning["المعنى الدلالي"]
-                    if actual_meaning == "نبع ماء":
-                        st.write("💡 تم اختيار هذا المعنى بسبب ارتباط كلمات النص بسياق الطبيعة أو السوائل والتدفق.")
-                    elif actual_meaning == "عضو البصر":
-                        st.write("💡 تم اختيار هذا المعنى لاعتماد النص على سياق تشريحي مرتبط بالرؤية أو البكاء.")
-                    elif actual_meaning == "جاسوس":
-                        st.write("💡 تم اختيار هذا المعنى نظراً لورود سياق أمني مرتبط بالخفاء أو الأعداء.")
-                    elif actual_meaning == "صلاة المغرب":
-                        st.write("💡 تم اختيار هذا المعنى لوجود مؤشرات سياقية دينية مرتبطة بالعبادات.")
-                    elif actual_meaning == "دولة المغرب":
-                        st.write("💡 تم اختيار هذا المعنى لبروز سياق جغرافي مكاني مرتبط بالسفر والدول.")
-                    elif actual_meaning == "عضو من الجسم":
-                        st.write("💡 تم اختيار هذا المعنى لارتباط العبارة بسياق جسدي بيولوجي.")
-                    elif actual_meaning == "قائد":
-                        st.write("💡 تم اختيار هذا المعنى لوجود سياق مهني وإداري يعبر عن المسؤولية.")
-                    elif actual_meaning == "قمة":
-                        st.write("💡 تم اختيار هذا المعنى لبروز سياق فيزيائي مرتبط بالارتفاعات والتضاريس.")
-            else:
-                st.error("خطأ فني: فشل النموذج في استخراج متجهات النص الحالية.")
-        else:
-            st.warning("تنبيه: الجملة المكتوبة لا تحتوي على أي من كلمات القاموس المدعومة حالياً.")
-    else:
-        st.warning("فضلاً، يرجى إدخال جملة أولاً ليتمكن النظام من معالجتها.")
-
-st.write("---")
-st.markdown("<p style='text-align:center; color:gray; font-size: 13px;'>تم التطوير والبرمجة بواسطة الطالبة: هاجر الزوكي © 2026 | LABEEB AI</p>", unsafe_allow_html=True)
+                
+                # عرض النتائج
+                st.write("### 📊 نتائج التحليل الدلالي:")
+                st.table(pd.DataFrame(similarities))
+                
+                # القرار النهائي
+                best_meaning = max(similarities, key=lambda x: x["نسبة القوة السياقية"])
+                st.success(f"
