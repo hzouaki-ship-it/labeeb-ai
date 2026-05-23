@@ -50,18 +50,32 @@ header {visibility: hidden;}
     margin-bottom: 35px;
 }
 
-.hero-logo-glow {
-    width: 90px;
-    height: 90px;
-    background: linear-gradient(135deg, #4F46E5, #6D28D9);
-    border-radius: 50%;
+/* حاوية اللوغو المطور الإبداعي */
+.hero-logo-wrapper {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 25px auto;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px auto;
-    box-shadow: 0 0 25px rgba(109, 40, 217, 0.35);
-    font-size: 38px;
-    color: white;
+}
+
+.hero-logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    box-shadow: 0 0 35px rgba(109, 40, 217, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.hero-logo-image:hover {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 0 50px rgba(109, 40, 217, 0.5);
 }
 
 .hero-title {
@@ -283,11 +297,13 @@ semantic_db = {
 }
 
 # =========================================
-# 3. عرض الهيكل الخارجي (HERO)
+# 3. عرض الهيكل الخارجي (HERO) مع اللوغو المطور
 # =========================================
 st.markdown("""
 <div class="hero-container">
-    <div class="hero-logo-glow">🧠</div>
+    <div class="hero-logo-wrapper">
+        <img src="http://googleusercontent.com/image_generation_content/0" class="hero-logo-image" alt="LABEEB AI Logo">
+    </div>
     <div class="hero-title">LABEEB AI (لبيب)</div>
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
     <div class="hero-desc">منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.</div>
@@ -389,45 +405,4 @@ col_w1, col_w2, col_w3 = st.columns(3)
 with col_w1:
     st.markdown("""
     <div class="step-card">
-        <div class="step-icon">🔎</div>
-        <div class="step-title">تحليل السياق</div>
-        <div class="step-desc">يقوم النظام بفحص البنية التركيبية المحيطة باللفظ المشترك، وعزل الكلمات المحورية المحيطة به بدقة وعناية.</div>
-    </div>
-    """, unsafe_allow_html=True)
-with col_w2:
-    st.markdown("""
-    <div class="step-card">
-        <div class="step-icon">✨</div>
-        <div class="step-title">اكتشاف المعنى</div>
-        <div class="step-desc">تُطابق البيئة السياقية الحالية مع الحقول والمؤشرات المعجمية المخزنة لتحديد الإحالة المعنوية الأنسب للفظ.</div>
-    </div>
-    """, unsafe_allow_html=True)
-with col_w3:
-    st.markdown("""
-    <div class="step-card">
-        <div class="step-icon">📊</div>
-        <div class="step-title">قياس التشابه الدلالي</div>
-        <div class="step-desc">يتم حساب أوزان ومعاملات المطابقة الإحصائية لإنتاج جدول دقيق يرتب الاحتمالات ترتيباً تصاعدياً بحسب النسبة.</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# =========================================
-# 7. بطاقة الباحثة (RESEARCHER CARD)
-# =========================================
-st.markdown("""
-<div class="researcher-card">
-    <div class="researcher-flex">
-        <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg" class="researcher-img" alt="Hajar Zouaki">
-        <div>
-            <div class="researcher-name">هاجر الزواكي</div>
-            <div class="researcher-title">طالبة ماستر في اللسانيات الرقمية والعربية</div>
-            <div class="researcher-bio">مهتمة بالذكاء الاصطناعي ومعالجة اللغة العربية وبناء الأنظمة الدلالية الذكية وأسعى إلى تطوير حلول رقمية حديثة لفهم اللغة العربية وتحليل السياق والمعنى.</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# =========================================
-# 8. التذييل (FOOTER)
-# =========================================
-st.markdown('<div class="footer-text">LABEEB AI © 2026 — جميع الحقوق محفوظة — هاجر الزواكي</div>', unsafe_allow_html=True)
+        <div
