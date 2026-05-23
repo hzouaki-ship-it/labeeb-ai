@@ -11,23 +11,49 @@ st.set_page_config(
     layout="centered"
 )
 
-# تصميم الواجهة
+# حقن كود CSS لقلب اتجاه المنصة بالكامل من اليمين إلى اليسار (RTL) وتنسيق الخطوط
 st.markdown("""
-<h1 style='text-align:center; color:#7C3AED;'>
-🧠 LABEEB AI (لبيب)
-</h1>
+    <style>
+    /* قلب اتجاه الواجهة بالكامل */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        direction: RTL;
+        text-align: right;
+    }
+    
+    /* ضبط صناديق الإدخال والمقاييس لتتحاذى لليمين */
+    div[data-testid="stTextArea"] textarea {
+        direction: RTL;
+        text-align: right;
+    }
+    div[data-testid="stMetricValue"] {
+        text-align: right;
+    }
+    div[data-testid="stMetricLabel"] {
+        text-align: right;
+    }
+    
+    /* تنسيق الجداول لتظهر باتجاه عربي صحيح */
+    .stDataFrame table {
+        direction: RTL;
+        text-align: right;
+    }
+    
+    /* محاذاة التنبيهات ونصوص المعلومات */
+    div[data-testid="stAlert"] {
+        direction: RTL;
+        text-align: right;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-<h3 style='text-align:center; color:#CBD5E1;'>
-Arabic Semantic Analyzer
-</h3>
-
-<p style='text-align:center; color:#94A3B8; font-size:18px; font-weight: bold;'>
-“منصة ذكية لتحليل المعنى والسياق في اللغة العربية”
-</p>
-
-<p style='text-align:center; color:#7C3AED; font-size:16px; font-weight: bold; margin-top: 15px;'>
-صُممت هذه المنصة بواسطة الطالبة: هاجر الزوكي
-</p>
+# تصميم الواجهة العلوية
+st.markdown("""
+<div style='text-align: center;'>
+    <h1 style='color:#7C3AED; margin-bottom: 0;'>🧠 LABEEB AI (لبيب)</h1>
+    <h3 style='color:#CBD5E1; margin-top: 5px;'>Arabic Semantic Analyzer</h3>
+    <p style='color:#94A3B8; font-size:18px; font-weight: bold;'>“منصة ذكية لتحليل المعنى والسياق في اللغة العربية”</p>
+    <p style='color:#7C3AED; font-size:16px; font-weight: bold; margin-top: 15px;'>صُممت هذه المنصة بواسطة الطالبة: هاجر الزوكي</p>
+</div>
 """, unsafe_allow_html=True)
 
 st.write("---")
@@ -81,11 +107,12 @@ for word in semantic_dictionary:
                 word
             )
 
-# إدخال المستخدم
+# إدخل المستخدم
 st.subheader("✍️ أدخل الجملة العربية للفحص:")
 user_sentence = st.text_area(
     "",
-    placeholder="مثال: صليت المغرب في المسجد، أو اجتمع رأس الشركة بالموظفين..."
+    placeholder="مثال: صليت المغرب في المسجد، أو اجتمع رأس الشركة بالموظفين...",
+    height=100
 )
 
 # زر التحليل
@@ -149,7 +176,7 @@ if st.button("⚡ إطلاق خوارزمية لبيب للتحليل"):
         else:
             st.warning("تنبيه: الجملة المكتوبة لا تحتوي على أي من كلمات القاموس المدعومة حالياً.")
     else:
-        st.warning("فضلاً, يرجى إدخال جملة أولاً ليتمكن النظام من معالجتها.")
+        st.warning("فضلاً، يرجى إدخال جملة أولاً ليتمكن النظام من معالجتها.")
 
 st.write("---")
 st.markdown("<p style='text-align:center; color:gray; font-size: 13px;'>تم التطوير والبرمجة بواسطة الطالبة: هاجر الزوكي © 2026 | LABEEB AI</p>", unsafe_allow_html=True)
