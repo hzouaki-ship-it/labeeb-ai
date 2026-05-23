@@ -62,7 +62,7 @@ header {visibility:hidden;}
 
     border-radius:40px;
 
-    padding:55px 70px;
+    padding:60px 70px;
 
     margin-bottom:35px;
 
@@ -78,6 +78,16 @@ header {visibility:hidden;}
     0 10px 35px rgba(139,92,246,0.08);
 
     backdrop-filter:blur(18px);
+
+    transition:0.35s ease;
+}
+
+.hero:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 35px rgba(139,92,246,0.12);
 }
 
 /* خلفية متوهجة */
@@ -118,126 +128,7 @@ header {visibility:hidden;}
     right:-150px;
 }
 
-/* الهيدر */
-
-.hero-content{
-
-    position:relative;
-
-    z-index:2;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:60px;
-
-    flex-wrap:wrap;
-}
-
-/* اللوغو */
-
-.hero-logo{
-
-    width:170px;
-    height:170px;
-
-    border-radius:50%;
-
-    background:white;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    box-shadow:
-    0 0 35px rgba(139,92,246,0.20);
-
-    overflow:hidden;
-}
-
-.hero-logo img{
-
-    width:120px;
-}
-
-/* النص */
-
-.hero-text{
-
-    text-align:center;
-}
-
-.hero-title{
-
-    font-size:88px;
-
-    font-weight:800;
-
-    line-height:1.1;
-
-    margin-bottom:8px;
-
-    background:
-    linear-gradient(
-    90deg,
-    #4F46E5,
-    #9333EA);
-
-    -webkit-background-clip:text;
-
-    -webkit-text-fill-color:transparent;
-}
-
-.hero-subtitle{
-
-    font-size:38px;
-
-    font-weight:700;
-
-    color:#374151;
-
-    margin-bottom:16px;
-}
-
-.hero-description{
-
-    font-size:21px;
-
-    color:#64748B;
-
-    line-height:2;
-}
-
-.author-badge{
-
-    margin-top:22px;
-
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    background:white;
-
-    padding:12px 24px;
-
-    border-radius:999px;
-
-    font-size:18px;
-
-    color:#4B5563;
-
-    box-shadow:
-    0 4px 14px rgba(0,0,0,0.05);
-}
-
-/* الزخارف */
+/* زخارف */
 
 .top-pill{
 
@@ -286,7 +177,132 @@ header {visibility:hidden;}
     border-radius:50%;
 }
 
-/* ================= INPUT CARD ================= */
+/* محتوى الهيدر */
+
+.hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:90px;
+
+    flex-wrap:wrap;
+}
+
+/* اللوغو */
+
+.hero-logo{
+
+    width:180px;
+    height:180px;
+
+    border-radius:50%;
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    box-shadow:
+    0 0 35px rgba(139,92,246,0.20);
+
+    overflow:hidden;
+}
+
+.hero-logo img{
+
+    width:125px;
+}
+
+/* النص */
+
+.hero-text{
+
+    text-align:center;
+}
+
+.hero-title{
+
+    font-size:78px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    line-height:1.1;
+
+    margin-bottom:14px;
+
+    background:
+    linear-gradient(
+    90deg,
+    #4F46E5,
+    #9333EA);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+}
+
+.hero-subtitle{
+
+    font-size:38px;
+
+    font-weight:700;
+
+    color:#374151;
+
+    margin-bottom:18px;
+}
+
+.hero-description{
+
+    font-size:24px;
+
+    color:#64748B;
+
+    line-height:2.2;
+
+    max-width:900px;
+
+    margin:auto;
+}
+
+.author-badge{
+
+    margin-top:24px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:white;
+
+    padding:12px 24px;
+
+    border-radius:999px;
+
+    font-size:18px;
+
+    color:#4B5563;
+
+    box-shadow:
+    0 4px 14px rgba(0,0,0,0.05);
+}
+
+/* ================= CARD ================= */
 
 .glass-card{
 
@@ -294,7 +310,7 @@ header {visibility:hidden;}
 
     border-radius:28px;
 
-    padding:35px;
+    padding:28px;
 
     box-shadow:
     0 6px 22px rgba(0,0,0,0.04);
@@ -302,7 +318,19 @@ header {visibility:hidden;}
     border:1px solid #ECEBFF;
 
     margin-bottom:25px;
+
+    transition:0.35s ease;
 }
+
+.glass-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 30px rgba(139,92,246,0.10);
+}
+
+/* العنوان */
 
 .section-title{
 
@@ -321,7 +349,7 @@ header {visibility:hidden;}
 
 .stTextArea textarea{
 
-    border-radius:18px !important;
+    border-radius:20px !important;
 
     border:2px solid #C4B5FD !important;
 
@@ -331,7 +359,9 @@ header {visibility:hidden;}
 
     line-height:2 !important;
 
-    background:#FAFAFF !important;
+    background:#FCFCFF !important;
+
+    min-height:160px !important;
 }
 
 /* الزر */
@@ -356,7 +386,7 @@ header {visibility:hidden;}
 
     font-weight:700;
 
-    width:270px;
+    width:280px;
 
     transition:0.3s ease;
 
@@ -369,7 +399,7 @@ header {visibility:hidden;}
     transform:translateY(-2px);
 }
 
-/* نتيجة التحليل */
+/* ================= RESULT ================= */
 
 .result-card{
 
@@ -385,6 +415,16 @@ header {visibility:hidden;}
     0 6px 20px rgba(0,0,0,0.04);
 
     margin-bottom:30px;
+
+    transition:0.35s ease;
+}
+
+.result-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 30px rgba(139,92,246,0.10);
 }
 
 .result-title{
@@ -398,13 +438,13 @@ header {visibility:hidden;}
     margin-bottom:22px;
 }
 
-/* خطوات لبيب */
+/* ================= STEPS ================= */
 
 .steps-title{
 
     text-align:center;
 
-    font-size:40px;
+    font-size:42px;
 
     font-weight:800;
 
@@ -432,14 +472,14 @@ header {visibility:hidden;}
 
     gap:24px;
 
-    margin-bottom:35px;
+    margin-bottom:40px;
 }
 
 .step-card{
 
     background:white;
 
-    padding:30px;
+    padding:32px;
 
     border-radius:24px;
 
@@ -449,6 +489,16 @@ header {visibility:hidden;}
     0 6px 20px rgba(0,0,0,0.04);
 
     text-align:center;
+
+    transition:0.35s ease;
+}
+
+.step-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 30px rgba(139,92,246,0.10);
 }
 
 .step-icon{
@@ -478,7 +528,7 @@ header {visibility:hidden;}
     font-size:17px;
 }
 
-/* بطاقة الباحثة */
+/* ================= BIO ================= */
 
 .bio-card{
 
@@ -502,6 +552,18 @@ header {visibility:hidden;}
     0 6px 20px rgba(0,0,0,0.04);
 
     margin-top:40px;
+
+    text-align:right;
+
+    transition:0.35s ease;
+}
+
+.bio-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 30px rgba(139,92,246,0.10);
 }
 
 .author-image{
@@ -619,9 +681,11 @@ LABEEB AI (لبيب)
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
 
 st.markdown("""
+
 <div class="section-title">
 ✍️ اكتب النص العربي الذي ترغب في تحليل معناه وسياقه
 </div>
+
 """, unsafe_allow_html=True)
 
 text = st.text_area(
