@@ -50,24 +50,27 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
 /* HERO */
 
 .hero{
+
     position: relative;
     overflow: hidden;
 
-    background: rgba(255,255,255,0.58);
+    background: rgba(255,255,255,0.62);
 
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.35);
 
     backdrop-filter: blur(18px);
 
-    border-radius: 32px;
+    border-radius: 38px;
 
-    padding: 50px;
+    padding: 70px 60px;
 
-    margin-bottom: 35px;
+    margin-bottom: 45px;
 
-    box-shadow: 0 10px 40px rgba(139,92,246,0.10);
+    box-shadow:
+    0 10px 40px rgba(139,92,246,0.10),
+    0 0 120px rgba(139,92,246,0.08);
+
 }
-
 .hero::before{
     content:"";
     position:absolute;
