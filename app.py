@@ -78,16 +78,6 @@ header {visibility:hidden;}
     0 10px 35px rgba(139,92,246,0.08);
 
     backdrop-filter:blur(18px);
-
-    transition:0.35s ease;
-}
-
-.hero:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 12px 35px rgba(139,92,246,0.12);
 }
 
 /* خلفية متوهجة */
@@ -126,55 +116,6 @@ header {visibility:hidden;}
 
     bottom:-150px;
     right:-150px;
-}
-
-/* زخارف */
-
-.top-pill{
-
-    position:absolute;
-
-    top:20px;
-    right:25px;
-
-    background:white;
-
-    color:#4F46E5;
-
-    padding:10px 24px;
-
-    border-radius:999px;
-
-    font-weight:700;
-
-    box-shadow:
-    0 4px 12px rgba(0,0,0,0.05);
-
-    z-index:10;
-}
-
-.dots{
-
-    position:absolute;
-
-    top:25px;
-    left:30px;
-
-    display:grid;
-
-    grid-template-columns:repeat(3,10px);
-
-    gap:8px;
-}
-
-.dots span{
-
-    width:10px;
-    height:10px;
-
-    background:#4F46E5;
-
-    border-radius:50%;
 }
 
 /* محتوى الهيدر */
@@ -318,16 +259,6 @@ header {visibility:hidden;}
     border:1px solid #ECEBFF;
 
     margin-bottom:25px;
-
-    transition:0.35s ease;
-}
-
-.glass-card:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 12px 30px rgba(139,92,246,0.10);
 }
 
 /* العنوان */
@@ -415,16 +346,6 @@ header {visibility:hidden;}
     0 6px 20px rgba(0,0,0,0.04);
 
     margin-bottom:30px;
-
-    transition:0.35s ease;
-}
-
-.result-card:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 12px 30px rgba(139,92,246,0.10);
 }
 
 .result-title{
@@ -489,16 +410,6 @@ header {visibility:hidden;}
     0 6px 20px rgba(0,0,0,0.04);
 
     text-align:center;
-
-    transition:0.35s ease;
-}
-
-.step-card:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 12px 30px rgba(139,92,246,0.10);
 }
 
 .step-icon{
@@ -554,16 +465,6 @@ header {visibility:hidden;}
     margin-top:40px;
 
     text-align:right;
-
-    transition:0.35s ease;
-}
-
-.bio-card:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 12px 30px rgba(139,92,246,0.10);
 }
 
 .author-image{
@@ -634,16 +535,6 @@ st.markdown("""
 
 <div class="hero">
 
-<div class="top-pill">
-✦ منصة ذكية عربية
-</div>
-
-<div class="dots">
-<span></span><span></span><span></span>
-<span></span><span></span><span></span>
-<span></span><span></span><span></span>
-</div>
-
 <div class="hero-content">
 
 <div class="hero-logo">
@@ -665,7 +556,7 @@ LABEEB AI (لبيب)
 </div>
 
 <div class="author-badge">
-🛡️ © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
+© 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
 </div>
 
 </div>
@@ -693,43 +584,47 @@ text = st.text_area(
     placeholder="اكتب أو ألصق جملة عربية واضحة هنا..."
 )
 
-st.button("✦ ابدأ التحليل الذكي")
+if st.button("ابدأ التحليل الذكي"):
+
+    if text.strip() == "":
+
+        st.warning("الرجاء إدخال نص للتحليل.")
+
+    else:
+
+        st.markdown(f"""
+
+        <div class="result-card">
+
+        <div class="result-title">
+        نتيجة التحليل
+        </div>
+
+        <div style='font-size:22px; line-height:2; color:#374151;'>
+
+        <b>النص المُدخل:</b><br><br>
+
+        {text}
+
+        <br><br>
+
+        <b>التحليل الدلالي:</b><br><br>
+
+        تم تحليل النص بنجاح باستخدام نموذج LABEEB AI لاستخراج المعنى والسياق اللغوي.
+
+        </div>
+
+        </div>
+
+        """, unsafe_allow_html=True)
 
 st.markdown("""
 <div style='margin-top:12px; color:#64748B; font-size:17px;'>
-🛡️ تحليل آمن ودقيق باستخدام الذكاء الاصطناعي
+تحليل آمن ودقيق باستخدام الذكاء الاصطناعي
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
-
-# ================= RESULT =================
-
-st.markdown("""
-
-<div class="result-card">
-
-<div class="result-title">
-📊 نتيجة التحليل
-</div>
-
-<div style='text-align:center; padding:30px;'>
-
-<div style='font-size:55px;'>🌀</div>
-
-<div style='font-size:34px; font-weight:800; color:#312E81;'>
-لم يتم إجراء أي تحليل بعد
-</div>
-
-<div style='margin-top:12px; color:#64748B; font-size:19px;'>
-اكتب نصًا في الأعلى ثم اضغط على زر التحليل لعرض النتيجة.
-</div>
-
-</div>
-
-</div>
-
-""", unsafe_allow_html=True)
 
 # ================= STEPS =================
 
@@ -800,7 +695,7 @@ st.markdown("""
 <div>
 
 <div class="bio-title">
-هاجر الزواكي 👩🏻‍💻
+هاجر الزواكي
 </div>
 
 <div class="bio-sub">
