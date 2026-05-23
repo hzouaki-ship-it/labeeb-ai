@@ -251,7 +251,88 @@ header {visibility: hidden;}
     color: #475569;
     line-height: 1.8;
 }
+/* =========================================
+LABEEB CREATIVE LOGO
+========================================= */
 
+.labeeb-orb{
+
+    position:relative;
+
+    width:120px;
+
+    height:120px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+}
+
+.orb-core{
+
+    width:85px;
+
+    height:85px;
+
+    border-radius:50%;
+
+    background:
+    linear-gradient(
+    135deg,
+    #6D28D9,
+    #4F46E5);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-size:42px;
+
+    font-weight:800;
+
+    box-shadow:
+    0 0 35px rgba(109,40,217,0.35);
+
+    position:relative;
+
+    z-index:2;
+
+    backdrop-filter:blur(12px);
+}
+
+.orb-ring{
+
+    position:absolute;
+
+    width:115px;
+
+    height:115px;
+
+    border-radius:50%;
+
+    border:2px dashed rgba(109,40,217,0.28);
+
+    animation:spinOrb 16s linear infinite;
+}
+
+@keyframes spinOrb{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
 .footer-text {
     text-align: center;
     color: #94A3B8;
@@ -286,15 +367,39 @@ semantic_db = {
 # 3. عرض الهيكل الخارجي (HERO)
 # =========================================
 st.markdown("""
+
 <div class="hero-container">
-   <div class="hero-logo-wrapper">
-    <img class="hero-logo-image"
-src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png"</div>
-    <div class="hero-logo-glow"></div>
-    <div class="hero-title">LABEEB AI (لبيب)</div>
-    <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
-    <div class="hero-desc">منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.</div>
-    <div class="badge-student">© 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي</div>
+
+    <div class="hero-logo-wrapper">
+
+        <div class="labeeb-orb">
+
+            <div class="orb-core">ل</div>
+
+            <div class="orb-ring"></div>
+
+        </div>
+
+    </div>
+
+    <div class="hero-title">
+        LABEEB AI (لبيب)
+    </div>
+
+    <div class="hero-subtitle">
+        المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية
+    </div>
+
+    <div class="hero-desc">
+        منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.
+    </div>
+
+    <div class="badge-student">
+        © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
+
+</div>
+
+""", unsafe_allow_html=True)
 </div>
 """, unsafe_allow_html=True)
 
