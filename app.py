@@ -8,18 +8,17 @@ import time
 st.set_page_config(
     page_title="LABEEB AI - لبيب",
     page_icon="🧠",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
 # =========================================
-# واجهة التصميم الحديثة (Modern AI SaaS UI)
+# واجهة التصميم الحديثة الاحترافية (Modern AI SaaS UI)
 # =========================================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
 
-/* تصفير الإعدادات الافتراضية وفرض خط القاهرة والاتجاه */
+/* فرض خط القاهرة والاتجاه */
 html, body, [class*="css"] {
     font-family: 'Cairo', sans-serif;
     direction: rtl;
@@ -29,8 +28,6 @@ html, body, [class*="css"] {
 /* خلفية المنصة الفاتحة مع التموجات البنفسجية الناعمة */
 .stApp {
     background: linear-gradient(135deg, #F8FAFC 0%, #F5F3FF 50%, #EFF6FF 100%);
-    position: relative;
-    overflow-x: hidden;
 }
 
 /* إخفاء عناصر سترمليت الافتراضية لتبدو كمنصة مستقلة */
@@ -40,8 +37,8 @@ header {visibility: hidden;}
 
 /* ضبط هوامش الحاوية الرئيسية */
 [data-testid="stMain"] .block-container {
-    max-width: 1200px;
-    padding-top: 3rem;
+    max-width: 1000px;
+    padding-top: 2.5rem;
     padding-bottom: 5rem;
     margin: 0 auto;
 }
@@ -51,65 +48,51 @@ header {visibility: hidden;}
 ========================================= */
 .hero-container {
     position: relative;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(243, 232, 255, 0.6));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(243, 232, 255, 0.7));
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 32px;
-    padding: 60px 40px;
+    padding: 50px 30px;
     text-align: center;
-    box-shadow: 0 20px 40px rgba(109, 40, 217, 0.05);
-    margin-bottom: 40px;
-}
-
-/* تأثير التوهج الخلفي المضيء */
-.hero-container::before {
-    content: "";
-    position: absolute;
-    top: -10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
-    z-index: -1;
-    pointer-events: none;
+    box-shadow: 0 20px 40px rgba(109, 40, 217, 0.04);
+    margin-bottom: 35px;
 }
 
 .hero-logo-glow {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     background: linear-gradient(135deg, #4F46E5, #6D28D9);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 24px auto;
-    box-shadow: 0 0 30px rgba(109, 40, 217, 0.4);
-    font-size: 42px;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 0 25px rgba(109, 40, 217, 0.35);
+    font-size: 38px;
     color: white;
 }
 
 .hero-title {
-    font-size: 54px;
+    font-size: 48px;
     font-weight: 800;
     background: linear-gradient(90deg, #6D28D9, #4F46E5);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .hero-subtitle {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     color: #1E293B;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .hero-desc {
-    font-size: 18px;
+    font-size: 17px;
     color: #64748B;
-    max-width: 700px;
-    margin: 0 auto 28px auto;
+    max-width: 650px;
+    margin: 0 auto 24px auto;
     line-height: 1.8;
 }
 
@@ -129,11 +112,11 @@ header {visibility: hidden;}
 2. INPUT & RESULT CARDS (Glassmorphism)
 ========================================= */
 .glass-card {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 24px;
-    padding: 35px;
+    padding: 32px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
     margin-bottom: 30px;
 }
@@ -143,9 +126,6 @@ header {visibility: hidden;}
     font-weight: 700;
     color: #1E293B;
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 /* تخصيص صندوق الكتابة */
@@ -155,13 +135,7 @@ header {visibility: hidden;}
     padding: 18px !important;
     font-size: 18px !important;
     background: rgba(255, 255, 255, 0.8) !important;
-    transition: all 0.3s ease !important;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.01) !important;
-}
-
-.stTextArea textarea:focus {
-    border-color: #6D28D9 !important;
-    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1) !important;
+    line-height: 1.8 !important;
 }
 
 /* تخصيص زر التحليل الذكي المتدرج */
@@ -175,12 +149,12 @@ header {visibility: hidden;}
     font-weight: 700 !important;
     width: 100% !important;
     transition: all 0.3s ease !important;
-    box-shadow: 0 8px 20px rgba(109, 40, 217, 0.25) !important;
+    box-shadow: 0 8px 20px rgba(109, 40, 217, 0.2) !important;
 }
 
 .stButton > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 12px 24px rgba(109, 40, 217, 0.35) !important;
+    box-shadow: 0 12px 24px rgba(109, 40, 217, 0.3) !important;
 }
 
 .sub-button-text {
@@ -197,7 +171,7 @@ header {visibility: hidden;}
     text-align: center;
     color: #94A3B8;
     font-size: 16px;
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
 .result-badge-container {
@@ -208,7 +182,7 @@ header {visibility: hidden;}
 }
 
 .result-stat-box {
-    background: rgba(255, 255, 255, 0.9);
+    background: white;
     border: 1px solid #F3E8FF;
     padding: 16px;
     border-radius: 16px;
@@ -232,120 +206,32 @@ header {visibility: hidden;}
 ========================================= */
 .section-main-title {
     text-align: center;
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 800;
     color: #1E293B;
-    margin: 50px 0 30px 0;
+    margin: 45px 0 25px 0;
 }
 
 .step-card {
     background: white;
     border: 1px solid #F1F5F9;
     border-radius: 20px;
-    padding: 30px 24px;
+    padding: 26px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
-    transition: all 0.3s ease;
-}
-
-.step-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(109, 40, 217, 0.06);
-    border-color: #E9D5FF;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
 }
 
 .step-icon {
-    font-size: 36px;
-    margin-bottom: 16px;
-}
-
-.step-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1E293B;
-    margin-bottom: 10px;
-}
-
-.step-desc {
-    font-size: 15px;
-    color: #64748B;
-    line-height: 1.7;
-}
-
-/* =========================================
-5. RESEARCHER SECTION
-========================================= */
-.researcher-card {
-    background: white;
-    border: 1px solid #EEF2F6;
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.01);
-    margin-top: 50px;
-}
-
-.researcher-flex {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-}
-
-.researcher-img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #F3E8FF;
-    box-shadow: 0 8px 20px rgba(109, 40, 217, 0.1);
-    flex-shrink: 0;
-}
-
-.researcher-name {
-    font-size: 24px;
-    font-weight: 800;
-    color: #1E293B;
-    margin-bottom: 4px;
-}
-
-.researcher-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #6D28D9;
+    font-size: 32px;
     margin-bottom: 12px;
 }
 
-.researcher-bio {
-    font-size: 15px;
-    color: #475569;
-    line-height: 1.8;
+.step-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 8px;
 }
 
-/* استعلام الاستجابة للهواتف */
-@media (max-width: 768px) {
-    .researcher-flex {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-
-/* =========================================
-6. FOOTER
-========================================= */
-.footer-text {
-    text-align: center;
-    color: #94A3B8;
-    font-size: 14px;
-    margin-top: 60px;
-    border-top: 1px solid #E2E8F0;
-    padding-top: 24px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# =========================================
-# قاعدة البيانات اللغوية لفك اللبس
-# =========================================
-semantic_db = {
-    "عين": [
-        {"المعنى": "عضو البصر والرؤية", "القرائن": ["طفل", "أصيب", "بصر", "طبيب", "نظارات", "رؤية", "جندي", "فقد", "عينه", "عينها"]},
-        {"المعنى": "نبع ماء طبيعي", "القرائن":
+.step-desc
