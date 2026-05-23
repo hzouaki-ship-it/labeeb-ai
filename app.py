@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # =========================================
-# التصميم الكامل الحديث
+# التصميم الكامل
 # =========================================
 
 st.markdown("""
@@ -48,14 +48,12 @@ header {visibility:hidden;}
 }
 
 /* =========================================
-HERO SECTION
+HERO
 ========================================= */
 
 .hero-container{
 
     position:relative;
-
-    overflow:hidden;
 
     background:
     linear-gradient(
@@ -69,7 +67,7 @@ HERO SECTION
 
     border-radius:32px;
 
-    padding:60px 35px;
+    padding:55px 35px;
 
     text-align:center;
 
@@ -79,59 +77,17 @@ HERO SECTION
     margin-bottom:35px;
 }
 
-/* تأثير متوهج */
+/* HERO LOGO */
 
-.hero-glow{
-
-    position:absolute;
-
-    width:320px;
-
-    height:320px;
-
-    background:
-    radial-gradient(
-    circle,
-    rgba(109,40,217,0.12),
-    transparent 70%);
-
-    top:-120px;
-
-    right:-120px;
-
-    z-index:0;
-}
-
-/* =========================================
-LOGO
-========================================= */
-
-.labeeb-orb{
-
-    position:relative;
-
-    width:130px;
-
-    height:130px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin:0 auto 28px auto;
-
-    z-index:2;
-}
-
-.orb-core{
+.hero-logo{
 
     width:90px;
 
     height:90px;
 
     border-radius:50%;
+
+    margin:0 auto 24px auto;
 
     background:
     linear-gradient(
@@ -147,47 +103,17 @@ LOGO
 
     color:white;
 
-    font-size:44px;
+    font-size:42px;
 
     font-weight:800;
 
     box-shadow:
-    0 0 45px rgba(109,40,217,0.30);
-
-    position:relative;
-
-    z-index:2;
-}
-
-.orb-ring{
-
-    position:absolute;
-
-    width:125px;
-
-    height:125px;
-
-    border-radius:50%;
-
-    border:2px dashed rgba(109,40,217,0.30);
-
-    animation:spinOrb 16s linear infinite;
-}
-
-@keyframes spinOrb{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
+    0 0 35px rgba(109,40,217,0.25);
 }
 
 .hero-title{
 
-    font-size:64px;
+    font-size:56px;
 
     font-weight:800;
 
@@ -202,44 +128,30 @@ LOGO
     -webkit-text-fill-color:transparent;
 
     margin-bottom:10px;
-
-    letter-spacing:1px;
-
-    position:relative;
-
-    z-index:2;
 }
 
 .hero-subtitle{
 
-    font-size:27px;
+    font-size:25px;
 
     font-weight:700;
 
     color:#1E293B;
 
     margin-bottom:14px;
-
-    position:relative;
-
-    z-index:2;
 }
 
 .hero-desc{
 
-    font-size:18px;
+    font-size:17px;
 
     color:#64748B;
 
-    max-width:760px;
+    max-width:700px;
 
     margin:0 auto 24px auto;
 
-    line-height:2;
-
-    position:relative;
-
-    z-index:2;
+    line-height:1.9;
 }
 
 .badge-student{
@@ -259,10 +171,6 @@ LOGO
     font-weight:600;
 
     color:#6D28D9;
-
-    position:relative;
-
-    z-index:2;
 }
 
 /* =========================================
@@ -619,16 +527,8 @@ st.markdown("""
 
 <div class="hero-container">
 
-    <div class="hero-glow"></div>
-
-    <div class="labeeb-orb">
-
-        <div class="orb-core">
-            ل
-        </div>
-
-        <div class="orb-ring"></div>
-
+    <div class="hero-logo">
+        ل
     </div>
 
     <div class="hero-title">
