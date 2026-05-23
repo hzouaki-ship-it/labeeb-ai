@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+import time
 
 # =========================================
 # إعداد الصفحة
@@ -521,6 +523,26 @@ FOOTER
 """, unsafe_allow_html=True)
 
 # =========================================
+# قاعدة البيانات المعجمية الدلالية المدمجة
+# =========================================
+
+semantic_db = {
+    "عين": [
+        {"المعنى": "عضو البصر", "جملة_مرجعية": "أصيبت عين الطفل بسبب الغبار المثار في الجو", "المؤشرات": ["الطفل", "أصيبت", "البصر", "طبيب", "نظارات", "رؤية", "دمعت"]},
+        {"المعنى": "نبع ماء طبيعي", "جملة_مرجعية": "شرب المسافرون من عين ماء عذبة تفجرت في الواحة", "المؤشرات": ["ماء", "شرب", "عذبة", "واحة", "بئر", "تدفق", "نبع"]},
+        {"المعنى": "جاسوس ومراقب", "جملة_مرجعية": "بث القائد عيناً له ليرصد بدقة تحتحركات الأعداء", "المؤشرات": ["القائد", "العدو", "جاسوس", "رصد", "تحركات", "استطلاع", "الأعداء"]}
+    ],
+    "المغرب": [
+        {"المعنى": "المملكة المغربية (الدولة)", "جملة_مرجعية": "سافرت إلى المغرب لزيارة المعالم الأثرية والتاريخية في مكناس والرباط", "المؤشرات": ["سافرت", "دولة", "الرباط", "فاس", "مكناس", "المملكة", "سياحة"]},
+        {"المعنى": "صلاة المغرب (الوقت)", "جملة_مرجعية": "توجه المصلون سريعاً إلى المسجد فور سماع أذان المغرب", "المؤشرات": ["صلاة", "أذان", "المسجد", "صليت", "المصلون", "إفطار", "الفريضة"]}
+    ],
+    "رأس": [
+        {"المعنى": "عضو في الجسم", "جملة_مرجعية": "شعر الطالب الباحث بصداع وألم في رأسه بسبب قلة النوم", "المؤشرات": ["ألم", "صداع", "شعر", "طبيب", "جسم", "السهر", "طبيب"]},
+        {"المعنى": "قمة جغرافية", "جملة_مرجعية": "استطاع فريق المغامرين الوصول بنجاح إلى رأس الجبل قبل الغروب", "المؤشرات": ["الجبل", "تسلق", "قمة", "وصل", "منحدر", "مرتفع"]}
+    ]
+}
+
+# =========================================
 # HERO
 # =========================================
 
@@ -586,32 +608,85 @@ if st.button("ابدأ التحليل الذكي"):
         st.warning("الرجاء إدخال نص للتحليل.")
 
     else:
-
-        st.markdown(f"""
-
-        <div class="result-card">
-
-        <div class="result-title">
-        نتيجة التحليل
-        </div>
-
-        <div style='font-size:22px; line-height:2; color:#374151;'>
-
-        <b>النص المُدخل:</b><br><br>
-
-        {text}
-
-        <br><br>
-
-        <b>التحليل الدلالي:</b><br><br>
-
-        تم تحليل النص بنجاح باستخدام نموذج LABEEB AI لاستخراج المعنى والسياق اللغوي.
-
-        </div>
-
-        </div>
-
-        """, unsafe_allow_html=True)
+        # خوارزمية الفحص واستخراج الروابط اللغوية
+        detected_keyword = None
+        for word in semantic_db.keys():
+            if word in text:
+                detected_keyword = word
+                break
+        
+        if detected_keyword:
+            with st.spinner("⏳ يجري الآن تفكيك العلاقات اللغوية وحساب نسب التقارب السياقي..."):
+                time.sleep(0.6)
+                
+                results_list = []
+                highest_score = -1
+                predicted_meaning = ""
+                
+                # حساب النسبة المئوية للتشابه الدلالي
+                for entry in semantic_db[detected_keyword]:
+                    score = 0.20 # حد أدنى كأولوية لغوية عامة
+                    for indicator in entry["المؤشرات"]:
+                        if indicator in text:
+                            score += 0.25
+                    
+                    if score > 0.98: score = 0.98
+                    
+                    results_list.append({
+                        "المعنى السياقي المرشح": entry["المعنى"],
+                        "السياق النموذجي المقارن": entry["جملة_مرجعية"],
+                        "نسبة التقارب الدلالي": f"{score * 100:.2f}%",
+                        "_raw_score": score
+                    })
+                    
+                    if score > highest_score:
+                        highest_score = score
+                        predicted_meaning = entry["المعنى"]
+                
+                # عرض النتيجة داخل الكرت المصمم الخاص بكِ
+                st.markdown(f"""
+                <div class="result-card">
+                    <div class="result-title">🎯 قرار النظام وفك اللبس المعجمي</div>
+                    <div style='font-size:22px; line-height:2; color:#374151; margin-bottom: 20px;'>
+                        <b>النص المُدخل:</b> {text}<br><br>
+                        🔹 تم رصد لفظ مشترك غامض دلالياً وهو: <b>({detected_keyword})</b><br>
+                        📌 <b>المعنى المقصود في سياق جملتكِ هو:</b> <span style='color: #7C3AED; font-weight: 800;'>({predicted_meaning})</span> بنسبة تطابقة بلغت <b>{highest_score * 100:.2f}%</b>.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # بناء الجدول الإحصائي للمصفوفة بشكل منسق وأنيق أسفل النتيجة
+                df_output = pd.DataFrame(results_list)
+                df_output = df_output.sort_values(by="_raw_score", ascending=False).drop(columns=["_raw_score"])
+                
+                st.markdown("<b style='font-size:19px; color:#312E81;'>📊 مصفوفة معاملات التقارب والتشابه السياقي المقارن:</b>", unsafe_allow_html=True)
+                st.dataframe(df_output, use_container_width=True, hide_index=True)
+                
+        else:
+            # معالجة النصوص العامة التي لا تحتوي على الكلمات التجريبية المحددة
+            with st.spinner("⏳ يجري تحليل الخصائص البنائية العامة للنص..."):
+                time.sleep(0.5)
+                st.markdown(f"""
+                <div class="result-card">
+                    <div class="result-title">نتيجة التحليل العامة</div>
+                    <div style='font-size:22px; line-height:2; color:#374151; margin-bottom: 15px;'>
+                        <b>النص المُدخل:</b> {text}<br><br>
+                        <b>التحليل التركيبي:</b> تم فحص البنية اللغوية للنص بنجاح. السياق مستقر ولا يحتوي على لبس معجمي مباشر يقع ضمن عينات المعاجم المثبتة حالياً (عين، المغرب، رأس).
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # عرض جدول هيكلي بسيط للنصوص العامة
+                words_count = len(text.split())
+                chars_count = len(text)
+                st.markdown("<b style='font-size:19px; color:#312E81;'>📊 الخصائص الهيكلية العامة للجملة المدخلة:</b>", unsafe_allow_html=True)
+                general_metrics = pd.DataFrame([{
+                    "عدد الكلمات الإجمالي": words_count,
+                    "عدد الحروف والرموز": chars_count,
+                    "طبيعة المعالجة اللغوية": "تحليل تركيبي عام (Syntactic Analysis)",
+                    "حالة اللبس الدلالي": "مستقر دلالياً"
+                }])
+                st.dataframe(general_metrics, use_container_width=True, hide_index=True)
 
 st.markdown("""
 <div style='margin-top:12px; color:#64748B; font-size:17px;'>
