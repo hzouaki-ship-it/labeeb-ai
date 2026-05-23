@@ -103,6 +103,27 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
     box-shadow:0 4px 12px rgba(0,0,0,0.05);
 }
 
+.hero-logo{
+
+    width:190px;
+    height:190px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,0.72);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    box-shadow:
+    0 0 40px rgba(124,58,237,0.18),
+    0 0 90px rgba(124,58,237,0.12);
+
+    backdrop-filter:blur(10px);
+}
 .hero-content{
     display:flex;
     align-items:center;
@@ -110,28 +131,6 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
     gap:40px;
     flex-wrap:wrap;
 }
-
-.hero-logo{
-    width:170px;
-    height:170px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,0.75);
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    box-shadow:0 0 40px rgba(124,58,237,0.18);
-
-    backdrop-filter:blur(10px);
-}
-
-.hero-logo img{
-    width:120px;
-}
-
 .hero-text{
     text-align:right;
 }
@@ -155,7 +154,6 @@ html, body, [data-testid="stAppViewContainer"], .stApp{
 
     margin-bottom:18px;
 }
-
 .hero-description{
     font-size:22px;
     line-height:2;
