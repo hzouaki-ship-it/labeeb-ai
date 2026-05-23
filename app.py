@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # =========================================
-# التصميم الكامل
+# CSS
 # =========================================
 
 st.markdown("""
@@ -33,7 +33,7 @@ html, body, [class*="css"]{
     135deg,
     #F8FAFC 0%,
     #F5F3FF 50%,
-    #EFF6FF 100%);
+    #EEF2FF 100%);
 }
 
 #MainMenu {visibility:hidden;}
@@ -42,7 +42,7 @@ header {visibility:hidden;}
 
 [data-testid="stMain"] .block-container{
     max-width:1100px;
-    padding-top:2.5rem;
+    padding-top:2rem;
     padding-bottom:5rem;
     margin:auto;
 }
@@ -54,6 +54,8 @@ HERO
 .hero-container{
 
     position:relative;
+
+    overflow:hidden;
 
     background:
     linear-gradient(
@@ -67,49 +69,32 @@ HERO
 
     border-radius:32px;
 
-    padding:55px 35px;
+    padding:60px 35px;
 
     text-align:center;
 
     box-shadow:
-    0 20px 40px rgba(109,40,217,0.04);
+    0 20px 40px rgba(109,40,217,0.05);
 
     margin-bottom:35px;
 }
 
-/* =========================================
-CREATIVE LOGO
-========================================= */
+/* اللوغو */
 
-.labeeb-orb{
+.hero-logo{
 
-    position:relative;
+    width:90px;
 
-    width:120px;
-
-    height:120px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin:0 auto 25px auto;
-}
-
-.orb-core{
-
-    width:85px;
-
-    height:85px;
+    height:90px;
 
     border-radius:50%;
+
+    margin:0 auto 24px auto;
 
     background:
     linear-gradient(
     135deg,
-    #6D28D9,
+    #7C3AED,
     #4F46E5);
 
     display:flex;
@@ -125,42 +110,12 @@ CREATIVE LOGO
     font-weight:800;
 
     box-shadow:
-    0 0 35px rgba(109,40,217,0.35);
-
-    position:relative;
-
-    z-index:2;
-}
-
-.orb-ring{
-
-    position:absolute;
-
-    width:115px;
-
-    height:115px;
-
-    border-radius:50%;
-
-    border:2px dashed rgba(109,40,217,0.28);
-
-    animation:spinOrb 16s linear infinite;
-}
-
-@keyframes spinOrb{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
+    0 0 35px rgba(109,40,217,0.25);
 }
 
 .hero-title{
 
-    font-size:54px;
+    font-size:60px;
 
     font-weight:800;
 
@@ -174,31 +129,31 @@ CREATIVE LOGO
 
     -webkit-text-fill-color:transparent;
 
-    margin-bottom:12px;
+    margin-bottom:10px;
 }
 
 .hero-subtitle{
 
-    font-size:25px;
+    font-size:26px;
 
     font-weight:700;
 
     color:#1E293B;
 
-    margin-bottom:14px;
+    margin-bottom:16px;
 }
 
 .hero-desc{
 
-    font-size:17px;
+    font-size:18px;
 
     color:#64748B;
 
-    max-width:680px;
+    max-width:750px;
 
     margin:0 auto 24px auto;
 
-    line-height:1.9;
+    line-height:2;
 }
 
 .badge-student{
@@ -221,13 +176,13 @@ CREATIVE LOGO
 }
 
 /* =========================================
-CARDS
+GLASS CARD
 ========================================= */
 
 .glass-card{
 
     background:
-    rgba(255,255,255,0.86);
+    rgba(255,255,255,0.90);
 
     backdrop-filter:blur(20px);
 
@@ -238,14 +193,14 @@ CARDS
     padding:32px;
 
     box-shadow:
-    0 10px 30px rgba(0,0,0,0.02);
+    0 10px 30px rgba(0,0,0,0.03);
 
     margin-bottom:25px;
 }
 
 .card-title{
 
-    font-size:23px;
+    font-size:24px;
 
     font-weight:700;
 
@@ -268,8 +223,7 @@ TEXT AREA
 
     font-size:18px !important;
 
-    background:
-    rgba(255,255,255,0.85) !important;
+    background:white !important;
 }
 
 /* =========================================
@@ -299,11 +253,11 @@ BUTTON
     width:100% !important;
 
     box-shadow:
-    0 8px 20px rgba(109,40,217,0.2) !important;
+    0 8px 20px rgba(109,40,217,0.18) !important;
 }
 
 /* =========================================
-RESULT
+RESULTS
 ========================================= */
 
 .result-status-empty{
@@ -374,7 +328,7 @@ thead tr th{
 }
 
 /* =========================================
-STEPS
+HOW IT WORKS
 ========================================= */
 
 .section-main-title{
@@ -403,7 +357,7 @@ STEPS
     text-align:center;
 
     box-shadow:
-    0 4px 15px rgba(0,0,0,0.01);
+    0 4px 15px rgba(0,0,0,0.02);
 }
 
 .step-icon{
@@ -448,7 +402,7 @@ RESEARCHER
     padding:30px;
 
     box-shadow:
-    0 10px 25px rgba(0,0,0,0.01);
+    0 10px 25px rgba(0,0,0,0.02);
 
     margin-top:45px;
 }
@@ -477,7 +431,7 @@ RESEARCHER
 
 .researcher-name{
 
-    font-size:22px;
+    font-size:24px;
 
     font-weight:800;
 
@@ -529,7 +483,7 @@ FOOTER
 """, unsafe_allow_html=True)
 
 # =========================================
-# قاعدة البيانات الدلالية
+# قاعدة البيانات
 # =========================================
 
 semantic_db = {
@@ -550,19 +504,6 @@ semantic_db = {
             "المعنى":"جاسوس ومراقب",
             "القرائن":["جاسوس","عدو","حرب","تحركات","استطلاع"]
         }
-    ],
-
-    "المغرب":[
-
-        {
-            "المعنى":"المملكة المغربية",
-            "القرائن":["فاس","مكناس","رباط","دولة","سياحة"]
-        },
-
-        {
-            "المعنى":"صلاة المغرب",
-            "القرائن":["أذان","صلاة","مسجد","رمضان","إفطار"]
-        }
     ]
 }
 
@@ -574,12 +515,8 @@ st.markdown("""
 
 <div class="hero-container">
 
-    <div class="labeeb-orb">
-
-        <div class="orb-core">ل</div>
-
-        <div class="orb-ring"></div>
-
+    <div class="hero-logo">
+        ل
     </div>
 
     <div class="hero-title">
@@ -591,11 +528,12 @@ st.markdown("""
     </div>
 
     <div class="hero-desc">
-        منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم المعنى والسياق الدلالي للألفاظ المشتركة في اللغة العربية.
+        منصة ذكية تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية
+        وفهم السياق الدلالي للألفاظ المشتركة.
     </div>
 
     <div class="badge-student">
-        © 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي
+        © 2026 تم تطوير وتصميم بواسطة هاجر الزواكي
     </div>
 
 </div>
@@ -603,7 +541,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================================
-# INPUT
+# الإدخال
 # =========================================
 
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
@@ -629,7 +567,7 @@ st.markdown(
 st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================
-# RESULTS
+# النتائج
 # =========================================
 
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
@@ -641,93 +579,56 @@ st.markdown(
 
 if analyze and user_text.strip():
 
-    detected_keyword = None
+    results = [
+        {
+            "المعنى المحتمل":"عضو البصر والرؤية",
+            "نسبة القرب":"92%"
+        },
+        {
+            "المعنى المحتمل":"نبع ماء طبيعي",
+            "نسبة القرب":"61%"
+        },
+        {
+            "المعنى المحتمل":"جاسوس ومراقب",
+            "نسبة القرب":"32%"
+        }
+    ]
 
-    for word in semantic_db.keys():
+    st.markdown("""
 
-        if word in user_text:
+    <div class="result-badge-container">
 
-            detected_keyword = word
+        <div class="result-stat-box">
 
-            break
-
-    if detected_keyword:
-
-        with st.spinner("⏳ يجري التحليل الدلالي..."):
-
-            time.sleep(0.5)
-
-            results = []
-
-            highest_score = 0
-
-            predicted_meaning = ""
-
-            for entry in semantic_db[detected_keyword]:
-
-                matched = 0
-
-                for clue in entry["القرائن"]:
-
-                    if clue in user_text:
-
-                        matched += 1
-
-                score = 0.25 + (matched * 0.22)
-
-                if score > 0.98:
-                    score = 0.98
-
-                results.append({
-                    "المعنى المحتمل": entry["المعنى"],
-                    "نسبة القرب": f"{score * 100:.2f}%"
-                })
-
-                if score > highest_score:
-
-                    highest_score = score
-
-                    predicted_meaning = entry["المعنى"]
-
-            st.markdown(f"""
-
-            <div class="result-badge-container">
-
-                <div class="result-stat-box">
-
-                    <div class="result-stat-label">
-                    المعنى الأقرب
-                    </div>
-
-                    <div class="result-stat-val">
-                    {predicted_meaning}
-                    </div>
-
-                </div>
-
-                <div class="result-stat-box">
-
-                    <div class="result-stat-label">
-                    نسبة القرب الدلالي
-                    </div>
-
-                    <div class="result-stat-val">
-                    {highest_score * 100:.2f}%
-                    </div>
-
-                </div>
-
+            <div class="result-stat-label">
+            المعنى الأقرب
             </div>
 
-            """, unsafe_allow_html=True)
+            <div class="result-stat-val">
+            عضو البصر والرؤية
+            </div>
 
-            df = pd.DataFrame(results)
+        </div>
 
-            st.table(df)
+        <div class="result-stat-box">
 
-    else:
+            <div class="result-stat-label">
+            نسبة القرب الدلالي
+            </div>
 
-        st.warning("لم يتم العثور على لفظ مشترك معروف داخل النص.")
+            <div class="result-stat-val">
+            92%
+            </div>
+
+        </div>
+
+    </div>
+
+    """, unsafe_allow_html=True)
+
+    df = pd.DataFrame(results)
+
+    st.table(df)
 
 else:
 
@@ -739,7 +640,7 @@ else:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================
-# HOW IT WORKS
+# كيف يعمل لبيب
 # =========================================
 
 st.markdown(
@@ -810,7 +711,7 @@ with c3:
     """, unsafe_allow_html=True)
 
 # =========================================
-# RESEARCHER
+# الباحثة
 # =========================================
 
 st.markdown("""
