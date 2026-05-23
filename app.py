@@ -18,7 +18,7 @@ st.markdown("""
 
     /* تطبيق الخط والاتجاه والخلفية الفاتحة على كامل التطبيق */
     html, body, [data-testid="stAppViewContainer"], .stApp {
-        background-color: #F8FAFC !important; /* لون خلفية فاتح جداً ومريح */
+        background-color: #F8FAFC !important;
         direction: RTL !important;
         text-align: right !important;
         font-family: 'Tajawal', sans-serif !important;
@@ -27,7 +27,7 @@ st.markdown("""
     /* تنسيق كافة العناوين والنصوص */
     h1, h2, h3, h4, p, span, label, .stMarkdown {
         font-family: 'Tajawal', sans-serif !important;
-        color: #1E293B !important; /* لون نص داكن مائل للزرقة */
+        color: #1E293B !important;
         text-align: right !important;
     }
 
@@ -46,7 +46,7 @@ st.markdown("""
 
     /* تنسيق زر التحليل */
     div.stButton > button {
-        background-color: #7C3AED !important; /* اللون البنفسجي الخاص بلبيب */
+        background-color: #7C3AED !important;
         color: white !important;
         font-family: 'Tajawal', sans-serif !important;
         font-weight: bold !important;
@@ -173,4 +173,23 @@ if st.button("⚡ إطلاق خوارزمية لبيب للتحليل"):
                 
                 # القرار النهائي
                 best_meaning = max(similarities, key=lambda x: x["نسبة القوة السياقية"])
-                st.success(f"
+                st.success(f"🎯 **القرار الدلالي النهائي:** المعنى المقصود في نصّك هو **({best_meaning['المعنى الدلالي']})**")
+            else:
+                st.error("فشل النموذج في معالجة سياق هذه الجملة.")
+        else:
+            st.warning("هذه الجملة لا تحتوي على كلمات غامضة مدعومة حالياً.")
+    else:
+        st.warning("برجاء إدخال نص أولاً.")
+
+# 6. النبذة التعريفية الأكاديمية (الخاتمة)
+st.markdown("---")
+st.markdown("""
+<div class="bio-box">
+    <strong>💡 نبذة عن المشروع:</strong><br>
+    هذه المنصة هي نتاج عمل بحثي وبرمجي للطالبة: <strong>هاجر الزوكي</strong>، طالبة بالسنة الثانية ماجستير في تخصص <strong>اللسانيات الرقمية والعربية</strong> بجامعة مولاي إسماعيل - كلية الآداب والعلوم الإنسانية، بمكناس.
+    <br><br>
+    يندرج هذا التطبيق الذكي ضمن متطلبات <strong>مشروع التخرج</strong>، ويهدف إلى تسخير تقنيات التعلم العميق (Deep Learning) لحل مشكلة المشترك اللفظي والغموض الدلالي في النصوص العربية آلياً.
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("<p style='text-align:center; color:#94A3B8; font-size: 12px; margin-top:20px;'>حقوق البرمجة محفوظة © 2026 | LABEEB AI - جامعة مولاي إسماعيل</p>", unsafe_allow_html=True)
