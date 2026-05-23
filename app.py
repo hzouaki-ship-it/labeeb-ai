@@ -13,14 +13,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. هندسة الـ CSS المتقدمة لمحاكاة التصميم المطلوب بدقة (ألوان، حواف، بطاقات، وتأثيرات)
+# 2. هندسة الـ CSS المتقدمة لمحاكاة التصميم المطلوب بدقة متناهية
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
 
     /* الضبط العام للمنصة والخلفية المريحة */
     html, body, [data-testid="stAppViewContainer"], .stApp {
-        background-color: #F8FAFC !important;
+        background-color: #F9FAFB !important;
         direction: RTL !important;
         text-align: right !important;
         font-family: 'Cairo', sans-serif !important;
@@ -28,8 +28,8 @@ st.markdown("""
     
     /* تحديد أبعاد الحاوية الرئيسية */
     [data-testid="stMain"] .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
+        padding-top: 0rem !important;
+        padding-bottom: 3rem !important;
         max-width: 850px !important;
     }
 
@@ -42,110 +42,130 @@ st.markdown("""
         font-family: 'Cairo', sans-serif !important;
     }
 
-    /* ---------------- القسم العلوي (Hero Section) ---------------- */
-    .hero-container {
-        background: white;
-        border-radius: 24px;
-        padding: 40px 30px;
+    /* ---------------- القسم العلوي (Hero Section) المطور ---------------- */
+    .hero-outer {
+        margin-left: -4rem;
+        margin-right: -4rem;
+        background: linear-gradient(180deg, #EBF0FF 0%, #F4EFFF 60%, #F9FAFB 100%);
+        padding: 50px 40px 60px 40px;
         text-align: center !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-        margin-bottom: 24px;
         position: relative;
         overflow: hidden;
-        border: 1px solid #EEF2F6;
+        border-bottom-left-radius: 50px 20px;
+        border-bottom-right-radius: 50px 20px;
     }
     
-    /* محاكاة النقاط الديكورية الجانبية في التصميم */
-    .hero-container::before {
-        content: "•••\\A•••\\A•••";
-        white-space: pre;
+    /* مصفوفة النقاط الديكورية اليسرى */
+    .hero-dots-left {
         position: absolute;
-        top: 20px;
-        left: 25px;
-        color: #E2E8F0;
-        font-size: 14px;
-        letter-spacing: 4px;
-        line-height: 1.2;
+        top: 30px;
+        left: 40px;
+        width: 60px;
+        height: 60px;
+        background-image: radial-gradient(#94A3B8 1.5px, transparent 1.5px);
+        background-size: 12px 12px;
+        opacity: 0.4;
     }
-    .hero-container::after {
-        content: "•••\\A•••\\A•••";
-        white-space: pre;
+    
+    /* مصفوفة النقاط الديكورية اليمنى */
+    .hero-dots-right {
         position: absolute;
-        bottom: 20px;
-        right: 25px;
-        color: #E2E8F0;
-        font-size: 14px;
-        letter-spacing: 4px;
-        line-height: 1.2;
+        bottom: 40px;
+        right: 40px;
+        width: 60px;
+        height: 60px;
+        background-image: radial-gradient(#94A3B8 1.5px, transparent 1.5px);
+        background-size: 12px 12px;
+        opacity: 0.4;
     }
 
     /* الشارة العلوية الصغيرة */
     .top-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        background-color: #F5F3FF;
-        color: #7C3AED;
-        padding: 6px 16px;
+        background-color: #FFFFFF;
+        color: #6366F1;
+        padding: 4px 16px;
         border-radius: 100px;
         font-size: 13px;
         font-weight: 600;
-        margin-bottom: 20px;
-        border: 1px solid #E9E3FF;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 6px rgba(99, 102, 241, 0.08);
+    }
+    
+    .hero-logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 12px;
+    }
+    
+    .hero-logo-icon {
+        background: #FFFFFF;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .hero-title {
-        font-size: 44px !important;
+        font-size: 46px !important;
         font-weight: 800 !important;
-        color: #5011CE !important;
-        margin: 0px 0px 8px 0px !important;
+        color: #5B21B6 !important;
+        margin: 0 !important;
         line-height: 1.2;
     }
     .hero-subtitle {
         font-size: 18px !important;
         font-weight: 700 !important;
         color: #1E293B !important;
-        margin-bottom: 16px !important;
+        margin-top: 14px !important;
+        margin-bottom: 14px !important;
     }
     .hero-description {
         font-size: 15px !important;
         color: #64748B !important;
-        max-width: 680px;
+        max-width: 650px;
         margin: 0 auto 24px auto !important;
         line-height: 1.7;
     }
     .author-badge {
         display: inline-block;
-        background: linear-gradient(135deg, #F5F3FF 0%, #F0E9FF 100%);
-        color: #6D28D9 !important;
-        padding: 8px 20px;
-        border-radius: 12px;
-        font-size: 14px !important;
+        background: #F3E8FF;
+        color: #6B21A8 !important;
+        padding: 6px 20px;
+        border-radius: 100px;
+        font-size: 13px !important;
         font-weight: 600;
-        border: 1px solid #E4D9FF;
+        border: 1px solid #E9D5FF;
     }
 
     /* ---------------- بطاقات الأقسام (Cards) ---------------- */
     .section-card {
         background: #FFFFFF;
-        border: 1px solid #EEF2F6;
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
-        margin-bottom: 24px;
+        border: 1px solid #F1F5F9;
+        border-radius: 24px;
+        padding: 35px;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.015);
+        margin-top: 30px;
+        margin-bottom: 5px;
     }
     
-    .section-title-container {
+    .card-title-container {
         display: flex;
         align-items: center;
+        justify-content: flex-start;
         gap: 8px;
-        margin-bottom: 16px;
-        border-bottom: 1px solid #F1F5F9;
-        padding-bottom: 12px;
+        margin-bottom: 20px;
     }
     
-    .section-title {
-        font-size: 18px !important;
+    .card-title-text {
+        font-size: 16px !important;
         font-weight: 700 !important;
         color: #1E293B !important;
         margin: 0 !important;
@@ -153,147 +173,143 @@ st.markdown("""
 
     /* ---------------- مدخلات المستخدم والزر ---------------- */
     .stTextArea textarea {
-        background-color: #FAFAFA !important;
+        background-color: #FFFFFF !important;
         border: 1px solid #E2E8F0 !important;
-        border-radius: 14px !important;
-        padding: 16px !important;
+        border-radius: 16px !important;
+        padding: 18px !important;
         font-family: 'Cairo', sans-serif !important;
-        font-size: 15px !important;
-        color: #1E293B !important;
+        font-size: 14.5px !important;
+        color: #334155 !important;
         transition: all 0.2s ease;
     }
     .stTextArea textarea:focus {
-        border-color: #7C3AED !important;
-        background-color: #FFFFFF !important;
-        box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.08) !important;
+        border-color: #A855F7 !important;
+        box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1) !important;
     }
     
-    /* تخصيص الزر البنفسجي الأنيق بنبضة خفيفة */
+    /* تخصيص الزر البنفسجي الأنيق ليتطابق مع الصورة */
     div.stButton > button {
-        background: #7C3AED !important;
+        background: #6D28D9 !important;
         color: white !important;
         font-family: 'Cairo', sans-serif !important;
         font-weight: 600 !important;
-        font-size: 15px !important;
+        font-size: 14.5px !important;
         border-radius: 12px !important;
         border: none !important;
-        padding: 12px 24px !important;
-        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2) !important;
+        padding: 10px 24px !important;
+        box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25) !important;
         transition: all 0.2s ease !important;
     }
     div.stButton > button:hover {
-        background: #6D28D9 !important;
-        box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3) !important;
-        transform: translateY(-1px);
+        background: #5B21B6 !important;
+        box-shadow: 0 6px 16px rgba(109, 40, 217, 0.35) !important;
     }
 
-    /* ---------------- حالة الانتظار والبطاقة الفارغة ---------------- */
-    .empty-state {
-        text-align: center;
+    /* ---------------- حالة الانتظار الأنيقة (لم يتم إجراء أي تحليل) ---------------- */
+    .inner-dashed-box {
+        border: 1px dashed #E2E8F0;
+        border-radius: 16px;
         padding: 40px 20px;
+        text-align: center;
+        background: #FAFAFA;
     }
-    .empty-icon {
-        font-size: 40px;
-        color: #7C3AED;
-        background: #F5F3FF;
-        width: 70px;
-        height: 70px;
+    .empty-icon-box {
+        font-size: 36px;
+        color: #6D28D9;
+        background: #F3E8FF;
+        width: 64px;
+        height: 64px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
+        border-radius: 16px;
         margin-bottom: 16px;
     }
-    .empty-text {
-        color: #4F46E5;
+    .empty-main-text {
+        color: #6D28D9;
         font-weight: 700;
         font-size: 16px;
         margin-bottom: 6px;
     }
-    .empty-subtext {
-        color: #64748B;
-        font-size: 14px;
+    .empty-sub-text {
+        color: #94A3B8;
+        font-size: 13.5px;
+    }
+
+    /* ---------------- عنوان كيف يعمل لبيب ---------------- */
+    .steps-section-title {
+        text-align: center !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: #1E293B !important;
+        margin-top: 40px !important;
+        margin-bottom: 6px !important;
+    }
+    .steps-section-desc {
+        text-align: center !important;
+        font-size: 14px !important;
+        color: #64748B !important;
+        margin-bottom: 25px !important;
     }
 
     /* ---------------- بطاقات قسم "كيف يعمل لبيب؟" الثلاثية ---------------- */
-    .steps-grid {
+    .steps-container {
         display: flex;
         gap: 16px;
-        margin-top: 15px;
     }
-    .step-card {
+    .step-item {
         flex: 1;
-        background: #FAFAFA;
-        border: 1px solid #E2E8F0;
-        border-radius: 16px;
-        padding: 20px;
+        background: #FFFFFF;
+        border: 1px solid #F1F5F9;
+        border-radius: 20px;
+        padding: 24px 20px;
         text-align: center;
         position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
     }
-    .step-number {
+    .step-badge-num {
         position: absolute;
         top: -12px;
         left: 20px;
-        background: #7C3AED;
+        background: #6D28D9;
         color: white;
-        width: 26px;
-        height: 26px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 12px;
         font-weight: 700;
-        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
     }
-    .step-icon {
-        font-size: 24px;
-        margin-bottom: 10px;
-        background: white;
-        width: 50px;
-        height: 50px;
+    .step-icon-wrapper {
+        font-size: 22px;
+        margin-bottom: 12px;
+        background: #F8FAFC;
+        width: 48px;
+        height: 48px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        border-radius: 50%;
     }
-    .step-title {
+    .step-item-title {
         font-weight: 700;
-        color: #4F46E5;
-        font-size: 15px;
+        color: #4338CA;
+        font-size: 14.5px;
         margin-bottom: 8px;
     }
-    .step-desc {
+    .step-item-desc {
         color: #64748B;
         font-size: 13px;
         line-height: 1.6;
     }
 
-    /* ---------------- جداول استعراض البيانات ---------------- */
-    .stTable, table {
-        width: 100% !important;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-    th {
-        background-color: #F8FAFC !important;
-        color: #475569 !important;
-        font-weight: 600 !important;
-        padding: 10px !important;
-        border-bottom: 2px solid #E2E8F0 !important;
-    }
-    td {
-        padding: 10px !important;
-        border-bottom: 1px solid #E2E8F0 !important;
-        color: #334155 !important;
-    }
-
     /* ---------------- تذييل الصفحة الأكاديمي ---------------- */
-    .footer-text {
+    .footer-container {
         text-align: center !important;
-        margin-top: 40px;
-        padding: 20px 0;
+        margin-top: 45px;
+        padding-top: 20px;
         color: #94A3B8 !important;
         font-size: 13px !important;
         border-top: 1px solid #E2E8F0;
@@ -301,11 +317,11 @@ st.markdown("""
     
     /* استجابة الشاشات الصغيرة لبطاقات الخطوات */
     @media (max-width: 768px) {
-        .steps-grid {
+        .steps-container {
             flex-direction: column;
             gap: 20px;
         }
-        .step-number {
+        .step-badge-num {
             left: auto;
             right: 20px;
         }
@@ -315,9 +331,14 @@ st.markdown("""
 
 # 3. عرض قسم الـ Hero الاحترافي بمحاكاة بصرية كاملة للتصميم المستهدف
 st.markdown("""
-<div class="hero-container">
+<div class="hero-outer">
+    <div class="hero-dots-left"></div>
+    <div class="hero-dots-right"></div>
     <div class="top-badge">✦ منصة ذكية عربية</div>
-    <h1 class="hero-title">LABEEB AI (لبيب)</h1>
+    <div class="hero-logo-container">
+        <div class="hero-logo-icon">🧠</div>
+        <h1 class="hero-title">LABEEB AI (لبيب)</h1>
+    </div>
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
     <p class="hero-description">
         منصة تعتمد على الذكاء الاصطناعي لفهم السياق اللغوي واكتشاف المعنى الصحيح للكلمات من خلال تحليل دلالي عميق ودقيق.
@@ -372,19 +393,19 @@ for word in semantic_dictionary:
                 semantic_dictionary[word][meaning]["النص"], word
             )
 
-# 5. بطاقة منطقة مدخلات فحص الجمل العربية
+# 5. بطاقة منطقة مدخلات فحص الجمل العربية (تطابق كامل مع الهوية الجديدة)
 st.markdown("""
 <div class="section-card">
-    <div class="section-title-container">
-        <span style="font-size: 18px;">✍️</span>
-        <h3 class="section-title">أدخل الجملة العربية للتحليل:</h3>
+    <div class="card-title-container">
+        <span style="font-size: 16px;">✍️</span>
+        <h3 class="card-title-text">أدخل الجملة العربية للتحليل:</h3>
     </div>
 """, unsafe_allow_html=True)
 
 user_sentence = st.text_area(
     "",
     placeholder="اكتب جملة عربية واضحة تحتوي على المعنى والسياق...",
-    height=100,
+    height=110,
     label_visibility="collapsed"
 )
 
@@ -396,9 +417,9 @@ st.markdown("</div>", unsafe_allow_html=True) # إغلاق بطاقة الإدخ
 # 6. بطاقة ديناميكية موحدة لعرض نتائج التحليل والقرارات
 st.markdown("""
 <div class="section-card">
-    <div class="section-title-container">
-        <span style="font-size: 18px;">📊</span>
-        <h3 class="section-title">نتيجة التحليل</h3>
+    <div class="card-title-container">
+        <span style="font-size: 16px; color:#6D28D9;">📊</span>
+        <h3 class="card-title-text" style="color:#6D28D9 !important;">نتيجة التحليل</h3>
     </div>
 """, unsafe_allow_html=True)
 
@@ -412,7 +433,7 @@ if analysis_triggered:
         
         if detected_word:
             with st.spinner("⏳ يقوم لبيب بقراءة المؤشرات السياقية عبر نموذج AraBERT اللغوي..."):
-                time.sleep(1.0)
+                time.sleep(0.8)
                 user_vector = get_word_vector(user_sentence, detected_word)
                 
                 if user_vector is not None:
@@ -432,19 +453,19 @@ if analysis_triggered:
                     
                     # طباعة القرار الدلالي النهائي بشكل منظم وجذاب
                     st.markdown(f"""
-                        <p style="font-size: 16px; color: #1E293B; margin-bottom: 8px;">
-                            الكلمة التي تم رصدها وتحليلها تلقائياً: <strong style="color:#7C3AED;">{detected_word}</strong>
+                        <p style="font-size: 15px; color: #1E293B; margin-bottom: 8px;">
+                            الكلمة التي تم رصدها وتحليلها تلقائياً: <strong style="color:#6D28D9;">{detected_word}</strong>
                         </p>
-                        <div style="background-color: #F0FDF4; border: 1px solid #DCFCE7; padding: 16px; border-radius: 12px; margin: 15px 0;">
-                            <span style="font-size: 18px; font-weight: 700; color: #15803D;">🎯 القرار النهائي الخوارزمي:</span>
-                            <p style="font-size: 18px; font-weight: 700; color: #16A34A; margin: 6px 0 0 0 !important;">
+                        <div style="background-color: #F0FDF4; border: 1px solid #DCFCE7; padding: 16px; border-radius: 14px; margin: 15px 0;">
+                            <span style="font-size: 16px; font-weight: 700; color: #16A34A;">🎯 القرار النهائي الخوارزمي:</span>
+                            <p style="font-size: 16px; font-weight: 700; color: #15803D; margin: 6px 0 0 0 !important;">
                                 المعنى المقصود والمكتشف في النص هو: ({best_meaning})
                             </p>
                         </div>
-                        <p style="font-size: 15px; color: #475569; margin-bottom: 20px;">
-                            درجة ثقة الخوارزمية في القرار الحالي: <strong style="color: #7C3AED;">{confidence_percentage}%</strong>
+                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 20px;">
+                            درجة ثقة الخوارزمية في القرار الحالي: <strong style="color: #6D28D9;">{confidence_percentage}%</strong>
                         </p>
-                        <p style="font-weight: 700; font-size: 14px; color: #1E293B; margin-bottom: 6px;">📊 جدول معاملات التشابه الجيب تمامي (Cosine Similarity):</p>
+                        <p style="font-weight: 700; font-size: 14px; color: #1E293B; margin-bottom: 8px;">📊 جدول معاملات التشابه الجيب تمامي (Cosine Similarity):</p>
                     """, unsafe_allow_html=True)
                     
                     # عرض جدول التشابه
@@ -458,55 +479,37 @@ if analysis_triggered:
     else:
         st.warning("⚠️ فضلاً، يرجى كتابة جملة عربية أولاً ليتمكن لبيب من معالجتها وفحص سياقها الدلالي.")
 else:
-    # شاشة الحالة الافتراضية "لم يتم إجراء أي تحليل بعد" لمطابقة التصميم المستهدف
+    # شاشة الحالة الافتراضية "لم يتم إجراء أي تحليل بعد" لمطابقة التصميم المستهدف بدقة
     st.markdown("""
-    <div class="empty-state">
-        <div class="empty-icon">📄</div>
-        <div class="empty-text">لم يتم إجراء أي تحليل بعد</div>
-        <div class="empty-subtext">اكتب جملة عربية واضغط على زر التحليل للحصول على النتيجة.</div>
+    <div class="inner-dashed-box">
+        <div class="empty-icon-box">🔍</div>
+        <div class="empty-main-text">لم يتم إجراء أي تحليل بعد</div>
+        <div class="empty-sub-text">اكتب جملة عربية واضغط على زر التحليل للحصول على النتيجة.</div>
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True) # إغلاق بطاقة النتائج
 
-# 7. قسم "كيف يعمل لبيب؟" - معالجة كاملة وحقن آمن لشبكة البطاقات الثلاثية المدعومة بالـ CSS
+# 7. قسم "كيف يعمل لبيب؟" التوضيحي المطور بالكامل
 st.markdown("""
-<div class="section-card">
-    <div class="section-title-container">
-        <span style="font-size: 18px;">🧠</span>
-        <h3 class="section-title">كيف يعمل لبيب؟</h3>
-    </div>
-    <p style="font-size: 14px; color: #64748B; margin-bottom: 15px;">يستخدم لبيب الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها الحقيقي في السياق عبر ثلاث خطوات متكاملة:</p>
-    
-    <div class="steps-grid">
-        <div class="step-card">
-            <div class="step-number">1</div>
-            <div class="step-icon">🔍</div>
-            <div class="step-title">تحليل السياق</div>
-            <div class="step-desc">يحلل لبيب الجملة والكلمات المحيطة لفهم السياق اللغوي بدقة متناهية.</div>
-        </div>
-        
-        <div class="step-card">
-            <div class="step-number">2</div>
-            <div class="step-icon">🎯</div>
-            <div class="step-title">اكتشاف المعنى</div>
-            <div class="step-desc">يحدد المعنى الأقرب اعتماداً على السياق والدلالة اللغوية المخزنة.</div>
-        </div>
-        
-        <div class="step-card">
-            <div class="step-number">3</div>
-            <div class="step-icon">📊</div>
-            <div class="step-title">قياس التشابه الدلالي</div>
-            <div class="step-desc">يستخدم نماذج لغوية متقدمة لقياس التشابه الدلالي وتصنيف النتائج بدقة.</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+<div class="steps-section-title">🧠 كيف يعمل لبيب؟</div>
+<div class="steps-section-desc">يستخدم لبيب الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها الحقيقي في السياق.</div>
 
-# 8. تذييل المنصة (Footer الحماية الأكاديمية)
-st.markdown("""
-<div class="footer-text">
-    تم تطوير وتصميم منصة LABEEB AI بواسطة الطالبة هاجر الزواكي © 2026<br>
-    جميع الحقوق محفوظة
-</div>
-""", unsafe_allow_html=True)
+<div class="steps-container">
+    <div class="step-item">
+        <div class="step-badge-num">1</div>
+        <div class="step-icon-wrapper" style="color: #6D28D9;">🔍</div>
+        <div class="step-item-title">تحليل السياق</div>
+        <div class="step-desc">يحلل لبيب الجملة والكلمات المحيطة لفهم السياق اللغوي بدقة.</div>
+    </div>
+    
+    <div class="step-item">
+        <div class="step-badge-num">2</div>
+        <div class="step-icon-wrapper" style="color: #EC4899;">🎯</div>
+        <div class="step-item-title">اكتشاف المعنى</div>
+        <div class="step-desc">يحدد المعنى الأقرب اعتماداً على السياق والدلالة اللغوية المخزنة.</div>
+    </div>
+    
+    <div class="step-item">
+        <div class="step-badge-num">3</div>
+        <div class="step-icon-wrapper" style="color: #3B82F6;">📊</div>
