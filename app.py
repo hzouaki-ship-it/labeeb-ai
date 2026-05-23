@@ -800,9 +800,8 @@ st.markdown("""
 <div>
 
 <div class="bio-title">
-هاجر الزواكي 👩🏻‍💻
+هاجر الزواكي
 </div>
-
 <div class="bio-sub">
 طالبة ماستر في اللسانيات الرقمية والعربية
 </div>
