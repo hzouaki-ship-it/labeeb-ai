@@ -562,24 +562,24 @@ if score > highest_score:
     highest_score = score
     predicted_meaning = entry["المعنى"]
 
-            # عرض الكروت الرقمية العلوية
-            st.markdown('<div class="result-badge-container">'
-            ' <div class="result-stat-box">'
-            '     <div class="result-stat-label">المعنى الأقرب</div>'
-            '     <div class="result-stat-val">' + predicted_meaning + '</div>'
-            ' </div>'
-            ' <div class="result-stat-box">'
-            '     <div class="result-stat-label">نسبة القرب الدلالي</div>'
-            '     <div class="result-stat-val">' + f"{highest_score * 100:.2f}%" + '</div>'
-            ' </div>'
-            '</div>', unsafe_allow_html=True)
-           # عرض الجدول بخانتين نظيفتين فقط
-            df_clean = pd.DataFrame(results_list)\
-                .sort_values(by="_raw", ascending=False)\
-                .drop(columns=["_raw"])
+# عرض الكروت الرقمية العلوية
+st.markdown('<div class="result-badge-container">'
+' <div class="result-stat-box">'
+'     <div class="result-stat-label">المعنى الأقرب</div>'
+'     <div class="result-stat-val">' + predicted_meaning + '</div>'
+' </div>'
+' <div class="result-stat-box">'
+'     <div class="result-stat-label">نسبة القرب الدلالي</div>'
+'     <div class="result-stat-val">' + f"{highest_score * 100:.2f}%" + '</div>'
+' </div>'
+'</div>', unsafe_allow_html=True)
 
-            st.table(df_clean.reset_index(drop=True))
+# عرض الجدول بخانتين نظيفتين فقط
+df_clean = pd.DataFrame(results_list)\
+    .sort_values(by="_raw", ascending=False)\
+    .drop(columns=["_raw"])
 
+st.table(df_clean.reset_index(drop=True))
     else:
         st.warning("⚠️ لم يتم العثور على الكلمة داخل قاعدة البيانات.")
 
