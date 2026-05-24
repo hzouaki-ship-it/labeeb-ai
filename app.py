@@ -565,11 +565,14 @@ if submit_btn and user_text.strip():
             '     <div class="result-stat-val">' + f"{highest_score * 100:.2f}%" + '</div>'
             ' </div>'
             '</div>', unsafe_allow_html=True)
-            
             # عرض الجدول بخانتين نظيفتين فقط
-            df_clean = pd.DataFrame(results_list).sort_values(by="_raw", ascending=False).drop(columns=["_raw"])
-            st.table(df_clean)
-    else:
+            df_clean = pd.DataFrame(results_list)\
+                .sort_values(by="_raw", ascending=False)\
+                .drop(columns=["_raw"])
+
+            st.table(df_clean.reset_index(drop=True))
+
+        else:
         st.markdown('<div class="result-stat-box" style="width:100%;">'
         ' <div class="result-stat-label">حالة البنية اللغوية</div>'
         ' <div class="result-stat-val" style="color: #64748B; font-size:15px;">لم يتم رصد لفظ مشترك معروف (عين، المغرب، رأس)</div>'
