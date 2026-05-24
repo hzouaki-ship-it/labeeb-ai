@@ -1,7 +1,9 @@
 import streamlit as st
+from tashaphyne.stemming import ArabicLightStemmer
 import pandas as pd
 import time
 
+stemmer = ArabicLightStemmer()
 # =========================================
 # 1. إعداد الصفحة الأساسي والهوية البصرية
 # =========================================
@@ -532,15 +534,22 @@ if submit_btn and user_text.strip():
                 base_score = 0.20
                 matched_clues = 0
 
-                for clue, weight in entry["القرائن"].items():
-                    if clue in user_text:
-                        matched_clues += weight
 
-                if matched_clues > 0:
-                    score = base_score + (matched_clues * 0.40)
-                else:
-                    score = base_score
+for clue in entry["القرائن"]:
 
+    stemmer.light_stem(clue)
+    clue_stem = stemmer.get_stem()
+
+    stemmer.light_stem(user_text)
+    text_stem = stemmer.get_stem()
+
+    if clue_stem in text_stem:
+        matched_clues += 1
+
+if matched_clues > 0:
+    score = base_score + (matched_clues * 0.40)
+else:
+    score = base_score
                 if score > 0.95:
                     score = 0.95
 
