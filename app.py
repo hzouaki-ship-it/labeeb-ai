@@ -331,9 +331,15 @@ st.markdown('<div class="hero-container">'
 # 4. بطاقة الإدخال (INPUT SECTION)
 # =========================================
 st.markdown('<div class="glass-card">'
+' <div class="card-title">🖋️ ابدأ التحليل</div>'
 '</div>', unsafe_allow_html=True)
-' <div class="card-title">🖋️ اكتب النص العربي الذي ترغب في تحليل معناه وسياقه</div>'
-user_text = st.text_area("", placeholder="اكتب جملتك هنا (مثال: فقد الجندي عينه في المعركة)...", key="main_input", label_visibility="collapsed")
+
+user_text = st.text_area(
+    "",
+    placeholder="اكتب جملتك هنا (مثال: فقد الجندي عينه في المعركة)...",
+    key="main_input",
+    label_visibility="collapsed"
+)
 submit_btn = st.button("⚡تشغيل خوارزمية لبيب للتحليل")
 
 st.markdown('<div style="text-align:center; color:#94A3B8; font-size:13px; margin-top:-10px; margin-bottom:20px;">تحليل آمن ودقيق باستخدام الذكاء الاصطناعي</div>', unsafe_allow_html=True)
