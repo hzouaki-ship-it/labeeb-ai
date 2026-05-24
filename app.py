@@ -335,7 +335,7 @@ st.markdown('<div class="glass-card">'
 '</div>', unsafe_allow_html=True)
 
 user_text = st.text_area("", placeholder="اكتب جملتك هنا (مثال: فقد الجندي عينه في المعركة)...", key="main_input", label_visibility="collapsed")
-submit_btn = st.button("ابدأ التحليل الذكي")
+submit_btn = st.button("⚡تشغيل خوارزمية لبيب للتحليل")
 
 st.markdown('<div style="text-align:center; color:#94A3B8; font-size:13px; margin-top:-10px; margin-bottom:20px;">تحليل آمن ودقيق باستخدام الذكاء الاصطناعي</div>', unsafe_allow_html=True)
 
