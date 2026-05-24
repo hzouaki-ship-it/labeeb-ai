@@ -531,9 +531,9 @@ if submit_btn and user_text.strip():
                 base_score = 0.20
                 matched_clues = 0
                 
-                for clue in entry["القرائن"]:
-                    if clue in user_text:
-                        matched_clues += 1
+  for clue, weight in entry["القرائن"].items():
+    if clue in user_text:
+        matched_clues += weight
                         
                 if matched_clues > 0:
                     score = base_score + (matched_clues * 0.40)
