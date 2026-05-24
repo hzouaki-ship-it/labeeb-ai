@@ -267,12 +267,10 @@ semantic_db = {
 # =========================================
 st.markdown('<div class="hero-container">'
 ' <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png" class="hero-logo-img">'
-' <div class="hero-title">LABEEB AI (لبيب)</div>'
 ' <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>'
 ' <div class="hero-desc">منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.</div>'
 ' <div class="badge-student">© 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي</div>'
 '</div>', unsafe_allow_html=True)
-
 # =========================================
 # 4. بطاقة الإدخال (INPUT SECTION)
 # =========================================
