@@ -13,7 +13,9 @@ st.set_page_config(
 
 # تعيين النمط الجمالي والـ CSS بأمان كامل لتجنب تداخل علامات الاقتباس
 st.markdown('<style>'
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap");' html, body, [class*="css"] {'
+' @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap");'
+
+' html, body, [class*="css"] {'
 '     font-family: "Cairo", sans-serif;'
 '     direction: rtl;'
 '     text-align: right;'
