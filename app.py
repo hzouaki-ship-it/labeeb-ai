@@ -307,16 +307,18 @@ semantic_db = {
 st.markdown('<div class="hero-container">'
 
 ' <div class="hero-inline">'
-            
-' <div class="hero-brand">'
 
-'      <div class="brand-main"><span>✦</span> LABEEB AI</div>'
+'     <div class="hero-brand">'
 
-'      <div class="brand-sub">CONTEXTUAL SEMANTIC ANALYZER</div>'
+'          <div class="brand-main"><span>✦</span> LABEEB AI</div>'
+
+'          <div class="brand-sub">CONTEXTUAL SEMANTIC ANALYZER</div>'
+
+'     </div>'
+
+'     <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png" class="hero-logo-img">'
 
 ' </div>'
-
-' <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png" class="hero-logo-img">'
 
 ' <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>'
 
