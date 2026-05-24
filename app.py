@@ -530,27 +530,32 @@ if submit_btn and user_text.strip():
             for entry in semantic_db[detected_keyword]:
                 base_score = 0.20
                 matched_clues = 0
-                
-  for clue, weight in entry["القرائن"].items():
-    if clue in user_text:
-        matched_clues += weight
-                        
-                if matched_clues > 0:
-                    score = base_score + (matched_clues * 0.40)
-                else:
-                    score = base_score
-                    
-                if score > 0.95: score = 0.95
-                
-                results_list.append({
-                    "المعنى المحتمل": entry["المعنى"],
-                    "نسبة القرب": f"{score * 100:.2f}%",
-                    "_raw": score
-                })
-                
-                if score > highest_score:
-                    highest_score = score
-                    predicted_meaning = entry["المعنى"]
+             for entry in meanings:
+
+    base_score = 0.20
+    matched_clues = 0
+
+    for clue, weight in entry["القرائن"].items():
+        if clue in user_text:
+            matched_clues += weight
+
+    if matched_clues > 0:
+        score = base_score + (matched_clues * 0.40)
+    else:
+        score = base_score
+
+    if score > 0.95:
+        score = 0.95
+
+    results_list.append({
+        "المعنى المحتمل": entry["المعنى"],
+        "نسبة القرب": f"{score * 100:.2f}%",
+        "_raw": score
+    })
+
+    if score > highest_score:
+        highest_score = score
+        predicted_meaning = entry["المعنى"] 
             
             # عرض الكروت الرقمية العلوية
             st.markdown('<div class="result-badge-container">'
