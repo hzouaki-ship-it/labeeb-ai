@@ -312,6 +312,7 @@ st.markdown('<div class="hero-container">'
 
 '     <div class="hero-brand">'
 '      <div class="brand-main"><span>LABEEB AI</div>'
+            
 '      <div class="brand-sub">CONTEXTUAL SEMANTIC ANALYZER</div>'
 '     </div>'
 
