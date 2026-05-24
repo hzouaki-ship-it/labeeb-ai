@@ -534,7 +534,6 @@ if submit_btn and user_text.strip():
                 base_score = 0.20
                 matched_clues = 0
 
-
 for clue in entry["القرائن"]:
 
     stemmer.light_stem(clue)
@@ -550,9 +549,9 @@ if matched_clues > 0:
     score = base_score + (matched_clues * 0.40)
 else:
     score = base_score
-                if score > 0.95:
-                    score = 0.95
 
+if score > 0.95:
+    score = 0.95
                 results_list.append({
                     "المعنى المحتمل": entry["المعنى"],
                     "نسبة القرب": f"{score * 100:.2f}%",
