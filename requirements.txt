@@ -6,3 +6,4 @@ scikit-learn
 pandas
 sentencepiece
 Tashaphyne
+google-generativeai
