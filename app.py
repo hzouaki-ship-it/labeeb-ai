@@ -573,6 +573,7 @@ if submit_btn and user_text.strip():
             st.table(df_clean.reset_index(drop=True))
 
         else:
+            st.warning("⚠️ لم يتم العثور على الكلمة داخل قاعدة البيانات.")
         st.markdown('<div class="result-stat-box" style="width:100%;">'
         ' <div class="result-stat-label">حالة البنية اللغوية</div>'
         ' <div class="result-stat-val" style="color: #64748B; font-size:15px;">لم يتم رصد لفظ مشترك معروف (عين، المغرب، رأس)</div>'
