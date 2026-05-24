@@ -40,6 +40,43 @@ st.markdown('<style>'
 '     text-align: center;'
 '     box-shadow: 0 20px 40px rgba(109, 40, 217, 0.03);'
 '     margin-bottom: 30px;'
+' }'
+ ' .hero-inline {'
+'     display: flex;'
+'     align-items: center;'
+'     justify-content: center;'
+'     gap: 28px;'
+'     margin-bottom: 25px;'
+' }'
+
+' .hero-brand {'
+'     text-align: left;'
+' }'
+
+' .brand-en {'
+'     font-size: 56px;'
+'     font-weight: 800;'
+'     letter-spacing: 2px;'
+'     background: linear-gradient(90deg,#6D28D9,#4F46E5);'
+'     -webkit-background-clip: text;'
+'     -webkit-text-fill-color: transparent;'
+'     line-height: 1;'
+' }'
+
+' .brand-ar {'
+'     font-size: 42px;'
+'     font-weight: 700;'
+'     color: #6D28D9;'
+'     margin-top: 6px;'
+'     margin-bottom: 8px;'
+' }'
+
+' .brand-sub {'
+'     font-size: 15px;'
+'     letter-spacing: 3px;'
+'     color: #4338CA;'
+'     font-weight: 600;'
+' }'           
 ' .hero-logo-img {'
 '     width: 185px;'
 '     height: 185px;'
@@ -207,6 +244,8 @@ st.markdown('<style>'
 '     border: 3px solid #F3E8FF !important;'
 '     overflow: hidden !important;'
 '     display: block !important;'
+' }'
+
 ' .researcher-flex {'
 '     display: flex;'
 '     align-items: center;'
@@ -264,10 +303,29 @@ semantic_db = {
 # 3. عرض الهيكل البصري (HERO SECTION)
 # =========================================
 st.markdown('<div class="hero-container">'
-' <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png" class="hero-logo-img">'
+
+' <div class="hero-inline">'
+
+'     <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png" class="hero-logo-img">'
+
+'     <div class="hero-brand">'
+
+'         <div class="brand-en">LABEEB AI</div>'
+
+'         <div class="brand-ar">لبيب</div>'
+
+'         <div class="brand-sub">CONTEXTUAL SEMANTIC ANALYZER</div>'
+
+'     </div>'
+
+' </div>'
+
 ' <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>'
+
 ' <div class="hero-desc">منصة تعتمد على الذكاء الاصطناعي لتحليل النصوص العربية وفهم معناها العميق في السياق.</div>'
+
 ' <div class="badge-student">© 2026 تم تطوير وتصميم بواسطة الطالبة هاجر الزواكي</div>'
+
 '</div>', unsafe_allow_html=True)
 # =========================================
 # 4. بطاقة الإدخال (INPUT SECTION)
