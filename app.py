@@ -533,53 +533,54 @@ if submit_btn and user_text.strip():
 
                 base_score = 0.20
                 matched_clues = 0
-for clue in entry["القرائن"]:
 
-    stemmer.light_stem(clue)
-    clue_stem = stemmer.get_stem()
+                for clue in entry["القرائن"]:
 
-    stemmer.light_stem(user_text)
-    text_stem = stemmer.get_stem()
+                    stemmer.light_stem(clue)
+                    clue_stem = stemmer.get_stem()
 
-    if clue_stem in text_stem:
-        matched_clues += 1
+                    stemmer.light_stem(user_text)
+                    text_stem = stemmer.get_stem()
 
-if matched_clues > 0:
-    score = base_score + (matched_clues * 0.40)
-else:
-    score = base_score
+                    if clue_stem in text_stem:
+                        matched_clues += 1
 
-if score > 0.95:
-    score = 0.95
+                if matched_clues > 0:
+                    score = base_score + (matched_clues * 0.40)
+                else:
+                    score = base_score
 
-results_list.append({
-    "المعنى المحتمل": entry["المعنى"],
-    "نسبة القرب": f"{score * 100:.2f}%",
-    "_raw": score
-})
+                if score > 0.95:
+                    score = 0.95
 
-if score > highest_score:
-    highest_score = score
-    predicted_meaning = entry["المعنى"]
+                results_list.append({
+                    "المعنى المحتمل": entry["المعنى"],
+                    "نسبة القرب": f"{score * 100:.2f}%",
+                    "_raw": score
+                })
 
-# عرض الكروت الرقمية العلوية
-st.markdown('<div class="result-badge-container">'
-' <div class="result-stat-box">'
-'     <div class="result-stat-label">المعنى الأقرب</div>'
-'     <div class="result-stat-val">' + predicted_meaning + '</div>'
-' </div>'
-' <div class="result-stat-box">'
-'     <div class="result-stat-label">نسبة القرب الدلالي</div>'
-'     <div class="result-stat-val">' + f"{highest_score * 100:.2f}%" + '</div>'
-' </div>'
-'</div>', unsafe_allow_html=True)
+                if score > highest_score:
+                    highest_score = score
+                    predicted_meaning = entry["المعنى"]
 
-# عرض الجدول بخانتين نظيفتين فقط
-df_clean = pd.DataFrame(results_list)\
-    .sort_values(by="_raw", ascending=False)\
-    .drop(columns=["_raw"])
+            # عرض الكروت الرقمية العلوية
+            st.markdown('<div class="result-badge-container">'
+            ' <div class="result-stat-box">'
+            '     <div class="result-stat-label">المعنى الأقرب</div>'
+            '     <div class="result-stat-val">' + predicted_meaning + '</div>'
+            ' </div>'
+            ' <div class="result-stat-box">'
+            '     <div class="result-stat-label">نسبة القرب الدلالي</div>'
+            '     <div class="result-stat-val">' + f"{highest_score * 100:.2f}%" + '</div>'
+            ' </div>'
+            '</div>', unsafe_allow_html=True)
 
-st.table(df_clean.reset_index(drop=True))
+            # عرض الجدول بخانتين نظيفتين فقط
+            df_clean = pd.DataFrame(results_list)\
+                .sort_values(by="_raw", ascending=False)\
+                .drop(columns=["_raw"])
+
+            st.table(df_clean.reset_index(drop=True))
     else:
         st.warning("⚠️ لم يتم العثور على الكلمة داخل قاعدة البيانات.")
 
