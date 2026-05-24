@@ -202,13 +202,6 @@ st.markdown('<style>'
 '     overflow: hidden !important;'
 '     flex-shrink: 0 !important;'
 ' }'
-
-' .researcher-flex img {'
-'     width: 85px !important;'
-'     height: 85px !important;'
-'     border-radius: 50% !important;'
-'     object-fit: cover !important;'
-' }'
 '     font-size: 20px;'
 '     font-weight: 800;'
 '     color: #1E293B;'
@@ -378,7 +371,7 @@ with col_w3:
 # =========================================
 st.markdown('<div class="researcher-card">'
 ' <div class="researcher-flex">'
-'     <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg" class="researcher-img" alt="Hajar Zouaki">'
+'     <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg" class="researcher-img" alt="Hajar Zouaki" width="85">'
 '     <div>'
 '         <div class="researcher-name">هاجر الزواكي</div>'
 '         <div class="researcher-title">طالبة ماستر في اللسانيات الرقمية والعربية</div>'
@@ -386,7 +379,6 @@ st.markdown('<div class="researcher-card">'
 '     </div>'
 ' </div>'
 '</div>', unsafe_allow_html=True)
-
 # =========================================
 # 8. التذييل (FOOTER)
 # =========================================
