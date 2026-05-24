@@ -1,6 +1,6 @@
 streamlit
-torchvision
 torch
+torchvision
 transformers
 scikit-learn
 pandas
