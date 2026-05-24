@@ -533,7 +533,6 @@ if submit_btn and user_text.strip():
 
                 base_score = 0.20
                 matched_clues = 0
-
 for clue in entry["القرائن"]:
 
     stemmer.light_stem(clue)
@@ -552,15 +551,16 @@ else:
 
 if score > 0.95:
     score = 0.95
-                results_list.append({
-                    "المعنى المحتمل": entry["المعنى"],
-                    "نسبة القرب": f"{score * 100:.2f}%",
-                    "_raw": score
-                })
 
-                if score > highest_score:
-                    highest_score = score
-                    predicted_meaning = entry["المعنى"]
+results_list.append({
+    "المعنى المحتمل": entry["المعنى"],
+    "نسبة القرب": f"{score * 100:.2f}%",
+    "_raw": score
+})
+
+if score > highest_score:
+    highest_score = score
+    predicted_meaning = entry["المعنى"]
 
             # عرض الكروت الرقمية العلوية
             st.markdown('<div class="result-badge-container">'
