@@ -526,7 +526,7 @@ if submit_btn and user_text.strip():
             results_list = []
             highest_score = 0.0
             predicted_meaning = ""
-            
+            meanings = semantic_db[detected_keyword]
             for entry in meanings:
 
                 base_score = 0.20
