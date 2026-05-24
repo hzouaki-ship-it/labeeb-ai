@@ -527,7 +527,7 @@ if submit_btn and user_text.strip():
             highest_score = 0.0
             predicted_meaning = ""
             
-         for entry in meanings:
+            for entry in meanings:
 
                 base_score = 0.20
                 matched_clues = 0
