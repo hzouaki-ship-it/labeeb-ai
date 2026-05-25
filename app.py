@@ -11,8 +11,11 @@ st.set_page_config(page_title="LABEEB AI - لبيب", page_icon="🧠", layout="
 try:
     if "GOOGLE_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    else:genai.configure(api_key="AIzaSyA8bG4DU2L815GS-DacoxDSaajRETabM8s")    
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    else:
+        genai.configure(api_key="AIzaSyA8bG4DU2L815GS-DacoxDSaajRETabM8s")
+
+    model = genai.GenerativeModel('gemini-pro')
+
 except Exception as e:
     st.error(f"خطأ في تهيئة النموذج: {e}")
 
