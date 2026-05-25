@@ -11,8 +11,8 @@ st.set_page_config(page_title="LABEEB AI - لبيب", page_icon="🧠", layout="
 model = None
 if "GOOGLE_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    model = genai.GenerativeModel('gemini-1.5-flash')
-
+# تهيئة النموذج باستخدام النموذج الذي ظهر في قائمتك
+model = genai.GenerativeModel('gemini-3.5-flash')
 # 3. هنا ضعي كود الـ CSS الخاص بك (st.markdown('<style>...</style>', ...))
 # [ضعي كود الـ CSS الطويل الخاص بكِ هنا]
 
