@@ -704,53 +704,46 @@ if submit_btn and user_text.strip():
 
             # عرض الجدول بخانتين نظيفتين فقط
             df_clean = pd.DataFrame(results_list)\
-                .sort_values(by="_raw", ascending=False)\
-                .drop(columns=["_raw"])
-
-            st.table(df_clean.reset_index(drop=True))
-   else:
-
-    if model:
-
-        with st.spinner("⏳ جاري التحليل الدلالي الذكي..."):
-
-            try:
-
-                response = model.generate_content(
-                    f"""
-                    حلل الجملة التالية دلالياً.
-
-                    الجملة:
-                    {user_text}
-
-                    إذا احتوت على لفظ مشترك أو تعبير مجازي:
-                    - استخرج الكلمة
-                    - حدد معناها المقصود
-                    - فسّر اعتماداً على السياق
-                    """
-                )
-
-                st.markdown(
-                    '<div class="result-stat-box" style="width:100%;">'
-                    ' <div class="result-stat-label">التحليل الدلالي الذكي</div>'
-                    f' <div class="result-stat-val" style="font-size:15px;">{response.text}</div>'
-                    '</div>',
-                    unsafe_allow_html=True
-                )
-
-            except Exception as e:
-
-                st.error(f"فشل الاتصال بالذكاء الاصطناعي: {e}")
+              st.table(df_clean.reset_index(drop=True))
 
     else:
 
-        st.warning("⚠️ لم يتم العثور على الكلمة داخل قاعدة البيانات.")
+        if model:
 
-# =========================================
-# 6. قسم خطوات العمل (HOW IT WORKS)
-# =========================================
-st.markdown('<div class="section-main-title">كيف يعمل لبيب؟</div>', unsafe_allow_html=True)
+            with st.spinner("⏳ جاري التحليل الدلالي الذكي..."):
 
+                try:
+
+                    response = model.generate_content(
+                        f"""
+                        حلل الجملة التالية دلالياً.
+
+                        الجملة:
+                        {user_text}
+
+                        إذا احتوت على لفظ مشترك أو تعبير مجازي:
+                        - استخرج الكلمة
+                        - حدد معناها المقصود
+                        - فسّر اعتماداً على السياق
+                        """
+                    )
+
+                    st.markdown(
+                        '<div class="result-stat-box" style="width:100%;">'
+                        ' <div class="result-stat-label">التحليل الدلالي الذكي</div>'
+                        f' <div class="result-stat-val" style="font-size:15px;">{response.text}</div>'
+                        '</div>',
+                        unsafe_allow_html=True
+                    )
+
+                except Exception as e:
+
+                    st.error(f"فشل الاتصال بالذكاء الاصطناعي: {e}")
+
+        else:
+
+            st.warning("⚠️ لم يتم العثور على الكلمة داخل قاعدة البيانات.")
+st.markdown('</div>', unsafe_allow_html=True)
 col_w1, col_w2, col_w3 = st.columns(3)
 with col_w1:
     st.markdown('<div class="step-card">'
