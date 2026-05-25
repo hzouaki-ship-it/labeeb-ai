@@ -7,14 +7,14 @@ from tashaphyne.stemming import ArabicLightStemmer
 st.set_page_config(page_title="LABEEB AI - لبيب", page_icon="🧠", layout="wide")
 
 # 2. تهيئة الاتصال بـ Gemini
-# سيحاول أولاً استخدام الـ Secrets، إذا فشل، سيستخدم المفتاح المباشر
 try:
     if "GOOGLE_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
     else:
         genai.configure(api_key="AIzaSyA8bG4DU2L815GS-DacoxDSaajRETabM8s")
-
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    
+    # تعريف النموذج هنا داخل كتلة الـ try
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
     st.error(f"خطأ في تهيئة النموذج: {e}")
 
@@ -25,7 +25,7 @@ semantic_db = {
 }
 
 # 4. الواجهة
-st.markdown('<div style="background: #EFF6FF; padding: 20px; border-radius: 15px; text-align: center;"><h1>✦ LABEEB AI</h1><p>المحلل الدلالي الذكي</p></div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align: center;"><h1>✦ LABEEB AI</h1><p>المحلل الدلالي الذكي</p></div>', unsafe_allow_html=True)
 
 user_text = st.text_area("أدخلي الجملة هنا:", placeholder="مثال: فقد الجندي عينه في المعركة...")
 submit_btn = st.button("⚡ تحليل")
@@ -36,7 +36,7 @@ if submit_btn and user_text:
     for word, meanings in semantic_db.items():
         if word in user_text:
             found = True
-            st.success(f"تم رصد اللفظ في القاموس: {word}")
+            st.success(f"تم رصد اللفظ: {word}")
             results = [{"المعنى": m["المعنى"], "قوة الارتباط": sum(1 for c in m["القرائن"] if c in user_text)} for m in meanings]
             st.table(pd.DataFrame(results))
             break
@@ -44,10 +44,14 @@ if submit_btn and user_text:
     if not found:
         with st.spinner("⏳ جاري التحليل بواسطة Gemini..."):
             try:
-                response = model.generate_content(f"حلل الجملة التالية دلالياً: {user_text}")
-                st.write(response.text)
+                # التأكد من وجود النموذج قبل استخدامه
+                if 'model' in locals():
+                    response = model.generate_content(f"حلل الجملة التالية دلالياً: {user_text}")
+                    st.write(response.text)
+                else:
+                    st.error("النموذج غير مهيأ.")
             except Exception as e:
-                st.error(f"فشل الاتصال بالذكاء الاصطناعي: {e}")
+                st.error(f"خطأ في الاتصال: {e}")
 
 st.markdown("---")
 st.write("تم التطوير بواسطة: هاجر الزواكي | 2026")
