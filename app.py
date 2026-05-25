@@ -11,8 +11,7 @@ try:
     if "GOOGLE_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
     else:
-        genai.configure(api_key="AIzaSyA8bG4DU2L815GS-DacoxDSaajRETabM8s")
-    
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])    
     # تعريف النموذج
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
