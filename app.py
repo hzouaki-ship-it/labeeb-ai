@@ -708,18 +708,43 @@ if submit_btn and user_text.strip():
                 .drop(columns=["_raw"])
 
             st.table(df_clean.reset_index(drop=True))
+   else:
+
+    if model:
+
+        with st.spinner("⏳ جاري التحليل الدلالي الذكي..."):
+
+            try:
+
+                response = model.generate_content(
+                    f"""
+                    حلل الجملة التالية دلالياً.
+
+                    الجملة:
+                    {user_text}
+
+                    إذا احتوت على لفظ مشترك أو تعبير مجازي:
+                    - استخرج الكلمة
+                    - حدد معناها المقصود
+                    - فسّر اعتماداً على السياق
+                    """
+                )
+
+                st.markdown(
+                    '<div class="result-stat-box" style="width:100%;">'
+                    ' <div class="result-stat-label">التحليل الدلالي الذكي</div>'
+                    f' <div class="result-stat-val" style="font-size:15px;">{response.text}</div>'
+                    '</div>',
+                    unsafe_allow_html=True
+                )
+
+            except Exception as e:
+
+                st.error(f"فشل الاتصال بالذكاء الاصطناعي: {e}")
+
     else:
+
         st.warning("⚠️ لم يتم العثور على الكلمة داخل قاعدة البيانات.")
-
-        st.markdown('<div class="result-stat-box" style="width:100%;">'
-        ' <div class="result-stat-label">حالة البنية اللغوية</div>'
-        ' <div class="result-stat-val" style="color: #64748B; font-size:15px;">لم يتم رصد لفظ مشترك معروف (عين، المغرب، رأس)</div>'
-        '</div>', unsafe_allow_html=True)
-
-else:
-    st.markdown('<div class="result-status-empty">🤖 لم يتم إجراء أي تحليل بعد. اكتب نصاً واضغط على الزر لبدء المعالجة.</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================
 # 6. قسم خطوات العمل (HOW IT WORKS)
