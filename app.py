@@ -10,9 +10,13 @@ if "GOOGLE_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
     model = genai.GenerativeModel(
         model_name='gemini-3.5-flash',
-        system_instruction="أنت أداة معالجة خلفية. وظيفتك تحليل الجملة دلالياً واستخراج المعنى الأقرب. أجب بالمعنى فقط دون مقدمات أو شرح."
-    )
-
+         system_instruction="""
+    أنت محلل دلالي عربي متخصص.
+    استخرج المعنى المقصود للكلمة أو التعبير اعتماداً على السياق.
+    إذا وُجد مجاز أو استعارة فاشرحه باختصار .
+    أجب في أربعة أسطر كحد أقصى.
+    """
+)
 stemmer = ArabicLightStemmer()
 
 # --- إعداد الصفحة ---
