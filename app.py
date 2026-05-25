@@ -6,14 +6,14 @@ import pandas as pd
 st.set_page_config(page_title="LABEEB AI - لبيب", page_icon="🧠", layout="wide")
 
 # 2. تهيئة الاتصال بـ Gemini
-# نستخدم st.secrets لجلب المفتاح بأمان
 model = None
 try:
     if "GOOGLE_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # تعريف النموذج داخل جملة if لضمان أنه لن يُعرف إلا بوجود المفتاح
+        model = genai.GenerativeModel('gemini-3.5-flash')
     else:
-        st.error("⚠️ لم يتم العثور على GOOGLE_API_KEY في إعدادات التطبيق (Secrets). يرجى إضافته.")
+        st.error("⚠️ لم يتم العثور على GOOGLE_API_KEY في إعدادات التطبيق (Secrets).")
 except Exception as e:
     st.error(f"خطأ في تهيئة النموذج: {e}")
 
@@ -45,4 +45,4 @@ if st.button("⚡ تحليل"):
         else:
             st.warning("الرجاء إدخال نص أولاً!")
     else:
-        st.error("لا يمكن التحليل لأن النموذج غير مهيأ (تحققي من مفتاح API).")
+        st.error("لا يمكن التحليل لأن النموذج غير مهيأ.")
