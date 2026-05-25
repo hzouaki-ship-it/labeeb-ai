@@ -1,45 +1,53 @@
 import streamlit as st
 from tashaphyne.stemming import ArabicLightStemmer
+import pandas as pd
+import time
 import google.generativeai as genai
 
-# إعداد النموذج مع معالجة الأخطاء
-model = None
-if "GOOGLE_API_KEY" in st.secrets:
-    try:
-        genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-        model = genai.GenerativeModel('gemini-3.5-flash')
-    except Exception:
-        model = None
-
-# إعدادات الصفحة
+# 1. إعداد الصفحة (يجب أن يكون دائماً في البداية)
 st.set_page_config(page_title="LABEEB AI - لبيب", page_icon="🧠", layout="wide")
 
-# التصميم
-st.markdown('<style>'
-    '.stButton > button { background: linear-gradient(90deg, #4F46E5, #6D28D9) !important; color: white !important; border-radius: 12px !important; width: 100% !important; }'
-    '.glass-card { background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 15px 0; }'
-    '</style>', unsafe_allow_html=True)
+# 2. تهيئة النموذج
+model = None
+if "GOOGLE_API_KEY" in st.secrets:
+    genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+# تهيئة النموذج باستخدام النموذج الذي ظهر في قائمتك
+model = genai.GenerativeModel('gemini-3.5-flash')
+# 3. هنا ضعي كود الـ CSS الخاص بك (st.markdown('<style>...</style>', ...))
+# [ضعي كود الـ CSS الطويل الخاص بكِ هنا]
 
-st.markdown('<h1>✦ LABEEB AI</h1>', unsafe_allow_html=True)
+# 4. إعداد واجهة Hero Section
+st.markdown('<div class="hero-container"><h1>✦ LABEEB AI</h1></div>', unsafe_allow_html=True)
 
-# المدخلات
-user_text = st.text_area("أدخلي الجملة هنا:", placeholder="اكتبي النص...")
-submit_btn = st.button("⚡ تشغيل خوارزمية لبيب للتحليل")
+# 5. منطقة الإدخال
+user_text = st.text_area("أدخلي الجملة هنا:", placeholder="اكتبي النص الذي تودين تحليله...")
 
-# المنطق
-if submit_btn:
+# 6. زر التحليل ومنطق العمل (تم دمجهما بشكل صحيح)
+if st.button("⚡ تحليل"):
     if not user_text.strip():
-        st.warning("يرجى كتابة نص للتحليل.")
+        st.warning("الرجاء إدخال نص أولاً!")
+    elif not model:
+        st.error("مفتاح API غير مهيأ، يرجى التحقق من الإعدادات.")
     else:
-        with st.spinner("⏳ جاري التحليل..."):
-            # محاولة الاستدعاء
-            if model:
-                try:
-                    response = model.generate_content(f"حلل الجملة التالية دلالياً وأجب بالمعنى فقط: {user_text}")
-                    st.markdown(f'<div class="glass-card"><h3>التحليل:</h3><p>{response.text}</p></div>', unsafe_allow_html=True)
-                except Exception:
-                    st.info("حدث خطأ في الاتصال بالسيرفر. يرجى التأكد من مفتاح الـ API الخاص بك.")
-            else:
-                st.error("نظام الذكاء الاصطناعي غير متصل. تأكدي من إعدادات الـ Secrets.")
+        # البدء بالتحليل
+        with st.spinner("⏳ جاري التحليل بواسطة لبيب..."):
+            try:
+                # عرض النتيجة
+                st.success("النتيجة:")
+                result_placeholder = st.empty()
+                full_response = ""
+                
+                # الاتصال بـ Gemini
+                response = model.generate_content(f"حلل الجملة التالية دلالياً باختصار: {user_text}", stream=True)
+                
+                for chunk in response:
+                    full_response += chunk.text
+                    result_placeholder.markdown(full_response + "▌")
+                
+                result_placeholder.markdown(full_response)
+                
+            except Exception as e:
+                st.error(f"حدث خطأ أثناء الاتصال: {e}")
 
-st.markdown('<div style="text-align:center; margin-top:50px; color:#94A3B8;">LABEEB AI © 2026 — هاجر الزواكي</div>', unsafe_allow_html=True)
+# 7. التذييل وباقي أقسام الصفحة
+st.markdown('<div class="footer-text">LABEEB AI © 2026 — هاجر الزواكي</div>', unsafe_allow_html=True)
