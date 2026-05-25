@@ -2,8 +2,15 @@ import streamlit as st
 from tashaphyne.stemming import ArabicLightStemmer
 import pandas as pd
 import time
-
+import google.generativeai as genai
 stemmer = ArabicLightStemmer()
+# إعداد Gemini
+model = None
+
+if "GOOGLE_API_KEY" in st.secrets:
+    genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+
+    model = genai.GenerativeModel('gemini-3.5-flash')
 # =========================================
 # 1. إعداد الصفحة الأساسي والهوية البصرية
 # =========================================
