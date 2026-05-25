@@ -1,4 +1,6 @@
 streamlit
+nltk
 pandas
 tashaphyne
+scikit-learn
 google-generativeai>=0.8.0
