@@ -14,8 +14,7 @@ try:
     else:
         genai.configure(api_key="AIzaSyA8bG4DU2L815GS-DacoxDSaajRETabM8s")
 
-    model = genai.GenerativeModel('models/gemini-1.5-flash')
-
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 except Exception as e:
     st.error(f"خطأ في تهيئة النموذج: {e}")
 
