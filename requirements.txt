@@ -1,6 +1,5 @@
 streamlit
+tashaphyne
+google-generativeai
 nltk
 pandas
-tashaphyne
-scikit-learn
-google-generativeai>=0.8.0
