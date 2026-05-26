@@ -69,19 +69,43 @@ if submit_btn and user_text.strip():
                     found_local = True
                     break
         
-        # ب) البحث في الشبكة الدلالية (WordNet)
-        synsets = []
-        for w in words_in_text:
-            synsets.extend(wn.synsets(w, lang='arb'))
-            
-        if synsets:
-            st.markdown('<div class="glass-card"><h3>🧠 نتائج الشبكة الدلالية (WordNet)</h3>', unsafe_allow_html=True)
-            for syn in synsets[:2]:
-                st.write(f"📌 المعنى: {syn.definition()}")
-                arabic_words = [lemma.name() for lemma in syn.lemmas(lang='arb')]
-                if arabic_words:
-                    st.write(f"🔹 المرادفات: {', '.join(arabic_words[:3])}")
-            st.markdown('</div>', unsafe_allow_html=True)
+# ب) البحث في الشبكة الدلالية (WordNet)
+
+synsets = []
+
+for w in words_in_text:
+
+    if len(w) > 2:
+
+        results = wn.synsets(w, lang='arb')
+
+        if results:
+
+            synsets.extend(results[:1])
+
+if synsets and not found_local:
+
+    st.markdown(
+        '<div class="glass-card"><h3>🧠 نتائج الشبكة الدلالية</h3>',
+        unsafe_allow_html=True
+    )
+
+    for syn in synsets[:2]:
+
+        st.write(f"📌 المعنى: {syn.definition()}")
+
+        arabic_words = [
+            lemma.name()
+            for lemma in syn.lemmas(lang='arb')
+        ]
+
+        if arabic_words:
+
+            st.write(
+                f"🔹 المرادفات: {', '.join(arabic_words[:3])}"
+            )
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
         # ج) التحليل الذكي (Gemini)
         if model and not found_local:
