@@ -1,6 +1,5 @@
 streamlit
-tashaphyne
-transformers
-nltk
+openai
 torch
-pandas
+transformers
+tashaphyne
