@@ -1,5 +1,6 @@
 streamlit
 tashaphyne
-google-generativeai
+transformers
+torch
 nltk
 pandas
