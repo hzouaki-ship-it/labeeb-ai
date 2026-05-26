@@ -11,17 +11,16 @@ nltk.download('wordnet', quiet=True)
 nltk.download('omw-1.4', quiet=True)
 stemmer = ArabicLightStemmer()
 
-# قاعدة البيانات المحلية (Semantic DB)
+# قاعدة البيانات المحلية
 semantic_db = {
     "روح": {"المعنى": "النفس البشرية", "السياق": "عالم الغيب أو الحياة"},
     "عين": {"المعنى": "عضو البصر أو نبع أو جاسوس", "السياق": "يعتمد على الألفاظ المحيطة"},
     "كتاب": {"المعنى": "مؤلف مطبوع", "السياق": "قراءة أو تشريع"}
 }
 
-# إعداد واجهة الصفحة
 st.set_page_config(page_title="LABEEB AI - لبيب", page_icon="🧠", layout="wide")
 
-# --- 2. CSS الجمالي ---
+# --- 2. CSS ---
 st.markdown('<style>'
     '.hero-container { text-align: center; padding: 20px; }'
     '.glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 15px 0; border: 1px solid #E2E8F0; }'
@@ -47,75 +46,46 @@ submit_btn = st.button("⚡ تحليل")
 if submit_btn and user_text.strip():
     with st.spinner("⏳ جاري تحليل البنية الدلالية..."):
         
-        # أ) التحليل المحلي (Local DB + Stemming)
+        # أ) التحليل المحلي
         found_local = False
         words_in_text = user_text.split()
-        
         for word, data in semantic_db.items():
-            # مقارنة جذور كلمات النص بجذور كلمات قاعدة البيانات
             for token in words_in_text:
                 stemmer.light_stem(token)
-                token_stem = stemmer.get_stem()
-                
-                stemmer.light_stem(word)
-                word_stem = stemmer.get_stem()
-                
-                if token_stem == word_stem:
+                if stemmer.get_stem() == stemmer.light_stem(word):
                     st.markdown(f'''<div class="glass-card"><h3>🔍 تحليل لبيب (محلي):</h3>
                                 <p><b>اللفظ المكتشف:</b> {word}</p>
                                 <p><b>المعنى:</b> {data["المعنى"]}</p>
-                                <p><b>السياق:</b> {data["السياق"]}</p>
                                 </div>''', unsafe_allow_html=True)
                     found_local = True
                     break
-        
-# ب) البحث في الشبكة الدلالية (WordNet)
 
-synsets = []
+        # ب) البحث في الشبكة الدلالية (WordNet)
+        synsets = []
+        for w in words_in_text:
+            if len(w) > 2:
+                results = wn.synsets(w, lang='arb')
+                if results:
+                    synsets.extend(results[:1])
 
-for w in words_in_text:
+        if synsets and not found_local:
+            st.markdown('<div class="glass-card"><h3>🧠 نتائج الشبكة الدلالية</h3>', unsafe_allow_html=True)
+            for syn in synsets[:2]:
+                st.write(f"📌 المعنى: {syn.definition()}")
+                arabic_words = [lemma.name() for lemma in syn.lemmas(lang='arb')]
+                if arabic_words:
+                    st.write(f"🔹 المرادفات: {', '.join(arabic_words[:3])}")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    if len(w) > 2:
-
-        results = wn.synsets(w, lang='arb')
-
-        if results:
-
-            synsets.extend(results[:1])
-
-if synsets and not found_local:
-
-    st.markdown(
-        '<div class="glass-card"><h3>🧠 نتائج الشبكة الدلالية</h3>',
-        unsafe_allow_html=True
-    )
-
-    for syn in synsets[:2]:
-
-        st.write(f"📌 المعنى: {syn.definition()}")
-
-        arabic_words = [
-            lemma.name()
-            for lemma in syn.lemmas(lang='arb')
-        ]
-
-        if arabic_words:
-
-            st.write(
-                f"🔹 المرادفات: {', '.join(arabic_words[:3])}"
-            )
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-        # ج) التحليل الذكي (Gemini)
+        # ج) التحليل الذكي (Gemini) - تم تصحيح المسافات هنا
         if model and not found_local:
             try:
                 response = model.generate_content(f"حلل هذه الجملة دلالياً واشرح المجاز إن وجد: {user_text}")
                 st.markdown(f'<div class="glass-card"><h3>🤖 التحليل الدلالي الذكي:</h3><p>{response.text}</p></div>', unsafe_allow_html=True)
             except Exception:
-                st.info("نظام لبيب: التحليل الذكي مشغول حالياً، تم الاعتماد على التحليل المورفولوجي.")
+                st.info("نظام لبيب: التحليل الذكي مشغول حالياً.")
         elif not model:
-            st.warning("نظام التحليل الذكي غير مهيأ (تحققي من المفتاح).")
+            st.warning("نظام التحليل الذكي غير مهيأ.")
 
 # --- 6. التذييل ---
 st.markdown('<div class="footer-text">LABEEB AI © 2026 — هاجر الزواكي</div>', unsafe_allow_html=True)
