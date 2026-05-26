@@ -1,5 +1,7 @@
 streamlit
-openai
 torch
 transformers
 tashaphyne
+openai
+sentencepiece
+sacremoses
