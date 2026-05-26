@@ -1,9 +1,7 @@
 import streamlit as st
 import torch
 import torch.nn.functional as F
-import nltk
 
-from nltk.corpus import wordnet as wn
 from tashaphyne.stemming import ArabicLightStemmer
 
 from transformers import (
@@ -12,11 +10,8 @@ from transformers import (
 )
 
 # =========================================
-# 1. التحميلات والإعدادات
+# 1. الإعدادات العامة
 # =========================================
-
-nltk.download('wordnet', quiet=True)
-nltk.download('omw-1.4', quiet=True)
 
 stemmer = ArabicLightStemmer()
 
@@ -36,11 +31,11 @@ st.markdown(
 
     .hero-container{
         text-align:center;
-        padding:30px;
+        padding:35px;
     }
 
     .hero-title{
-        font-size:52px;
+        font-size:56px;
         font-weight:800;
         color:#4F46E5;
     }
@@ -52,7 +47,7 @@ st.markdown(
     }
 
     .glass-card{
-        background:rgba(255,255,255,0.92);
+        background:rgba(255,255,255,0.93);
         backdrop-filter:blur(10px);
         border-radius:22px;
         padding:25px;
@@ -69,14 +64,29 @@ st.markdown(
     }
 
     .stButton > button{
-        background:linear-gradient(90deg,#4F46E5,#6D28D9) !important;
+        background:linear-gradient(
+            90deg,
+            #4F46E5,
+            #6D28D9
+        ) !important;
+
         color:white !important;
-        border-radius:12px !important;
-        width:100% !important;
-        height:50px !important;
-        font-size:18px !important;
-        font-weight:bold !important;
+
         border:none !important;
+
+        border-radius:14px !important;
+
+        width:100% !important;
+
+        height:52px !important;
+
+        font-size:18px !important;
+
+        font-weight:bold !important;
+    }
+
+    textarea{
+        direction:rtl !important;
     }
 
     </style>
@@ -101,10 +111,11 @@ def load_arabert():
 
     return tokenizer, model
 
+
 tokenizer, arabert_model = load_arabert()
 
 # =========================================
-# 4. دالة استخراج التمثيل الدلالي
+# 4. استخراج التمثيل الدلالي
 # =========================================
 
 def get_embedding(text):
@@ -127,7 +138,7 @@ def get_embedding(text):
     return embedding
 
 # =========================================
-# 5. دالة التشابه الدلالي
+# 5. حساب التشابه الدلالي
 # =========================================
 
 def semantic_similarity(text1, text2):
@@ -183,6 +194,15 @@ semantic_db = {
 
         "حرب أو فتن":
         "الصراع والقتال"
+    },
+
+    "قلب": {
+
+        "عضو حيوي":
+        "النبض والدم والجسد",
+
+        "العاطفة والمشاعر":
+        "الحب والإحساس والمشاعر"
     }
 }
 
@@ -217,13 +237,13 @@ submit_btn = st.button(
 )
 
 # =========================================
-# 8. منطق التحليل
+# 8. التحليل الدلالي
 # =========================================
 
 if submit_btn and user_text.strip():
 
     with st.spinner(
-        "⏳ جاري التحليل الدلالي السياقي..."
+        "⏳ جاري تحليل السياق الدلالي..."
     ):
 
         words = user_text.split()
@@ -231,14 +251,14 @@ if submit_btn and user_text.strip():
         found_target = None
 
         # =====================================
-        # أ) الكشف عن اللفظ المشترك
+        # الكشف عن اللفظ
         # =====================================
 
         for word in words:
 
             stemmer.light_stem(word)
 
-            stem = stemmer.get_stem()
+            word_stem = stemmer.get_stem()
 
             for key in semantic_db.keys():
 
@@ -246,7 +266,7 @@ if submit_btn and user_text.strip():
 
                 key_stem = stemmer.get_stem()
 
-                if stem == key_stem:
+                if word_stem == key_stem:
 
                     found_target = key
                     break
@@ -255,12 +275,12 @@ if submit_btn and user_text.strip():
                 break
 
         # =====================================
-        # ب) التحليل الدلالي
+        # التحليل السياقي
         # =====================================
 
         if found_target:
 
-            candidates = semantic_db[
+            meanings = semantic_db[
                 found_target
             ]
 
@@ -268,16 +288,16 @@ if submit_btn and user_text.strip():
 
             highest_similarity = -1
 
-            similarity_results = []
+            all_results = []
 
-            for meaning, context in candidates.items():
+            for meaning, context in meanings.items():
 
                 similarity = semantic_similarity(
                     user_text,
                     context
                 )
 
-                similarity_results.append(
+                all_results.append(
                     (meaning, similarity)
                 )
 
@@ -288,7 +308,7 @@ if submit_btn and user_text.strip():
                     best_meaning = meaning
 
             # =================================
-            # عرض النتيجة الأساسية
+            # عرض النتيجة الرئيسية
             # =================================
 
             st.markdown(
@@ -317,10 +337,11 @@ if submit_btn and user_text.strip():
                     <p>
                     <b>التفسير:</b>
                     قام النظام بتحليل السياق
-                    باستخدام AraBERT ومقارنة
-                    المتجهات الدلالية للمعاني
-                    المحتملة ثم اختيار المعنى
-                    الأقرب للسياق.
+                    باستخدام نموذج AraBERT
+                    ثم مقارنة المتجهات
+                    الدلالية للمعاني المحتملة
+                    واختيار المعنى الأقرب
+                    لسياق الجملة.
                     </p>
 
                 </div>
@@ -329,7 +350,7 @@ if submit_btn and user_text.strip():
             )
 
             # =================================
-            # عرض جميع الاحتمالات
+            # عرض الاحتمالات
             # =================================
 
             st.markdown(
@@ -343,7 +364,7 @@ if submit_btn and user_text.strip():
                 unsafe_allow_html=True
             )
 
-            for meaning, similarity in similarity_results:
+            for meaning, similarity in all_results:
 
                 st.write(
                     f"• {meaning} → "
@@ -366,71 +387,7 @@ if submit_btn and user_text.strip():
                     "استعارة أو استعمال مجازي."
                 )
 
-        # =====================================
-        # ج) WordNet
-        # =====================================
-
-        synsets = []
-
-        for w in words:
-
-            if len(w) > 2:
-
-                results = wn.synsets(
-                    w,
-                    lang='arb'
-                )
-
-                if results:
-
-                    synsets.extend(results[:1])
-
-        if synsets:
-
-            st.markdown(
-                """
-                <div class="glass-card">
-
-                <h3>
-                🧠 نتائج الشبكة الدلالية
-                </h3>
-                """,
-                unsafe_allow_html=True
-            )
-
-            for syn in synsets[:2]:
-
-                st.write(
-                    f"📌 المعنى: "
-                    f"{syn.definition()}"
-                )
-
-                arabic_words = [
-
-                    lemma.name()
-
-                    for lemma in syn.lemmas(
-                        lang='arb'
-                    )
-                ]
-
-                if arabic_words:
-
-                    st.write(
-                        f"🔹 المرادفات: "
-                        f"{', '.join(arabic_words[:3])}"
-                    )
-
-            st.markdown(
-                "</div>",
-                unsafe_allow_html=True
-            )
-
-        # =====================================
-        # د) في حالة عدم العثور
-        # =====================================
-
-        if not found_target:
+        else:
 
             st.warning(
                 "لم يتم العثور على لفظ "
