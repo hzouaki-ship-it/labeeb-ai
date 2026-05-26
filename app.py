@@ -231,19 +231,71 @@ semantic_db = {
 }
 
 # =========================================
-# 9. الواجهة
+# 9. HERO SECTION
 # =========================================
 
 st.markdown(
     """
     <div class="hero-container">
 
-        <div class="hero-title">
-            ✦ LABEEB AI
+        <div class="hero-inline">
+
+            <div class="hero-brand">
+
+                <div class="hero-title">
+                    ✦ LABEEB AI
+                </div>
+
+                <div class="hero-sub">
+                    CONTEXTUAL SEMANTIC ANALYZER
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="hero-sub">
-            المحلل الدلالي السياقي للغة العربية
+        <div style="
+        font-size:22px;
+        font-weight:700;
+        color:#1E293B;
+        margin-top:10px;
+        ">
+
+        المحلل الدلالي الذكي لفهم
+        المعنى والسياق في اللغة العربية
+
+        </div>
+
+        <div style="
+        font-size:16px;
+        color:#64748B;
+        margin-top:15px;
+        line-height:2;
+        max-width:700px;
+        margin-left:auto;
+        margin-right:auto;
+        ">
+
+        منصة تعتمد على الذكاء الاصطناعي
+        وتحليل التمثيلات الدلالية
+        لفهم المعنى العميق للنصوص العربية.
+
+        </div>
+
+        <div style="
+        margin-top:20px;
+        display:inline-block;
+        background:white;
+        padding:8px 20px;
+        border-radius:999px;
+        border:1px solid #E9D5FF;
+        color:#6D28D9;
+        font-size:14px;
+        font-weight:700;
+        ">
+
+        © 2026 — هاجر الزواكي
+
         </div>
 
     </div>
@@ -251,15 +303,38 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# =========================================
+# بطاقة الإدخال
+# =========================================
+
+st.markdown(
+    """
+    <div class="glass-card">
+
+        <h3 style="
+        margin-bottom:18px;
+        color:#1E293B;
+        ">
+
+        🖋️ ابدأ التحليل
+
+        </h3>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 user_text = st.text_area(
-    "أدخلي الجملة:",
-    placeholder="مثال: أشعلت كلماتها نار الحماس في قلبه..."
+    "",
+    placeholder=
+    "مثال: أشعلت كلماتها نار الحماس في قلبه...",
+    label_visibility="collapsed"
 )
 
 submit_btn = st.button(
-    "⚡ تحليل دلالي ذكي"
+    "⚡ تشغيل خوارزمية لبيب للتحليل"
 )
-
 # =========================================
 # 10. التحليل
 # =========================================
