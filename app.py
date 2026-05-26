@@ -19,7 +19,6 @@ st.set_page_config(
     page_icon="🧠",
     layout="wide"
 )
-
 # =========================================
 # 2. CSS الجمالي
 # =========================================
@@ -28,37 +27,123 @@ st.markdown(
     """
     <style>
 
+    .stApp{
+        background:linear-gradient(
+            135deg,
+            #F8FAFC,
+            #EEF2FF
+        );
+    }
+
     .hero-container{
+
         text-align:center;
-        padding:35px;
+
+        padding:50px 30px;
+
+        background:rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+        backdrop-filter:blur(16px);
+
+        border-radius:30px;
+
+        margin-bottom:30px;
+
+        border:1px solid #E2E8F0;
+
+        box-shadow:
+        0 10px 30px rgba(
+            0,
+            0,
+            0,
+            0.05
+        );
+    }
+
+    .hero-inline{
+
+        display:flex;
+
+        justify-content:center;
+
+        align-items:center;
+
+        gap:25px;
+
+        margin-bottom:20px;
+    }
+
+    .hero-brand{
+        text-align:center;
     }
 
     .hero-title{
-        font-size:58px;
+
+        font-size:64px;
+
         font-weight:800;
+
         color:#4F46E5;
+
+        letter-spacing:2px;
+
+        margin-bottom:8px;
     }
 
     .hero-sub{
+
         color:#64748B;
+
         font-size:18px;
-        margin-top:10px;
+
+        letter-spacing:3px;
+
+        font-weight:600;
+
+        text-transform:uppercase;
     }
 
     .glass-card{
-        background:rgba(255,255,255,0.93);
+
+        background:rgba(
+            255,
+            255,
+            255,
+            0.93
+        );
+
         backdrop-filter:blur(12px);
+
         border-radius:24px;
+
         padding:28px;
+
         margin-top:22px;
+
         border:1px solid #E2E8F0;
-        box-shadow:0 8px 24px rgba(0,0,0,0.06);
+
+        box-shadow:
+        0 8px 24px rgba(
+            0,
+            0,
+            0,
+            0.06
+        );
     }
 
     .footer-text{
+
         text-align:center;
+
         color:#94A3B8;
+
         margin-top:60px;
+
         font-size:13px;
     }
 
@@ -83,10 +168,23 @@ st.markdown(
         font-size:18px !important;
 
         font-weight:bold !important;
+
+        box-shadow:
+        0 8px 20px rgba(
+            79,
+            70,
+            229,
+            0.25
+        ) !important;
     }
 
     textarea{
+
         direction:rtl !important;
+
+        font-size:17px !important;
+
+        border-radius:18px !important;
     }
 
     </style>
