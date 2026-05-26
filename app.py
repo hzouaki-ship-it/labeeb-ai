@@ -96,6 +96,7 @@ st.markdown(
     }
 
     .hero-brand{
+
         text-align:center;
     }
 
@@ -234,7 +235,31 @@ st.markdown(
         padding:18px !important;
     }
 
+    .stTextArea textarea{
+
+        background:white !important;
+
+        border-radius:22px !important;
+
+        border:1px solid #E2E8F0 !important;
+
+        padding:20px !important;
+
+        font-size:18px !important;
+
+        line-height:2 !important;
+
+        box-shadow:
+        0 4px 12px rgba(
+            0,
+            0,
+            0,
+            0.03
+        ) !important;
+    }
+
     h3{
+
         color:#1E293B;
     }
 
@@ -455,11 +480,25 @@ st.markdown(
         <h3 style="
         margin-bottom:18px;
         color:#1E293B;
+        text-align:center;
         ">
 
-        🖋️ ابدأ التحليل
+        🖋️ ابدأ التحليل الدلالي
 
         </h3>
+
+        <p style="
+        color:#64748B;
+        text-align:center;
+        margin-bottom:25px;
+        line-height:2;
+        ">
+
+        أدخل جملة عربية وسيقوم لبيب
+        بتحليل معناها اعتمادًا على السياق
+        باستخدام الذكاء الاصطناعي.
+
+        </p>
 
     </div>
     """,
@@ -470,6 +509,7 @@ user_text = st.text_area(
     "",
     placeholder=
     "مثال: أشعلت كلماتها نار الحماس في قلبه...",
+    height=180,
     label_visibility="collapsed"
 )
 
