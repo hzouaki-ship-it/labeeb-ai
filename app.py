@@ -2,21 +2,21 @@ import streamlit as st
 import torch
 import torch.nn.functional as F
 
-from tashaphyne.stemming import ArabicLightStemmer
-
 from transformers import (
     AutoTokenizer,
     AutoModel
 )
 
-# =========================================
-# 1. الإعدادات العامة
-# =========================================
+from tashaphyne.stemming import ArabicLightStemmer
 
-stemmer = ArabicLightStemmer()
+from openai import OpenAI
+
+# =========================================
+# 1. إعداد الصفحة
+# =========================================
 
 st.set_page_config(
-    page_title="LABEEB AI - النظام الدلالي",
+    page_title="LABEEB AI",
     page_icon="🧠",
     layout="wide"
 )
@@ -35,7 +35,7 @@ st.markdown(
     }
 
     .hero-title{
-        font-size:56px;
+        font-size:58px;
         font-weight:800;
         color:#4F46E5;
     }
@@ -48,12 +48,12 @@ st.markdown(
 
     .glass-card{
         background:rgba(255,255,255,0.93);
-        backdrop-filter:blur(10px);
-        border-radius:22px;
-        padding:25px;
-        margin-top:20px;
+        backdrop-filter:blur(12px);
+        border-radius:24px;
+        padding:28px;
+        margin-top:22px;
         border:1px solid #E2E8F0;
-        box-shadow:0 8px 20px rgba(0,0,0,0.06);
+        box-shadow:0 8px 24px rgba(0,0,0,0.06);
     }
 
     .footer-text{
@@ -64,6 +64,7 @@ st.markdown(
     }
 
     .stButton > button{
+
         background:linear-gradient(
             90deg,
             #4F46E5,
@@ -78,7 +79,7 @@ st.markdown(
 
         width:100% !important;
 
-        height:52px !important;
+        height:54px !important;
 
         font-size:18px !important;
 
@@ -95,7 +96,13 @@ st.markdown(
 )
 
 # =========================================
-# 3. تحميل AraBERT
+# 3. أدوات المعالجة
+# =========================================
+
+stemmer = ArabicLightStemmer()
+
+# =========================================
+# 4. تحميل AraBERT
 # =========================================
 
 @st.cache_resource
@@ -115,16 +122,36 @@ def load_arabert():
 tokenizer, arabert_model = load_arabert()
 
 # =========================================
-# 4. استخراج التمثيل الدلالي
+# 5. OpenRouter + Qwen
+# =========================================
+
+client = None
+
+if "OPENROUTER_API_KEY" in st.secrets:
+
+    client = OpenAI(
+
+        api_key=st.secrets["OPENROUTER_API_KEY"],
+
+        base_url="https://openrouter.ai/api/v1"
+    )
+
+# =========================================
+# 6. استخراج embedding
 # =========================================
 
 def get_embedding(text):
 
     inputs = tokenizer(
+
         text,
+
         return_tensors="pt",
+
         truncation=True,
+
         padding=True,
+
         max_length=128
     )
 
@@ -132,13 +159,12 @@ def get_embedding(text):
 
         outputs = arabert_model(**inputs)
 
-    # استعمال CLS token
     embedding = outputs.last_hidden_state[:, 0, :]
 
     return embedding
 
 # =========================================
-# 5. حساب التشابه الدلالي
+# 7. التشابه الدلالي
 # =========================================
 
 def semantic_similarity(text1, text2):
@@ -155,7 +181,7 @@ def semantic_similarity(text1, text2):
     return similarity.item()
 
 # =========================================
-# 6. قاعدة البيانات الدلالية
+# 8. قاعدة البيانات الدلالية
 # =========================================
 
 semantic_db = {
@@ -172,18 +198,6 @@ semantic_db = {
         "التجسس والمراقبة والعدو"
     },
 
-    "روح": {
-
-        "نفس بشرية":
-        "الحياة والإنسان والوفاة",
-
-        "جانب معنوي":
-        "المشاعر والطاقة الداخلية",
-
-        "عالم الغيب":
-        "الأرواح والميتافيزيقا"
-    },
-
     "نار": {
 
         "لهب حقيقي":
@@ -194,6 +208,18 @@ semantic_db = {
 
         "حرب أو فتن":
         "الصراع والقتال"
+    },
+
+    "روح": {
+
+        "نفس بشرية":
+        "الحياة والإنسان والوفاة",
+
+        "جانب معنوي":
+        "المشاعر والطاقة الداخلية",
+
+        "عالم الغيب":
+        "الأرواح والميتافيزيقا"
     },
 
     "قلب": {
@@ -207,7 +233,7 @@ semantic_db = {
 }
 
 # =========================================
-# 7. الواجهة
+# 9. الواجهة
 # =========================================
 
 st.markdown(
@@ -233,11 +259,11 @@ user_text = st.text_area(
 )
 
 submit_btn = st.button(
-    "⚡ تحليل دلالي متقدم"
+    "⚡ تحليل دلالي ذكي"
 )
 
 # =========================================
-# 8. التحليل الدلالي
+# 10. التحليل
 # =========================================
 
 if submit_btn and user_text.strip():
@@ -251,7 +277,7 @@ if submit_btn and user_text.strip():
         found_target = None
 
         # =====================================
-        # الكشف عن اللفظ
+        # الكشف عن اللفظ المشترك
         # =====================================
 
         for word in words:
@@ -275,7 +301,7 @@ if submit_btn and user_text.strip():
                 break
 
         # =====================================
-        # التحليل السياقي
+        # التحليل باستخدام AraBERT
         # =====================================
 
         if found_target:
@@ -308,7 +334,60 @@ if submit_btn and user_text.strip():
                     best_meaning = meaning
 
             # =================================
-            # عرض النتيجة الرئيسية
+            # التحليل الذكي عبر Qwen
+            # =================================
+
+            ai_analysis = ""
+
+            if client:
+
+                try:
+
+                    response = client.chat.completions.create(
+
+                        model="qwen/qwen3-4b:free",
+
+                        messages=[
+
+                            {
+                                "role": "system",
+                                "content":
+                                """
+                                أنت محلل دلالي عربي متخصص.
+
+                                حلل المعنى السياقي للجملة.
+
+                                اشرح المجاز أو الاستعارة إن وجدت.
+
+                                لا تعط مقدمة طويلة.
+
+                                أجب بأسلوب أكاديمي واضح.
+                                """
+                            },
+
+                            {
+                                "role": "user",
+                                "content": user_text
+                            }
+                        ]
+                    )
+
+                    ai_analysis = (
+                        response
+                        .choices[0]
+                        .message
+                        .content
+                    )
+
+                except Exception:
+
+                    ai_analysis = (
+                        "تعذر تنفيذ التحليل "
+                        "الذكي حالياً."
+                    )
+
+            # =================================
+            # عرض النتيجة
             # =================================
 
             st.markdown(
@@ -335,13 +414,8 @@ if submit_btn and user_text.strip():
                     </p>
 
                     <p>
-                    <b>التفسير:</b>
-                    قام النظام بتحليل السياق
-                    باستخدام نموذج AraBERT
-                    ثم مقارنة المتجهات
-                    الدلالية للمعاني المحتملة
-                    واختيار المعنى الأقرب
-                    لسياق الجملة.
+                    <b>التفسير الدلالي:</b><br>
+                    {ai_analysis}
                     </p>
 
                 </div>
@@ -383,19 +457,89 @@ if submit_btn and user_text.strip():
             if highest_similarity < 0.60:
 
                 st.info(
-                    "💡 قد تحتوي الجملة على "
-                    "استعارة أو استعمال مجازي."
+                    "💡 قد تحتوي الجملة "
+                    "على معنى مجازي أو "
+                    "استعمال استعاري."
                 )
 
         else:
 
-            st.warning(
-                "لم يتم العثور على لفظ "
-                "مشترك داخل قاعدة البيانات."
-            )
+            # =================================
+            # في حالة عدم وجود اللفظ
+            # =================================
+
+            if client:
+
+                try:
+
+                    response = client.chat.completions.create(
+
+                        model="qwen/qwen3-4b:free",
+
+                        messages=[
+
+                            {
+                                "role": "system",
+                                "content":
+                                """
+                                أنت محلل دلالي عربي متخصص.
+
+                                حلل الجملة دلالياً.
+
+                                استخرج المجاز إن وجد.
+
+                                حدد المعنى المقصود
+                                من السياق.
+                                """
+                            },
+
+                            {
+                                "role": "user",
+                                "content": user_text
+                            }
+                        ]
+                    )
+
+                    ai_result = (
+                        response
+                        .choices[0]
+                        .message
+                        .content
+                    )
+
+                    st.markdown(
+                        f"""
+                        <div class="glass-card">
+
+                        <h3>
+                        🤖 التحليل الذكي
+                        </h3>
+
+                        <p>
+                        {ai_result}
+                        </p>
+
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                except Exception:
+
+                    st.error(
+                        "تعذر الاتصال "
+                        "بمحرك Qwen."
+                    )
+
+            else:
+
+                st.warning(
+                    "لم يتم العثور على "
+                    "مفتاح OpenRouter API."
+                )
 
 # =========================================
-# 9. التذييل
+# 11. التذييل
 # =========================================
 
 st.markdown(
