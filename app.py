@@ -8,7 +8,6 @@ from transformers import (
 )
 
 from tashaphyne.stemming import ArabicLightStemmer
-
 from openai import OpenAI
 
 # =========================================
@@ -118,11 +117,10 @@ def load_arabert():
 
     return tokenizer, model
 
-
 tokenizer, arabert_model = load_arabert()
 
 # =========================================
-# 5. OpenRouter + Qwen
+# 5. OpenRouter
 # =========================================
 
 client = None
@@ -137,7 +135,7 @@ if "OPENROUTER_API_KEY" in st.secrets:
     )
 
 # =========================================
-# 6. استخراج embedding
+# 6. استخراج Embedding
 # =========================================
 
 def get_embedding(text):
@@ -164,7 +162,7 @@ def get_embedding(text):
     return embedding
 
 # =========================================
-# 7. التشابه الدلالي
+# 7. حساب التشابه الدلالي
 # =========================================
 
 def semantic_similarity(text1, text2):
@@ -334,7 +332,7 @@ if submit_btn and user_text.strip():
                     best_meaning = meaning
 
             # =================================
-            # التحليل الذكي عبر Qwen
+            # التحليل الذكي
             # =================================
 
             ai_analysis = ""
@@ -345,7 +343,7 @@ if submit_btn and user_text.strip():
 
                     response = client.chat.completions.create(
 
-                        model="qwen/qwen3-4b:free",
+                        model="openrouter/auto",
 
                         messages=[
 
@@ -357,11 +355,13 @@ if submit_btn and user_text.strip():
 
                                 حلل المعنى السياقي للجملة.
 
-                                اشرح المجاز أو الاستعارة إن وجدت.
+                                استخرج المجاز أو الاستعارة إن وجدت.
 
-                                لا تعط مقدمة طويلة.
+                                حدد المعنى المقصود للكلمة
+                                اعتماداً على السياق.
 
-                                أجب بأسلوب أكاديمي واضح.
+                                أجب بأسلوب أكاديمي واضح
+                                ومختصر.
                                 """
                             },
 
@@ -379,11 +379,10 @@ if submit_btn and user_text.strip():
                         .content
                     )
 
-                except Exception:
+                except Exception as e:
 
                     ai_analysis = (
-                        "تعذر تنفيذ التحليل "
-                        "الذكي حالياً."
+                        f"تعذر تنفيذ التحليل الذكي: {e}"
                     )
 
             # =================================
@@ -465,7 +464,7 @@ if submit_btn and user_text.strip():
         else:
 
             # =================================
-            # في حالة عدم وجود اللفظ
+            # التحليل الذكي الكامل
             # =================================
 
             if client:
@@ -474,7 +473,7 @@ if submit_btn and user_text.strip():
 
                     response = client.chat.completions.create(
 
-                        model="qwen/qwen3-4b:free",
+                        model="openrouter/auto",
 
                         messages=[
 
@@ -490,6 +489,8 @@ if submit_btn and user_text.strip():
 
                                 حدد المعنى المقصود
                                 من السياق.
+
+                                أجب بالعربية الفصحى.
                                 """
                             },
 
@@ -524,18 +525,16 @@ if submit_btn and user_text.strip():
                         unsafe_allow_html=True
                     )
 
-                except Exception:
+                except Exception as e:
 
                     st.error(
-                        "تعذر الاتصال "
-                        "بمحرك Qwen."
+                        f"تعذر الاتصال بالمحرك الذكي: {e}"
                     )
 
             else:
 
                 st.warning(
-                    "لم يتم العثور على "
-                    "مفتاح OpenRouter API."
+                    "لم يتم العثور على مفتاح OpenRouter API."
                 )
 
 # =========================================
