@@ -164,6 +164,10 @@ st.markdown(
     """
     <div class="hero-container">
 
+st.markdown(
+    """
+    <div class="hero-container">
+
         <div class="hero-title">
             ✦ LABEEB AI
         </div>
@@ -172,6 +176,10 @@ st.markdown(
             المحلل الدلالي الذكي للغة العربية
         </div>
 
+    </div>
+    """,
+    unsafe_allow_html=True
+)
     </div>
     """,
     unsafe_allow_html=True
