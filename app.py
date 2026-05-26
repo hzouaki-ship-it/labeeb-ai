@@ -530,17 +530,23 @@ if submit_btn and user_text.strip():
 
                 st.warning(
                     "لم يتم العثور على مفتاح OpenRouter API."
-                )
+ =========================================
+#10. بطاقة الباحثة (RESEARCHER SECTION)
+# =========================================
+st.markdown('<div class="researcher-card">'
+' <div class="researcher-flex">'
+'     <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg" class="researcher-img" alt="Hajar Zouaki" width="85">'
+'     <div style="text-align:right;">'
+'         <div class="researcher-name">هاجر الزواكي</div>'
+'         <div class="researcher-title">طالبة ماستر في اللسانيات الرقمية والعربية | كلية الآداب والعلوم الإنسانية — جامعة مولاي إسماعيل، مكناس</div>'
+'         <div class="researcher-bio">مهتمة بالذكاء الاصطناعي ومعالجة اللغة العربية وبناء الأنظمة الدلالية الذكية وأسعى إلى تطوير حلول رقمية حديثة لفهم اللغة العربية وتحليل السياق والمعنى.</div>'
+'     </div>'
+' </div>'
+'</div>', unsafe_allow_html=True)                )
 
 # =========================================
 # 11. التذييل
 # =========================================
-
-st.markdown(
-    """
-    <div class="footer-text">
-        LABEEB AI © 2026 — هاجر الزواكي
-    </div>
-    """,
-    unsafe_allow_html=True
+st.markdown('<div class="footer-text">LABEEB AI © 2026 — جميع الحقوق محفوظة — هاجر الزواكي</div>', unsafe_allow_html=True)
+l=True
 )
