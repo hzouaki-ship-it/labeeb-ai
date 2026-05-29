@@ -396,5 +396,138 @@ user_text = st.text_area(
 submit_btn = st.button(
     "⚡ تشغيل التحليل الذكي"
 )
-# =================================
+# =========================================
+# التحليل الذكي
+# =========================================
 
+if submit_btn and user_text.strip():
+
+    with st.spinner(
+        "⏳ جاري التحليل الذكي..."
+    ):
+
+        time.sleep(1)
+
+        ai_analysis = ""
+
+        if client:
+
+            try:
+
+                response = client.chat.completions.create(
+
+                    model="openrouter/auto",
+
+                    messages=[
+
+                        {
+                            "role": "system",
+
+                            "content":
+                            """
+                            أنت محلل دلالي عربي متخصص.
+
+                            حلل الجملة اعتماداً
+                            على السياق الدلالي.
+
+                            أجب بهذا الشكل:
+
+                            • اللفظ المحوري
+                            • المعنى المقصود
+                            • هل الاستعمال حقيقي أم مجازي
+                            • تفسير مختصر
+                            • نسبة الثقة التقريبية
+
+                            يجب أن يكون الجواب:
+                            واضحاً،
+                            مختصراً،
+                            وأكاديمياً.
+                            """
+                        },
+
+                        {
+                            "role": "user",
+
+                            "content":
+                            user_text
+                        }
+                    ]
+                )
+
+                ai_analysis = (
+                    response
+                    .choices[0]
+                    .message
+                    .content
+                )
+
+            except Exception as e:
+
+                ai_analysis = (
+                    f"حدث خطأ: {e}"
+                )
+
+        else:
+
+            ai_analysis = (
+                "لم يتم العثور على مفتاح OpenRouter داخل secrets."
+            )
+
+        st.markdown(
+            f'''
+            <div style="
+            background:white;
+
+            border-radius:28px;
+
+            padding:35px;
+
+            margin-top:25px;
+
+            border:1px solid #E2E8F0;
+
+            box-shadow:
+            0 8px 24px rgba(
+                0,
+                0,
+                0,
+                0.05
+            );
+            ">
+
+                <div style="
+                text-align:center;
+
+                font-size:28px;
+
+                font-weight:800;
+
+                color:#4F46E5;
+
+                margin-bottom:20px;
+                ">
+
+                🤖 نتيجة التحليل الذكي
+
+                </div>
+
+                <div style="
+                line-height:2.5;
+
+                color:#334155;
+
+                font-size:18px;
+
+                white-space:pre-wrap;
+                ">
+
+                {ai_analysis.replace("**","")}
+
+                </div>
+
+            </div>
+            ''',
+            unsafe_allow_html=True
+        )
+
+# =================================
