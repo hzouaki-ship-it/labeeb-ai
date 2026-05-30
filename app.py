@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import math
 import pandas as pd
 from openai import OpenAI
 
@@ -21,14 +22,21 @@ st.set_page_config(
 )
 
 # =========================================
-# OpenRouter AI
+# ✅ Groq — مجاني وسريع جداً
+# الخطوات:
+# 1. سجّلي على https://console.groq.com
+# 2. أنشئي API Key مجاني
+# 3. في Streamlit Cloud: Settings > Secrets أضيفي:
+#    GROQ_API_KEY = "gsk_xxxxxxxxxxxx"
 # =========================================
 client = None
-if "OPENROUTER_API_KEY" in st.secrets:
+if "GROQ_API_KEY" in st.secrets:
     client = OpenAI(
-        api_key=st.secrets["OPENROUTER_API_KEY"],
-        base_url="https://openrouter.ai/api/v1"
+        api_key=st.secrets["GROQ_API_KEY"],
+        base_url="https://api.groq.com/openai/v1"
     )
+
+GROQ_MODEL = "llama-3.3-70b-versatile"  # مجاني ✅
 
 # =========================================
 # CSS
@@ -97,6 +105,13 @@ html, body, [class*="css"] {
     display: inline-block; background: rgba(255,255,255,0.9);
     border: 1px solid #E9D5FF; padding: 6px 20px;
     border-radius: 999px; font-size: 13px; font-weight: 700; color: #6D28D9;
+}
+.groq-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(90deg, #10B981, #059669);
+    color: white; padding: 6px 18px;
+    border-radius: 999px; font-size: 13px; font-weight: 700;
+    margin-top: 12px;
 }
 .glass-card {
     background: rgba(255,255,255,0.92);
@@ -188,48 +203,38 @@ html, body, [class*="css"] {
     text-transform: uppercase; letter-spacing: 2px;
     text-align: center; margin-bottom: 14px;
 }
-/* جدول النتائج — نص وسط + خط فاصل بين الخانتين */
+.history-section {
+    background: white; border-radius: 18px; padding: 24px;
+    border: 1px solid #F1F5F9; margin-top: 30px;
+}
+/* جدول النتائج */
 [data-testid="stTable"] table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Cairo', sans-serif;
-    direction: rtl;
+    width: 100%; border-collapse: collapse;
+    font-family: 'Cairo', sans-serif; direction: rtl;
 }
 [data-testid="stTable"] table thead tr th {
-    text-align: center !important;
-    font-size: 14px;
-    font-weight: 700;
-    color: #6D28D9;
-    padding: 12px 16px;
-    background: #F9F5FF;
-    border-bottom: 2px solid #E9D5FF;
+    text-align: center !important; font-size: 14px;
+    font-weight: 700; color: #6D28D9; padding: 12px 16px;
+    background: #F9F5FF; border-bottom: 2px solid #E9D5FF;
 }
 [data-testid="stTable"] table thead tr th:first-child {
     border-left: 2px solid #E9D5FF;
 }
 [data-testid="stTable"] table tbody tr td {
-    text-align: center !important;
-    font-size: 15px;
-    color: #334155;
-    padding: 12px 16px;
+    text-align: center !important; font-size: 15px;
+    color: #334155; padding: 12px 16px;
     border-bottom: 1px solid #F1F5F9;
 }
 [data-testid="stTable"] table tbody tr td:first-child {
-    border-left: 2px solid #E9D5FF;
-    font-weight: 600;
-    color: #1E293B;
+    border-left: 2px solid #E9D5FF; font-weight: 600; color: #1E293B;
 }
-[data-testid="stTable"] table tbody tr:last-child td {
-    border-bottom: none;
-}
-[data-testid="stTable"] table tbody tr:hover td {
-    background: #FAF5FF;
-}
+[data-testid="stTable"] table tbody tr:last-child td { border-bottom: none; }
+[data-testid="stTable"] table tbody tr:hover td { background: #FAF5FF; }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================
-# قاعدة البيانات المعجمية
+# قاعدة البيانات المعجمية (موسّعة)
 # =========================================
 semantic_db = {
     "روح": [
@@ -343,8 +348,55 @@ semantic_db = {
             "هداية": 5, "علم": 4, "معرفة": 5, "إيمان": 4, "حق": 3,
             "دين": 4, "قرآن": 4, "إسلام": 3, "تقوى": 4, "رشد": 4
         }}
+    ],
+    # ✅ كلمات جديدة مضافة
+    "لسان": [
+        {"المعنى": "عضو النطق", "القرائن": {
+            "كلام": 5, "نطق": 5, "فم": 5, "صوت": 4, "لغة": 4,
+            "تذوق": 4, "طعم": 4, "أكل": 3, "حلق": 4, "أسنان": 4
+        }},
+        {"المعنى": "اللغة أو الأسلوب", "القرائن": {
+            "عربي": 5, "فصيح": 5, "بيان": 4, "أدب": 4, "شعر": 4,
+            "خطابة": 5, "بلاغة": 5, "تعبير": 4, "كتابة": 3, "فقه": 3
+        }}
+    ],
+    "سيف": [
+        {"المعنى": "سلاح حاد", "القرائن": {
+            "معركة": 5, "حرب": 5, "قتال": 5, "ضرب": 4, "جرح": 4,
+            "دم": 4, "غمد": 5, "فارس": 4, "بطل": 3, "حديد": 4
+        }},
+        {"المعنى": "القوة أو الحجة القاطعة", "القرائن": {
+            "حجة": 5, "برهان": 4, "رد": 4, "جدل": 4, "دحض": 5,
+            "قاطع": 5, "حسم": 4, "إفحام": 5, "إثبات": 4, "نقاش": 3
+        }}
+    ],
+    "أسد": [
+        {"المعنى": "حيوان مفترس", "القرائن": {
+            "غابة": 5, "فريسة": 5, "زئير": 5, "مخلب": 5, "صيد": 4,
+            "حديقة الحيوان": 4, "أفريقيا": 3, "ضاري": 4, "حيوان": 4, "افترس": 5
+        }},
+        {"المعنى": "الشجاعة والبطولة", "القرائن": {
+            "شجاعة": 5, "بطولة": 5, "جرأة": 4, "إقدام": 4, "مقاتل": 4,
+            "جندي": 4, "قائد": 4, "بسالة": 5, "فداء": 3, "نضال": 4
+        }}
+    ],
+    "ظل": [
+        {"المعنى": "انعكاس الضوء", "القرائن": {
+            "شمس": 5, "ضوء": 4, "شجرة": 4, "صيف": 4, "حر": 4,
+            "انعكس": 5, "سقط": 4, "جدار": 3, "منتصف النهار": 4, "وقاية": 3
+        }},
+        {"المعنى": "الحماية والكنف", "القرائن": {
+            "أب": 5, "وطن": 5, "حماية": 5, "رعاية": 4, "دفء": 4,
+            "أمان": 5, "لجأ": 4, "استظل": 5, "كنف": 5, "عطف": 4
+        }}
     ]
 }
+
+# =========================================
+# سجل التحليلات (Session State)
+# =========================================
+if "history" not in st.session_state:
+    st.session_state.history = []
 
 # =========================================
 # HERO SECTION
@@ -361,6 +413,7 @@ st.markdown("""
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
     <div class="hero-desc">منصة تعتمد على الذكاء الاصطناعي لفهم المعنى والسياق وتحليل الدلالة في اللغة العربية.</div>
     <div class="badge-student">© 2026 — هاجر الزواكي</div>
+    <div><span class="groq-badge">⚡ مدعوم بـ Groq — مجاني وسريع</span></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -390,13 +443,31 @@ if submit_btn and user_text.strip():
     with st.spinner("⏳ يجري تحليل المتجهات والروابط السياقية..."):
         time.sleep(0.5)
 
-        # --- المرحلة 1: الخوارزمية المحلية ---
-        detected_keyword = None
+        # --- المرحلة 1: الخوارزمية المحلية (كل الكلمات المكتشفة) ---
+        detected_keywords = []
         for word in semantic_db.keys():
             variants = [word, word + "ه", word + "ها", word + "ي", "ال" + word]
             if any(v in user_text for v in variants):
+                detected_keywords.append(word)
+
+        # اختر الكلمة التي تحصل على أعلى درجة إجمالية
+        detected_keyword = None
+        best_total = -1
+        for word in detected_keywords:
+            tokens = set(user_text.replace("،", "").replace(".", "").split())
+            total = 0
+            for entry in semantic_db[word]:
+                for clue, weight in entry["القرائن"].items():
+                    if clue in user_text:
+                        total += weight
+                    else:
+                        for token in tokens:
+                            if clue in token or token in clue:
+                                total += weight
+                                break
+            if total > best_total:
+                best_total = total
                 detected_keyword = word
-                break
 
         local_result_html = ""
         predicted_meaning = ""
@@ -405,23 +476,20 @@ if submit_btn and user_text.strip():
         if detected_keyword:
             results_list = []
             meanings = semantic_db[detected_keyword]
-            tokens = set(user_text.replace("،","").replace(".","").split())
+            tokens = set(user_text.replace("،", "").replace(".", "").split())
             raw_scores = []
 
             for entry in meanings:
                 weighted_sum = 0
                 for clue, weight in entry["القرائن"].items():
                     found = False
-                    # مطابقة مباشرة بالكلمة أو جزء منها
                     if clue in user_text:
                         found = True
                     else:
-                        # مطابقة بكل رمز في الجملة
                         for token in tokens:
                             if clue in token or token in clue:
                                 found = True
                                 break
-                        # مطابقة بالجذر إن كان tashaphyne متاحاً
                         if not found and TASHAPHYNE_OK and stemmer:
                             try:
                                 stemmer.light_stem(clue)
@@ -436,16 +504,12 @@ if submit_btn and user_text.strip():
                                 pass
                     if found:
                         weighted_sum += weight
-
                 raw_scores.append(float(weighted_sum))
 
-            # إذا كانت كل النتائج صفراً، نوزع بالتساوي مع إشارة
             all_zero = all(s == 0 for s in raw_scores)
             if all_zero:
                 normalized = [1.0 / len(raw_scores)] * len(raw_scores)
             else:
-                # softmax بمعامل حرارة 0.5 لتضخيم الفروق
-                import math
                 temp = 0.5
                 exp_scores = [math.exp(s / temp) for s in raw_scores]
                 total_exp = sum(exp_scores)
@@ -489,13 +553,13 @@ if submit_btn and user_text.strip():
 </div>
 """
 
-        # --- المرحلة 2: الذكاء الاصطناعي ---
+        # --- المرحلة 2: Groq AI ---
         ai_analysis = ""
         if client:
             try:
                 context_hint = f"الكلمة المرصودة محلياً: «{detected_keyword}» — المعنى المرجّح: «{predicted_meaning}»\n\n" if detected_keyword else ""
                 response = client.chat.completions.create(
-                    model="openrouter/auto",
+                    model=GROQ_MODEL,
                     messages=[
                         {
                             "role": "system",
@@ -513,13 +577,28 @@ if submit_btn and user_text.strip():
                             "role": "user",
                             "content": context_hint + user_text
                         }
-                    ]
+                    ],
+                    max_tokens=500,
+                    temperature=0.3
                 )
                 ai_analysis = response.choices[0].message.content
             except Exception as e:
-                ai_analysis = f"حدث خطأ في الاتصال بالذكاء الاصطناعي: {e}"
+                ai_analysis = f"حدث خطأ في الاتصال بـ Groq: {e}"
         else:
-            ai_analysis = "لم يتم العثور على مفتاح OpenRouter.\nتأكدي من إضافة OPENROUTER_API_KEY في إعدادات Streamlit Cloud."
+            ai_analysis = """⚠️ لم يتم العثور على مفتاح Groq.
+خطوات الإعداد:
+1. سجّلي على https://console.groq.com (مجاني)
+2. أنشئي API Key
+3. في Streamlit Cloud: Settings > Secrets أضيفي:
+   GROQ_API_KEY = \"gsk_xxxxxxxxxxxx\""""
+
+        # --- حفظ في السجل ---
+        st.session_state.history.append({
+            "الجملة": user_text[:60] + ("..." if len(user_text) > 60 else ""),
+            "الكلمة": detected_keyword or "—",
+            "المعنى": predicted_meaning or "—",
+            "الوقت": pd.Timestamp.now().strftime("%H:%M:%S")
+        })
 
         # --- عرض النتائج ---
         st.markdown(f"""
@@ -532,10 +611,25 @@ if submit_btn and user_text.strip():
 
         st.markdown(f"""
     <div class="divider"></div>
-    <div class="section-label">② تحليل الذكاء الاصطناعي المعمّق</div>
+    <div class="section-label">② تحليل Groq AI المعمّق</div>
     <div class="ai-result-content">{ai_analysis.replace("**", "")}</div>
 </div>
 """, unsafe_allow_html=True)
+
+# =========================================
+# سجل التحليلات
+# =========================================
+if st.session_state.history:
+    st.markdown('<div class="section-main-title">📋 سجل التحليلات</div>', unsafe_allow_html=True)
+    with st.expander("عرض السجل الكامل لهذه الجلسة"):
+        df_history = pd.DataFrame(st.session_state.history)
+        st.dataframe(df_history, use_container_width=True)
+
+        # إحصائية بسيطة
+        word_counts = df_history["الكلمة"].value_counts()
+        if len(word_counts) > 1:
+            st.markdown("**أكثر الكلمات تحليلاً:**")
+            st.bar_chart(word_counts)
 
 # =========================================
 # كيف يعمل لبيب؟
@@ -553,7 +647,7 @@ with col2:
     st.markdown("""<div class="step-card">
     <div class="step-icon">✨</div>
     <div class="step-title">اكتشاف المعنى</div>
-    <div class="step-desc">تُطابق البيئة السياقية مع الحقول المعجمية ثم يُعمّق الذكاء الاصطناعي التفسير ويرجّح المعنى الأدق.</div>
+    <div class="step-desc">تُطابق البيئة السياقية مع الحقول المعجمية ثم يُعمّق Groq AI التفسير ويرجّح المعنى الأدق.</div>
 </div>""", unsafe_allow_html=True)
 with col3:
     st.markdown("""<div class="step-card">
@@ -582,4 +676,4 @@ st.markdown("""
 # =========================================
 # التذييل
 # =========================================
-st.markdown('<div class="footer-text">LABEEB AI © 2026 — جميع الحقوق محفوظة — هاجر الزواكي</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer-text">LABEEB AI © 2026 — مدعوم بـ Groq LLaMA 3.3 70B — هاجر الزواكي</div>', unsafe_allow_html=True)
