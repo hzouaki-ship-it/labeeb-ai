@@ -397,7 +397,7 @@ st.markdown("""
 # =========================================
 st.markdown("""
 <div class="glass-card">
-    <div class="card-title">🧠 التحليل الدلالي الذكي</div>
+    <div class="card-title">✦ التحليل الدلالي الذكي</div>
     <div class="card-desc">أدخل جملة عربية وسيقوم لبيب بتحليل جميع الألفاظ المشتركة فيها، كلٍّ على حدة، بدقة أكاديمية.</div>
 </div>
 """, unsafe_allow_html=True)
