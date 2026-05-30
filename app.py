@@ -191,6 +191,73 @@ html, body, [class*="css"] {
     text-align: center; color: #94A3B8; font-size: 13px;
     margin-top: 50px; border-top: 1px solid #E2E8F0; padding-top: 20px;
 }
+/* ===== بطاقة النتيجة الجديدة ===== */
+.result-card {
+    background: linear-gradient(135deg, #FAFAFA 0%, #F5F3FF 100%);
+    border: 1px solid #E9D5FF;
+    border-radius: 26px;
+    padding: 36px 40px;
+    margin-top: 24px;
+    box-shadow: 0 12px 40px rgba(109,40,217,0.07);
+    direction: rtl;
+}
+.result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    gap: 12px;
+}
+.result-title {
+    font-size: 20px; font-weight: 800; color: #4F46E5;
+}
+.result-source-pill {
+    font-size: 12px; font-weight: 700; padding: 5px 16px;
+    border-radius: 999px; display: inline-block;
+}
+.pill-local { background: #EDE9FE; color: #6D28D9; }
+.pill-ai    { background: #F0FDF4; color: #16A34A; }
+.pill-learn { background: #FEF3C7; color: #D97706; }
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 26px;
+}
+.result-cell {
+    background: white;
+    border: 1px solid #F3E8FF;
+    border-radius: 16px;
+    padding: 16px 18px;
+    text-align: center;
+}
+.result-cell-icon { font-size: 22px; margin-bottom: 6px; }
+.result-cell-label { font-size: 11px; color: #94A3B8; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.result-cell-val { font-size: 17px; font-weight: 800; color: #1E293B; }
+.result-divider { height: 1px; background: linear-gradient(90deg,transparent,#E9D5FF,transparent); margin: 22px 0; }
+.result-interp {
+    background: white; border-right: 4px solid #7C3AED;
+    border-radius: 0 14px 14px 0; padding: 16px 20px;
+    font-size: 15px; color: #334155; line-height: 2; margin-bottom: 18px;
+}
+.result-confidence {
+    display: flex; align-items: center; gap: 12px;
+    direction: rtl;
+}
+.conf-label { font-size: 13px; color: #64748B; font-weight: 700; white-space: nowrap; }
+.conf-bar-wrap { flex: 1; background: #F1F5F9; border-radius: 999px; height: 10px; overflow: hidden; }
+.conf-bar { height: 10px; border-radius: 999px;
+    background: linear-gradient(90deg, #7C3AED, #4F46E5); }
+.conf-pct { font-size: 14px; font-weight: 800; color: #4F46E5; white-space: nowrap; }
+.learn-banner {
+    background: linear-gradient(90deg, #FFFBEB, #FEF3C7);
+    border: 1px solid #FDE68A; border-radius: 14px;
+    padding: 12px 18px; margin-bottom: 20px;
+    font-size: 14px; color: #92400E; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+}
 .divider { height: 1px; background: #F1F5F9; margin: 22px 0; }
 .section-label {
     font-size: 13px; font-weight: 700; color: #94A3B8;
@@ -520,6 +587,29 @@ if submit_btn and user_text.strip():
                     break
 
         # -------------------------------------------------------
+        # التعلم التلقائي — إذا لم تُرصد كلمة موثوقة في القاعدة
+        # -------------------------------------------------------
+        just_learned = False
+        if not detected_keyword and client:
+            tokens_raw = [t.strip(".,،؟!") for t in user_text.split() if len(t) >= 3]
+            all_known = set(semantic_db.keys()) | set(st.session_state.learned_db.keys())
+            candidates = [t.lstrip("ال") for t in tokens_raw
+                          if t.lstrip("ال") not in all_known and len(t.lstrip("ال")) >= 3]
+            if candidates:
+                new_word = candidates[0]
+                learned = auto_learn_word(new_word, user_text, client)
+                if learned:
+                    st.session_state.learned_db[new_word] = learned
+                    semantic_db[new_word] = learned
+                    detected_keyword = new_word
+                    just_learned = True
+                    meanings_text = " | ".join(
+                        e["المعنى"] + ": " + ", ".join(list(e["القرائن"].keys())[:5])
+                        for e in learned
+                    )
+                    db_context = ("[تعلّم جديد] الكلمة «" + new_word + "» أُضيفت للقاعدة بالمعاني: " + meanings_text + "\n\n")
+
+        # -------------------------------------------------------
         # Groq AI — المحلل الرئيسي والوحيد
         # -------------------------------------------------------
         ai_analysis = ""
@@ -564,11 +654,25 @@ if submit_btn and user_text.strip():
         # -------------------------------------------------------
         ai_keyword = detected_keyword or "—"
         ai_meaning = "—"
+        ai_usage = "—"
+        ai_interp = "—"
+        ai_conf_pct = 0
         for line in ai_analysis.splitlines():
+            line = line.strip().lstrip("•").strip()
             if "اللفظ المحوري" in line and ":" in line:
-                ai_keyword = line.split(":", 1)[-1].strip().strip("«»")
+                ai_keyword = line.split(":", 1)[-1].strip().strip("«»").strip()
             if "المعنى المقصود" in line and ":" in line:
                 ai_meaning = line.split(":", 1)[-1].strip()
+            if "نوع الاستعمال" in line and ":" in line:
+                ai_usage = line.split(":", 1)[-1].strip()
+            if "التفسير" in line and ":" in line:
+                ai_interp = line.split(":", 1)[-1].strip()
+            if "نسبة الثقة" in line and ":" in line:
+                raw_conf = line.split(":", 1)[-1].strip().replace("%","").strip()
+                try:
+                    ai_conf_pct = int(float(raw_conf))
+                except Exception:
+                    ai_conf_pct = 85
 
         # حفظ في السجل
         st.session_state.history.append({
@@ -579,18 +683,54 @@ if submit_btn and user_text.strip():
         })
 
         # -------------------------------------------------------
-        # عرض النتيجة — Groq فقط بدون نسب خاطئة
+        # عرض النتيجة — بطاقة جميلة
         # -------------------------------------------------------
-        source_badge = (
-            f'<span style="background:#EDE9FE;color:#6D28D9;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;">📚 مدعوم بالقاعدة المحلية + الذكاء الاصطناعي</span>'
-            if detected_keyword else
-            f'<span style="background:#F0FDF4;color:#16A34A;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;">🤖 تحليل بالذكاء الاصطناعي</span>'
-        )
+        if detected_keyword and just_learned:
+            pill_cls, pill_txt = "pill-learn", "🧠 تعلّم تلقائي جديد"
+        elif detected_keyword:
+            pill_cls, pill_txt = "pill-local", "📚 قاعدة محلية + ذكاء اصطناعي"
+        else:
+            pill_cls, pill_txt = "pill-ai", "🤖 تحليل بالذكاء الاصطناعي"
+
+        usage_icon = "🔵" if "حقيقي" in ai_usage else "🟣"
+        conf_bar_w = min(ai_conf_pct, 100)
+
+        learn_banner_html = ""
+        if just_learned:
+            learn_banner_html = f'<div class="learn-banner">✨ <span>لبيب تعلّم كلمة جديدة وأضافها للقاعدة: <strong>«{ai_keyword}»</strong> — ستُحلَّل محلياً في الجلسة القادمة!</span></div>'
 
         st.markdown(f"""
-<div class="ai-result-box">
-    <div style="text-align:center;margin-bottom:18px;">{source_badge}</div>
-    <div class="ai-result-content">{ai_analysis.replace("**", "")}</div>
+<div class="result-card">
+    {learn_banner_html}
+    <div class="result-header">
+        <div class="result-title">🔍 نتيجة التحليل الدلالي</div>
+        <span class="result-source-pill {pill_cls}">{pill_txt}</span>
+    </div>
+    <div class="result-grid">
+        <div class="result-cell">
+            <div class="result-cell-icon">📝</div>
+            <div class="result-cell-label">اللفظ المحوري</div>
+            <div class="result-cell-val">{ai_keyword}</div>
+        </div>
+        <div class="result-cell">
+            <div class="result-cell-icon">💡</div>
+            <div class="result-cell-label">المعنى المقصود</div>
+            <div class="result-cell-val">{ai_meaning}</div>
+        </div>
+        <div class="result-cell">
+            <div class="result-cell-icon">{usage_icon}</div>
+            <div class="result-cell-label">نوع الاستعمال</div>
+            <div class="result-cell-val">{ai_usage}</div>
+        </div>
+    </div>
+    <div class="result-divider"></div>
+    <div style="font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:10px;">التفسير</div>
+    <div class="result-interp">{ai_interp}</div>
+    <div class="result-confidence">
+        <span class="conf-label">نسبة الثقة</span>
+        <div class="conf-bar-wrap"><div class="conf-bar" style="width:{conf_bar_w}%"></div></div>
+        <span class="conf-pct">{ai_conf_pct}%</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -604,7 +744,7 @@ if st.session_state.history:
         st.dataframe(df_history, use_container_width=True)
 
         # إحصائية بسيطة
-        word_counts = df_history["الكلمة"].value_counts()
+        word_counts = df_history["اللفظ المحوري"].value_counts() if "اللفظ المحوري" in df_history.columns else df_history.iloc[:,1].value_counts()
         if len(word_counts) > 1:
             st.markdown("**أكثر الكلمات تحليلاً:**")
             st.bar_chart(word_counts)
