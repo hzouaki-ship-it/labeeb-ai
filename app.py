@@ -335,22 +335,37 @@ if submit_btn and user_text.strip():
         if detected_keyword:
             results_list = []
             meanings = semantic_db[detected_keyword]
+            raw_scores = []
+
             for entry in meanings:
-                score = 0.20
-                matched = 0
+                weighted_sum = 0
+                total_weight = sum(entry["القرائن"].values())
                 for clue, weight in entry["القرائن"].items():
-                    if TASHAPHYNE_OK and stemmer:
-                        stemmer.light_stem(clue)
-                        c_stem = stemmer.get_stem()
-                        stemmer.light_stem(user_text)
-                        t_stem = stemmer.get_stem()
-                        if c_stem in t_stem:
-                            matched += 1
-                    else:
-                        if clue in user_text:
-                            matched += 1
-                if matched > 0:
-                    score = min(0.20 + matched * 0.40, 0.95)
+                    found = False
+                    if clue in user_text:
+                        found = True
+                    elif TASHAPHYNE_OK and stemmer:
+                        try:
+                            stemmer.light_stem(clue)
+                            c_stem = stemmer.get_stem()
+                            for token in user_text.split():
+                                stemmer.light_stem(token)
+                                t_stem = stemmer.get_stem()
+                                if c_stem and t_stem and c_stem == t_stem:
+                                    found = True
+                                    break
+                        except Exception:
+                            pass
+                    if found:
+                        weighted_sum += weight
+                ratio = (weighted_sum / total_weight) if total_weight > 0 else 0
+                raw_scores.append(0.10 + ratio * 0.85)
+
+            total = sum(raw_scores)
+            normalized = [s / total for s in raw_scores] if total > 0 else [1 / len(raw_scores)] * len(raw_scores)
+
+            for i, entry in enumerate(meanings):
+                score = min(normalized[i], 0.97)
                 if score > highest_score:
                     highest_score = score
                     predicted_meaning = entry["المعنى"]
