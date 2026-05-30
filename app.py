@@ -17,7 +17,6 @@ except Exception:
 # =========================================
 st.set_page_config(
     page_title="LABEEB AI - لبيب",
-    page_icon="🧠",
     layout="wide"
 )
 
