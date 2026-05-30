@@ -23,11 +23,6 @@ st.set_page_config(
 
 # =========================================
 # ✅ Groq — مجاني وسريع جداً
-# الخطوات:
-# 1. سجّلي على https://console.groq.com
-# 2. أنشئي API Key مجاني
-# 3. في Streamlit Cloud: Settings > Secrets أضيفي:
-#    GROQ_API_KEY = "gsk_xxxxxxxxxxxx"
 # =========================================
 client = None
 if "GROQ_API_KEY" in st.secrets:
@@ -36,7 +31,23 @@ if "GROQ_API_KEY" in st.secrets:
         base_url="https://api.groq.com/openai/v1"
     )
 
-GROQ_MODEL = "llama-3.3-70b-versatile"  # مجاني ✅
+GROQ_MODEL = "llama-3.3-70b-versatile"
+
+# =========================================
+# ✅ قائمة الكلمات الوظيفية المحظورة
+# =========================================
+ARABIC_STOPWORDS = {
+    "تلك","هذا","هذه","ذلك","هؤلاء","أولئك","التي","الذي","الذين",
+    "اللواتي","ما","من","في","على","إلى","عن","مع","هو","هي","هم",
+    "هن","أنا","أنت","أنتِ","نحن","أنتم","كان","كانت","يكون","تكون",
+    "لكن","إن","أن","لأن","حتى","إذا","لو","قد","كل","بعض",
+    "غير","بين","حول","عبر","خلال","منذ","رغم","بعد","قبل",
+    "وهو","وهي","وهم","أو","بل","ثم","إذ","إذن","لا","لم","لن",
+    "هناك","هنا","الآن","اليوم","أيضاً","أيضا","فقط","جداً","جدا",
+    "كما","مما","عما","فيما","بما","وما","وكان","وكانت","وكانوا",
+    "التي","الذين","اللذان","اللتان","حيث","كيف","متى","أين","لماذا",
+    "كيف","ليس","ليست","وقد","وإن","وأن","فإن","فأن","إلا","سوى"
+}
 
 # =========================================
 # CSS
@@ -106,7 +117,6 @@ html, body, [class*="css"] {
     border: 1px solid #E9D5FF; padding: 6px 20px;
     border-radius: 999px; font-size: 13px; font-weight: 700; color: #6D28D9;
 }
-
 .glass-card {
     background: rgba(255,255,255,0.92);
     backdrop-filter: blur(20px);
@@ -144,54 +154,6 @@ html, body, [class*="css"] {
     transform: translateY(-2px);
     box-shadow: 0 14px 28px rgba(79,70,229,0.35) !important;
 }
-.result-badge-container { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
-.result-stat-box {
-    flex: 1; background: white; border: 1px solid #F3E8FF;
-    padding: 14px; border-radius: 14px; text-align: center; min-width: 120px;
-}
-.result-stat-label { font-size: 13px; color: #64748B; margin-bottom: 4px; }
-.result-stat-val { font-size: 18px; font-weight: 700; color: #6D28D9; }
-.ai-result-box {
-    background: white; border-radius: 22px;
-    padding: 30px 35px; margin-top: 20px;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-    direction: rtl; text-align: right;
-}
-.ai-result-title { text-align: center; font-size: 24px; font-weight: 800; color: #4F46E5; margin-bottom: 18px; }
-.ai-result-content { line-height: 2.8; color: #334155; font-size: 17px; white-space: pre-wrap; direction: rtl; text-align: right; }
-.section-main-title { text-align: center; font-size: 26px; font-weight: 800; color: #1E293B; margin: 40px 0 20px 0; }
-.step-card {
-    background: white; border: 1px solid #F1F5F9;
-    border-radius: 18px; padding: 24px; text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-}
-.step-icon { font-size: 30px; margin-bottom: 10px; }
-.step-title { font-size: 17px; font-weight: 700; color: #1E293B; margin-bottom: 8px; }
-.step-desc { font-size: 14px; color: #64748B; line-height: 1.8; }
-.researcher-card {
-    background: white; border: 1px solid #EEF2F6;
-    border-radius: 22px; padding: 28px 32px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.02);
-    margin-top: 40px; direction: rtl;
-}
-.researcher-flex {
-    display: flex; align-items: center;
-    justify-content: flex-start; gap: 24px;
-    direction: rtl; text-align: right; flex-wrap: wrap;
-}
-.researcher-img {
-    width: 110px; height: 110px; border-radius: 50%;
-    object-fit: cover; border: 3px solid #F3E8FF; flex-shrink: 0;
-}
-.researcher-name { font-size: 21px; font-weight: 800; color: #1E293B; margin-bottom: 4px; }
-.researcher-title { font-size: 14px; font-weight: 600; color: #6D28D9; margin-bottom: 10px; line-height: 1.8; }
-.researcher-bio { font-size: 14px; color: #475569; line-height: 1.9; }
-.footer-text {
-    text-align: center; color: #94A3B8; font-size: 13px;
-    margin-top: 50px; border-top: 1px solid #E2E8F0; padding-top: 20px;
-}
-/* ===== بطاقة النتيجة الجديدة ===== */
 .result-card {
     background: linear-gradient(135deg, #FAFAFA 0%, #F5F3FF 100%);
     border: 1px solid #E9D5FF;
@@ -209,9 +171,7 @@ html, body, [class*="css"] {
     margin-bottom: 28px;
     gap: 12px;
 }
-.result-title {
-    font-size: 20px; font-weight: 800; color: #4F46E5;
-}
+.result-title { font-size: 20px; font-weight: 800; color: #4F46E5; }
 .result-source-pill {
     font-size: 12px; font-weight: 700; padding: 5px 16px;
     border-radius: 999px; display: inline-block;
@@ -243,8 +203,7 @@ html, body, [class*="css"] {
     font-size: 15px; color: #334155; line-height: 2; margin-bottom: 18px;
 }
 .result-confidence {
-    display: flex; align-items: center; gap: 12px;
-    direction: rtl;
+    display: flex; align-items: center; gap: 12px; direction: rtl;
 }
 .conf-label { font-size: 13px; color: #64748B; font-weight: 700; white-space: nowrap; }
 .conf-bar-wrap { flex: 1; background: #F1F5F9; border-radius: 999px; height: 10px; overflow: hidden; }
@@ -258,17 +217,37 @@ html, body, [class*="css"] {
     font-size: 14px; color: #92400E; font-weight: 600;
     display: flex; align-items: center; gap: 10px;
 }
-.divider { height: 1px; background: #F1F5F9; margin: 22px 0; }
-.section-label {
-    font-size: 13px; font-weight: 700; color: #94A3B8;
-    text-transform: uppercase; letter-spacing: 2px;
-    text-align: center; margin-bottom: 14px;
+.section-main-title { text-align: center; font-size: 26px; font-weight: 800; color: #1E293B; margin: 40px 0 20px 0; }
+.step-card {
+    background: white; border: 1px solid #F1F5F9;
+    border-radius: 18px; padding: 24px; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
 }
-.history-section {
-    background: white; border-radius: 18px; padding: 24px;
-    border: 1px solid #F1F5F9; margin-top: 30px;
+.step-icon { font-size: 30px; margin-bottom: 10px; }
+.step-title { font-size: 17px; font-weight: 700; color: #1E293B; margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: #64748B; line-height: 1.8; }
+.researcher-card {
+    background: white; border: 1px solid #EEF2F6;
+    border-radius: 22px; padding: 28px 32px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+    margin-top: 40px; direction: rtl;
 }
-/* جدول النتائج */
+.researcher-flex {
+    display: flex; align-items: center;
+    justify-content: flex-start; gap: 24px;
+    direction: rtl; text-align: right; flex-wrap: wrap;
+}
+.researcher-img {
+    width: 110px; height: 110px; border-radius: 50%;
+    object-fit: cover; border: 3px solid #F3E8FF; flex-shrink: 0;
+}
+.researcher-name { font-size: 21px; font-weight: 800; color: #1E293B; margin-bottom: 4px; }
+.researcher-title { font-size: 14px; font-weight: 600; color: #6D28D9; margin-bottom: 10px; line-height: 1.8; }
+.researcher-bio { font-size: 14px; color: #475569; line-height: 1.9; }
+.footer-text {
+    text-align: center; color: #94A3B8; font-size: 13px;
+    margin-top: 50px; border-top: 1px solid #E2E8F0; padding-top: 20px;
+}
 [data-testid="stTable"] table {
     width: 100%; border-collapse: collapse;
     font-family: 'Cairo', sans-serif; direction: rtl;
@@ -278,24 +257,17 @@ html, body, [class*="css"] {
     font-weight: 700; color: #6D28D9; padding: 12px 16px;
     background: #F9F5FF; border-bottom: 2px solid #E9D5FF;
 }
-[data-testid="stTable"] table thead tr th:first-child {
-    border-left: 2px solid #E9D5FF;
-}
 [data-testid="stTable"] table tbody tr td {
     text-align: center !important; font-size: 15px;
     color: #334155; padding: 12px 16px;
     border-bottom: 1px solid #F1F5F9;
 }
-[data-testid="stTable"] table tbody tr td:first-child {
-    border-left: 2px solid #E9D5FF; font-weight: 600; color: #1E293B;
-}
-[data-testid="stTable"] table tbody tr:last-child td { border-bottom: none; }
 [data-testid="stTable"] table tbody tr:hover td { background: #FAF5FF; }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================
-# قاعدة البيانات المعجمية (موسّعة)
+# قاعدة البيانات المعجمية
 # =========================================
 semantic_db = {
     "روح": [
@@ -410,7 +382,6 @@ semantic_db = {
             "دين": 4, "قرآن": 4, "إسلام": 3, "تقوى": 4, "رشد": 4
         }}
     ],
-    # ✅ كلمات جديدة مضافة
     "لسان": [
         {"المعنى": "عضو النطق", "القرائن": {
             "كلام": 5, "نطق": 5, "فم": 5, "صوت": 4, "لغة": 4,
@@ -458,44 +429,61 @@ semantic_db = {
 # =========================================
 if "history" not in st.session_state:
     st.session_state.history = []
-
-# قاعدة الكلمات المتعلَّمة تلقائياً في هذه الجلسة
 if "learned_db" not in st.session_state:
     st.session_state.learned_db = {}
 
 
 # =========================================
+# ✅ الحل 1: استخراج اللفظ المحوري محلياً
+# =========================================
+def extract_pivot_word(text: str, db: dict) -> str | None:
+    """
+    يبحث في الجملة عن أول كلمة موجودة في قاعدة البيانات.
+    يتجاهل الكلمات الوظيفية تلقائياً لأن القاعدة لا تحتوي عليها.
+    يتحقق أيضاً من الكلمة بعد حذف "ال" التعريف.
+    """
+    tokens = [t.strip(".,،؟!:؛-") for t in text.split()]
+    for token in tokens:
+        # تجاهل الكلمات القصيرة جداً
+        if len(token) < 3:
+            continue
+        # بحث مباشر
+        if token in db:
+            return token
+        # بحث بعد حذف "ال"
+        stripped = token.lstrip("ال")
+        if len(stripped) >= 3 and stripped in db:
+            return stripped
+        # بحث بعد حذف ضمائر الملكية الشائعة
+        for suffix in ["ه", "ها", "هم", "ي", "ك", "نا"]:
+            if token.endswith(suffix):
+                root = token[:-len(suffix)]
+                if root in db:
+                    return root
+                root2 = root.lstrip("ال")
+                if len(root2) >= 3 and root2 in db:
+                    return root2
+    return None
+
+
+# =========================================
 # دالة التعلم التلقائي عبر Groq
 # =========================================
-def auto_learn_word(word: str, sentence: str, groq_client) -> dict | None:
-    """
-    تطلب من Groq توليد معاني وقرائن للكلمة الجديدة
-    وتعيد قاموساً جاهزاً للإضافة إلى قاعدة البيانات.
-    """
+def auto_learn_word(word: str, sentence: str, groq_client) -> list | None:
     if not groq_client:
         return None
     try:
-        prompt = f"""أنت خبير في علم الدلالة العربية.
-الكلمة: «{word}»
-الجملة: «{sentence}»
-
-أعطني معاني هذه الكلمة المشتركة (polysemy) بصيغة JSON فقط بدون أي شرح.
-الصيغة المطلوبة:
-{{
-  "معاني": [
-    {{
-      "المعنى": "اسم المعنى الأول",
-      "القرائن": {{"كلمة1": 5, "كلمة2": 4, "كلمة3": 3}}
-    }},
-    {{
-      "المعنى": "اسم المعنى الثاني",
-      "القرائن": {{"كلمة1": 5, "كلمة2": 4, "كلمة3": 3}}
-    }}
-  ]
-}}
-اذكر على الأقل معنيين، وأعطِ لكل معنى من 6 إلى 10 قرائن سياقية مرجّحة (قيمة 1-5).
-أجب بـ JSON صالح فقط، بدون markdown أو backticks."""
-
+        prompt = (
+            "أنت خبير في علم الدلالة العربية.\n"
+            "الكلمة: «" + word + "»\n"
+            "الجملة: «" + sentence + "»\n\n"
+            "أعطني معاني هذه الكلمة المشتركة (polysemy) بصيغة JSON فقط بدون أي شرح.\n"
+            "الصيغة المطلوبة:\n"
+            '{"معاني": [{"المعنى": "اسم المعنى الأول", "القرائن": {"كلمة1": 5, "كلمة2": 4}}, '
+            '{"المعنى": "اسم المعنى الثاني", "القرائن": {"كلمة1": 5, "كلمة2": 4}}]}\n'
+            "اذكر على الأقل معنيين، وأعطِ لكل معنى من 6 إلى 10 قرائن سياقية (قيمة 1-5).\n"
+            "أجب بـ JSON صالح فقط، بدون markdown أو backticks."
+        )
         response = groq_client.chat.completions.create(
             model=GROQ_MODEL,
             messages=[{"role": "user", "content": prompt}],
@@ -503,7 +491,6 @@ def auto_learn_word(word: str, sentence: str, groq_client) -> dict | None:
             temperature=0.2
         )
         raw = response.choices[0].message.content.strip()
-        # تنظيف أي backticks
         raw = raw.replace("```json", "").replace("```", "").strip()
         import json
         data = json.loads(raw)
@@ -514,8 +501,9 @@ def auto_learn_word(word: str, sentence: str, groq_client) -> dict | None:
         pass
     return None
 
+
 # =========================================
-# HERO SECTION
+# HERO
 # =========================================
 st.markdown("""
 <div class="hero-container">
@@ -537,7 +525,7 @@ st.markdown("""
 # =========================================
 st.markdown("""
 <div class="glass-card">
-    <div class="card-title"> ✦التحليل الدلالي الذكي</div>
+    <div class="card-title">🧠 التحليل الدلالي الذكي</div>
     <div class="card-desc">أدخل جملة عربية وسيقوم لبيب بتحليل المعنى والسياق اعتمادًا على الخوارزمية المحلية والذكاء الاصطناعي معاً.</div>
 </div>
 """, unsafe_allow_html=True)
@@ -558,43 +546,35 @@ if submit_btn and user_text.strip():
     with st.spinner("⏳ يجري التحليل الدلالي..."):
 
         # -------------------------------------------------------
-        # البحث في القاعدة المحلية — للسياق فقط، لا للعرض
+        # ✅ الحل 1: استخراج اللفظ المحوري محلياً أولاً
         # -------------------------------------------------------
-        detected_keyword = None
+        detected_keyword = extract_pivot_word(user_text, semantic_db)
         db_context = ""
-
-        for word in semantic_db.keys():
-            variants = [word, word + "ه", word + "ها", word + "ي", "ال" + word]
-            if any(v in user_text for v in variants):
-                # تحقق أن هناك قرينة واحدة على الأقل تطابق الجملة
-                tokens = set(user_text.replace("،","").replace(".","").split())
-                matched = False
-                for entry in semantic_db[word]:
-                    for clue in entry["القرائن"]:
-                        if clue in user_text or any(clue in t or t in clue for t in tokens):
-                            matched = True
-                            break
-                    if matched:
-                        break
-                if matched:
-                    detected_keyword = word
-                    # ابنِ سياقاً نصياً من القاعدة لتغذية Groq
-                    meanings_text = " | ".join(
-                        f"{e['المعنى']}: {', '.join(list(e['القرائن'].keys())[:5])}"
-                        for e in semantic_db[word]
-                    )
-                    db_context = ("[معلومة من القاعدة المحلية] الكلمة «" + word + "» لها المعاني التالية مع قرائنها: " + meanings_text + "\n\n")
-                    break
-
-        # -------------------------------------------------------
-        # التعلم التلقائي — إذا لم تُرصد كلمة موثوقة في القاعدة
-        # -------------------------------------------------------
         just_learned = False
+
+        if detected_keyword:
+            # بناء سياق نصي دقيق من القاعدة لتغذية Groq
+            meanings_text = " | ".join(
+                e["المعنى"] + ": " + ", ".join(list(e["القرائن"].keys())[:5])
+                for e in semantic_db[detected_keyword]
+            )
+            db_context = (
+                "[معلومة من القاعدة المحلية] الكلمة «" + detected_keyword +
+                "» لها المعاني التالية مع قرائنها: " + meanings_text + "\n\n"
+            )
+
+        # -------------------------------------------------------
+        # التعلم التلقائي — إذا لم تُرصد كلمة في القاعدة
+        # -------------------------------------------------------
         if not detected_keyword and client:
             tokens_raw = [t.strip(".,،؟!") for t in user_text.split() if len(t) >= 3]
             all_known = set(semantic_db.keys()) | set(st.session_state.learned_db.keys())
-            candidates = [t.lstrip("ال") for t in tokens_raw
-                          if t.lstrip("ال") not in all_known and len(t.lstrip("ال")) >= 3]
+            candidates = [
+                t.lstrip("ال") for t in tokens_raw
+                if t.lstrip("ال") not in all_known
+                and t.lstrip("ال") not in ARABIC_STOPWORDS
+                and len(t.lstrip("ال")) >= 3
+            ]
             if candidates:
                 new_word = candidates[0]
                 learned = auto_learn_word(new_word, user_text, client)
@@ -607,61 +587,85 @@ if submit_btn and user_text.strip():
                         e["المعنى"] + ": " + ", ".join(list(e["القرائن"].keys())[:5])
                         for e in learned
                     )
-                    db_context = ("[تعلّم جديد] الكلمة «" + new_word + "» أُضيفت للقاعدة بالمعاني: " + meanings_text + "\n\n")
+                    db_context = (
+                        "[تعلّم جديد] الكلمة «" + new_word +
+                        "» أُضيفت للقاعدة بالمعاني: " + meanings_text + "\n\n"
+                    )
 
         # -------------------------------------------------------
-        # Groq AI — المحلل الرئيسي والوحيد
+        # ✅ Groq — موجَّه بالكلمة المحورية المستخرجة محلياً
         # -------------------------------------------------------
         ai_analysis = ""
         if client:
             try:
+                # بناء prompt مختلف: إذا عرفنا الكلمة نوجّه Groq مباشرة
+                if detected_keyword:
+                    user_prompt = (
+                        db_context +
+                        "الكلمة المحورية هي: «" + detected_keyword + "»\n"
+                        "الجملة: «" + user_text + "»\n\n"
+                        "حدد المعنى الدقيق لهذه الكلمة في هذا السياق فقط."
+                    )
+                else:
+                    user_prompt = user_text
+
                 response = client.chat.completions.create(
                     model=GROQ_MODEL,
                     messages=[
                         {
                             "role": "system",
-                            "content": """أنت محلل دلالي عربي متخصص في علم الاشتراك اللفظي (Polysemy).
-مهمتك: تحديد المعنى الدقيق للكلمة المحورية في الجملة بناءً على السياق فقط.
-إذا احتوت الجملة على أكثر من استعمال للفظ نفسه، فاذكر جميع الاستعمالات في خانة التفسير مع توضيح القرائن السياقية لكل معنى.
-أجب دائماً بهذا الشكل الثابت:
-• اللفظ المحوري:
-• المعنى المقصود:
-• نوع الاستعمال: (حقيقي / مجازي)
-• التفسير:
-• نسبة الثقة:
-الجواب يجب أن يكون واضحاً، مختصراً، وأكاديمياً."""
+                            "content": (
+                                "أنت محلل دلالي عربي متخصص في علم الاشتراك اللفظي (Polysemy).\n"
+                                "مهمتك: تحديد المعنى الدقيق للكلمة المحورية المعطاة في الجملة بناءً على السياق.\n\n"
+                                "قواعد صارمة:\n"
+                                "- اللفظ المحوري يجب أن يكون الكلمة المحورية المعطاة لك تحديداً.\n"
+                                "- لا تغير اللفظ المحوري أبداً، حتى لو بدا لك غير مناسب.\n"
+                                "- لا تختر أسماء إشارة أو ضمائر أو حروف جر بديلاً.\n\n"
+                                "أجب دائماً بهذا الشكل الثابت:\n"
+                                "• اللفظ المحوري:\n"
+                                "• المعنى المقصود:\n"
+                                "• نوع الاستعمال: (حقيقي / مجازي)\n"
+                                "• التفسير:\n"
+                                "• نسبة الثقة:\n"
+                                "الجواب يجب أن يكون واضحاً، مختصراً، وأكاديمياً."
+                            )
                         },
-                        {
-                            "role": "user",
-                            "content": db_context + user_text
-                        }
+                        {"role": "user", "content": user_prompt}
                     ],
                     max_tokens=500,
                     temperature=0.2
                 )
                 ai_analysis = response.choices[0].message.content
             except Exception as e:
-                ai_analysis = f"حدث خطأ في الاتصال: {e}"
+                ai_analysis = "حدث خطأ في الاتصال: " + str(e)
         else:
-            ai_analysis = """⚠️ لم يتم العثور على مفتاح Groq.
-خطوات الإعداد:
-1. سجّلي على https://console.groq.com (مجاني)
-2. أنشئي API Key
-3. في Streamlit Cloud: Settings > Secrets أضيفي:
-   GROQ_API_KEY = "gsk_xxxxxxxxxxxx" """
+            ai_analysis = (
+                "⚠️ لم يتم العثور على مفتاح Groq.\n"
+                "خطوات الإعداد:\n"
+                "1. سجّلي على https://console.groq.com (مجاني)\n"
+                "2. أنشئي API Key\n"
+                "3. في Streamlit Cloud: Settings > Secrets أضيفي:\n"
+                "   GROQ_API_KEY = \"gsk_xxxxxxxxxxxx\""
+            )
 
         # -------------------------------------------------------
-        # استخراج اللفظ المحوري والمعنى من رد Groq للسجل
+        # استخراج حقول النتيجة من رد Groq
         # -------------------------------------------------------
+        # ✅ نبدأ بالكلمة المستخرجة محلياً كقيمة افتراضية آمنة
         ai_keyword = detected_keyword or "—"
         ai_meaning = "—"
         ai_usage = "—"
         ai_interp = "—"
-        ai_conf_pct = 0
+        ai_conf_pct = 85
+
         for line in ai_analysis.splitlines():
             line = line.strip().lstrip("•").strip()
             if "اللفظ المحوري" in line and ":" in line:
-                ai_keyword = line.split(":", 1)[-1].strip().strip("«»").strip()
+                extracted = line.split(":", 1)[-1].strip().strip("«»").strip()
+                # ✅ التحقق: لا نقبل الكلمة من Groq إذا كانت في قائمة المحظورات
+                if extracted and extracted not in ARABIC_STOPWORDS:
+                    ai_keyword = extracted
+                # إذا كانت محظورة نبقى على القيمة المحلية
             if "المعنى المقصود" in line and ":" in line:
                 ai_meaning = line.split(":", 1)[-1].strip()
             if "نوع الاستعمال" in line and ":" in line:
@@ -669,7 +673,7 @@ if submit_btn and user_text.strip():
             if "التفسير" in line and ":" in line:
                 ai_interp = line.split(":", 1)[-1].strip()
             if "نسبة الثقة" in line and ":" in line:
-                raw_conf = line.split(":", 1)[-1].strip().replace("%","").strip()
+                raw_conf = line.split(":", 1)[-1].strip().replace("%", "").strip()
                 try:
                     ai_conf_pct = int(float(raw_conf))
                 except Exception:
@@ -684,9 +688,9 @@ if submit_btn and user_text.strip():
         })
 
         # -------------------------------------------------------
-        # عرض النتيجة — بطاقة جميلة
+        # عرض النتيجة
         # -------------------------------------------------------
-        if detected_keyword and just_learned:
+        if just_learned:
             pill_cls, pill_txt = "pill-learn", "🧠 تعلّم تلقائي جديد"
         elif detected_keyword:
             pill_cls, pill_txt = "pill-local", "📚 قاعدة محلية + ذكاء اصطناعي"
@@ -696,7 +700,6 @@ if submit_btn and user_text.strip():
         usage_icon = "🔵" if "حقيقي" in ai_usage else "🟣"
         conf_bar_w = min(ai_conf_pct, 100)
 
-        # بناء HTML في متغيرات منفصلة لتفادي تعارض علامات الاقتباس
         learn_banner_html = ""
         if just_learned:
             learn_banner_html = (
@@ -713,37 +716,31 @@ if submit_btn and user_text.strip():
             '<span class="result-source-pill ' + pill_cls + '">' + pill_txt + '</span>',
             '</div>',
             '<div class="result-grid">',
-
             '<div class="result-cell">',
             '<div class="result-cell-icon">📝</div>',
             '<div class="result-cell-label">اللفظ المحوري</div>',
             '<div class="result-cell-val">' + ai_keyword + '</div>',
             '</div>',
-
             '<div class="result-cell">',
             '<div class="result-cell-icon">💡</div>',
             '<div class="result-cell-label">المعنى المقصود</div>',
             '<div class="result-cell-val">' + ai_meaning + '</div>',
             '</div>',
-
             '<div class="result-cell">',
             '<div class="result-cell-icon">' + usage_icon + '</div>',
             '<div class="result-cell-label">نوع الاستعمال</div>',
             '<div class="result-cell-val">' + ai_usage + '</div>',
             '</div>',
-
-            '</div>',  # end result-grid
+            '</div>',
             '<div class="result-divider"></div>',
             '<div style="font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:10px;">التفسير</div>',
             '<div class="result-interp">' + ai_interp + '</div>',
-
             '<div class="result-confidence">',
             '<span class="conf-label">نسبة الثقة</span>',
             '<div class="conf-bar-wrap"><div class="conf-bar" style="width:' + str(conf_bar_w) + '%"></div></div>',
             '<span class="conf-pct">' + str(ai_conf_pct) + '%</span>',
             '</div>',
-
-            '</div>',  # end result-card
+            '</div>',
         ]
 
         st.markdown("".join(html_parts), unsafe_allow_html=True)
@@ -756,15 +753,13 @@ if st.session_state.history:
     with st.expander("عرض السجل الكامل لهذه الجلسة"):
         df_history = pd.DataFrame(st.session_state.history)
         st.dataframe(df_history, use_container_width=True)
-
-        # إحصائية بسيطة
-        word_counts = df_history["اللفظ المحوري"].value_counts() if "اللفظ المحوري" in df_history.columns else df_history.iloc[:,1].value_counts()
+        word_counts = df_history["اللفظ المحوري"].value_counts()
         if len(word_counts) > 1:
             st.markdown("**أكثر الكلمات تحليلاً:**")
             st.bar_chart(word_counts)
 
 # =========================================
-# الكلمات المتعلَّمة في هذه الجلسة
+# الكلمات المتعلَّمة
 # =========================================
 if st.session_state.learned_db:
     st.markdown('<div class="section-main-title">🧬 كلمات تعلّمها لبيب في هذه الجلسة</div>', unsafe_allow_html=True)
@@ -777,7 +772,6 @@ if st.session_state.learned_db:
 # كيف يعمل لبيب؟
 # =========================================
 st.markdown('<div class="section-main-title">كيف يعمل لبيب؟</div>', unsafe_allow_html=True)
-
 col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""<div class="step-card">
@@ -815,7 +809,4 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# =========================================
-# التذييل
-# =========================================
 st.markdown('<div class="footer-text">LABEEB AI © 2026 — هاجر الزواكي</div>', unsafe_allow_html=True)
