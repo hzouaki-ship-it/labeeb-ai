@@ -266,19 +266,28 @@ def score_meanings(text: str, meanings: list, tokens: set) -> tuple:
         )
         raw_scores.append(float(score))
 
-    # Softmax بمعامل حرارة 0.5 لتضخيم الفروق
+    # توزيع النسب مع حد أدنى 5% لكل معنى
     all_zero = all(s == 0 for s in raw_scores)
     if all_zero:
         normalized = [1.0 / len(raw_scores)] * len(raw_scores)
     else:
-        temp = 0.5
+        # Softmax بمعامل حرارة 2.0 لنتائج أكثر توازناً
+        temp = 2.0
         exp_scores = [math.exp(s / temp) for s in raw_scores]
         total = sum(exp_scores)
-        normalized = [e / total for e in exp_scores]
+        raw_norm = [e / total for e in exp_scores]
+        # حد أدنى 5% وحد أقصى 90% لكل معنى
+        n = len(raw_norm)
+        floor = 0.05
+        ceil_val = 0.90
+        normalized = [max(floor, min(ceil_val, v)) for v in raw_norm]
+        # إعادة التطبيع لتكون المجموع 1
+        total2 = sum(normalized)
+        normalized = [v / total2 for v in normalized]
 
     best_idx = normalized.index(max(normalized))
     best_meaning = meanings[best_idx]["المعنى"]
-    scores_dict = {m["المعنى"]: round(normalized[i]*100, 1) for i, m in enumerate(meanings)}
+    scores_dict = {m["المعنى"]: str(round(normalized[i]*100, 1)) + " %" for i, m in enumerate(meanings)}
     return best_meaning, scores_dict
 
 # =========================================
@@ -463,11 +472,12 @@ if submit_btn and user_text.strip():
 
         # 2 — تعلم تلقائي إن لم توجد كلمة معروفة
         if not all_pivots and client:
-            tokens_raw = [t.strip(".,،؟!") for t in user_text.split() if len(t) >= 3]
+            tokens_raw = [t.strip(".,،؟!:؛") for t in user_text.split() if len(t) >= 3]
             all_known = set(semantic_db.keys()) | set(st.session_state.learned_db.keys())
             candidates = [
                 t.lstrip("ال") for t in tokens_raw
                 if t.lstrip("ال") not in all_known
+                and t not in all_known
                 and t.lstrip("ال") not in ARABIC_STOPWORDS
                 and len(t.lstrip("ال")) >= 3
             ]
@@ -533,7 +543,7 @@ if submit_btn and user_text.strip():
             word = results[0]["keyword"]
             sc = scores_tables.get(word, {})
             if sc:
-                df_sc = pd.DataFrame(list(sc.items()), columns=["المعنى المحتمل", "نسبة القرب %"])
+                df_sc = pd.DataFrame(list(sc.items()), columns=["المعنى المحتمل", "نسبة القرب"])
                 df_sc = df_sc.sort_values("نسبة القرب %", ascending=False).reset_index(drop=True)
                 st.table(df_sc)
         else:
@@ -556,7 +566,7 @@ if submit_btn and user_text.strip():
                 sc = scores_tables.get(r["keyword"], {})
                 if sc:
                     st.markdown(f"**توزيع النسب — «{r['keyword']}»**")
-                    df_sc = pd.DataFrame(list(sc.items()), columns=["المعنى المحتمل", "نسبة القرب %"])
+                    df_sc = pd.DataFrame(list(sc.items()), columns=["المعنى المحتمل", "نسبة القرب"])
                     df_sc = df_sc.sort_values("نسبة القرب %", ascending=False).reset_index(drop=True)
                     st.table(df_sc)
 
