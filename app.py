@@ -188,6 +188,43 @@ html, body, [class*="css"] {
     text-transform: uppercase; letter-spacing: 2px;
     text-align: center; margin-bottom: 14px;
 }
+/* جدول النتائج — نص وسط + خط فاصل بين الخانتين */
+[data-testid="stTable"] table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+}
+[data-testid="stTable"] table thead tr th {
+    text-align: center !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: #6D28D9;
+    padding: 12px 16px;
+    background: #F9F5FF;
+    border-bottom: 2px solid #E9D5FF;
+}
+[data-testid="stTable"] table thead tr th:first-child {
+    border-left: 2px solid #E9D5FF;
+}
+[data-testid="stTable"] table tbody tr td {
+    text-align: center !important;
+    font-size: 15px;
+    color: #334155;
+    padding: 12px 16px;
+    border-bottom: 1px solid #F1F5F9;
+}
+[data-testid="stTable"] table tbody tr td:first-child {
+    border-left: 2px solid #E9D5FF;
+    font-weight: 600;
+    color: #1E293B;
+}
+[data-testid="stTable"] table tbody tr:last-child td {
+    border-bottom: none;
+}
+[data-testid="stTable"] table tbody tr:hover td {
+    background: #FAF5FF;
+}
 </style>
 """, unsafe_allow_html=True)
 
