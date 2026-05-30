@@ -695,44 +695,57 @@ if submit_btn and user_text.strip():
         usage_icon = "🔵" if "حقيقي" in ai_usage else "🟣"
         conf_bar_w = min(ai_conf_pct, 100)
 
+        # بناء HTML في متغيرات منفصلة لتفادي تعارض علامات الاقتباس
         learn_banner_html = ""
         if just_learned:
-            learn_banner_html = f'<div class="learn-banner">✨ <span>لبيب تعلّم كلمة جديدة وأضافها للقاعدة: <strong>«{ai_keyword}»</strong> — ستُحلَّل محلياً في الجلسة القادمة!</span></div>'
+            learn_banner_html = (
+                '<div class="learn-banner">✨ <span>لبيب تعلّم كلمة جديدة وأضافها للقاعدة: '
+                '<strong>«' + ai_keyword + '»</strong>'
+                ' — ستُحلَّل محلياً في الجلسة القادمة!</span></div>'
+            )
 
-        st.markdown(f"""
-<div class="result-card">
-    {learn_banner_html}
-    <div class="result-header">
-        <div class="result-title">🔍 نتيجة التحليل الدلالي</div>
-        <span class="result-source-pill {pill_cls}">{pill_txt}</span>
-    </div>
-    <div class="result-grid">
-        <div class="result-cell">
-            <div class="result-cell-icon">📝</div>
-            <div class="result-cell-label">اللفظ المحوري</div>
-            <div class="result-cell-val">{ai_keyword}</div>
-        </div>
-        <div class="result-cell">
-            <div class="result-cell-icon">💡</div>
-            <div class="result-cell-label">المعنى المقصود</div>
-            <div class="result-cell-val">{ai_meaning}</div>
-        </div>
-        <div class="result-cell">
-            <div class="result-cell-icon">{usage_icon}</div>
-            <div class="result-cell-label">نوع الاستعمال</div>
-            <div class="result-cell-val">{ai_usage}</div>
-        </div>
-    </div>
-    <div class="result-divider"></div>
-    <div style="font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:10px;">التفسير</div>
-    <div class="result-interp">{ai_interp}</div>
-    <div class="result-confidence">
-        <span class="conf-label">نسبة الثقة</span>
-        <div class="conf-bar-wrap"><div class="conf-bar" style="width:{conf_bar_w}%"></div></div>
-        <span class="conf-pct">{ai_conf_pct}%</span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+        html_parts = [
+            '<div class="result-card">',
+            learn_banner_html,
+            '<div class="result-header">',
+            '<div class="result-title">🔍 نتيجة التحليل الدلالي</div>',
+            '<span class="result-source-pill ' + pill_cls + '">' + pill_txt + '</span>',
+            '</div>',
+            '<div class="result-grid">',
+
+            '<div class="result-cell">',
+            '<div class="result-cell-icon">📝</div>',
+            '<div class="result-cell-label">اللفظ المحوري</div>',
+            '<div class="result-cell-val">' + ai_keyword + '</div>',
+            '</div>',
+
+            '<div class="result-cell">',
+            '<div class="result-cell-icon">💡</div>',
+            '<div class="result-cell-label">المعنى المقصود</div>',
+            '<div class="result-cell-val">' + ai_meaning + '</div>',
+            '</div>',
+
+            '<div class="result-cell">',
+            '<div class="result-cell-icon">' + usage_icon + '</div>',
+            '<div class="result-cell-label">نوع الاستعمال</div>',
+            '<div class="result-cell-val">' + ai_usage + '</div>',
+            '</div>',
+
+            '</div>',  # end result-grid
+            '<div class="result-divider"></div>',
+            '<div style="font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:10px;">التفسير</div>',
+            '<div class="result-interp">' + ai_interp + '</div>',
+
+            '<div class="result-confidence">',
+            '<span class="conf-label">نسبة الثقة</span>',
+            '<div class="conf-bar-wrap"><div class="conf-bar" style="width:' + str(conf_bar_w) + '%"></div></div>',
+            '<span class="conf-pct">' + str(ai_conf_pct) + '%</span>',
+            '</div>',
+
+            '</div>',  # end result-card
+        ]
+
+        st.markdown("".join(html_parts), unsafe_allow_html=True)
 
 # =========================================
 # سجل التحليلات
