@@ -106,13 +106,7 @@ html, body, [class*="css"] {
     border: 1px solid #E9D5FF; padding: 6px 20px;
     border-radius: 999px; font-size: 13px; font-weight: 700; color: #6D28D9;
 }
-.groq-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: linear-gradient(90deg, #10B981, #059669);
-    color: white; padding: 6px 18px;
-    border-radius: 999px; font-size: 13px; font-weight: 700;
-    margin-top: 12px;
-}
+
 .glass-card {
     background: rgba(255,255,255,0.92);
     backdrop-filter: blur(20px);
@@ -393,10 +387,65 @@ semantic_db = {
 }
 
 # =========================================
-# سجل التحليلات (Session State)
+# Session State
 # =========================================
 if "history" not in st.session_state:
     st.session_state.history = []
+
+# قاعدة الكلمات المتعلَّمة تلقائياً في هذه الجلسة
+if "learned_db" not in st.session_state:
+    st.session_state.learned_db = {}
+
+
+# =========================================
+# دالة التعلم التلقائي عبر Groq
+# =========================================
+def auto_learn_word(word: str, sentence: str, groq_client) -> dict | None:
+    """
+    تطلب من Groq توليد معاني وقرائن للكلمة الجديدة
+    وتعيد قاموساً جاهزاً للإضافة إلى قاعدة البيانات.
+    """
+    if not groq_client:
+        return None
+    try:
+        prompt = f"""أنت خبير في علم الدلالة العربية.
+الكلمة: «{word}»
+الجملة: «{sentence}»
+
+أعطني معاني هذه الكلمة المشتركة (polysemy) بصيغة JSON فقط بدون أي شرح.
+الصيغة المطلوبة:
+{{
+  "معاني": [
+    {{
+      "المعنى": "اسم المعنى الأول",
+      "القرائن": {{"كلمة1": 5, "كلمة2": 4, "كلمة3": 3}}
+    }},
+    {{
+      "المعنى": "اسم المعنى الثاني",
+      "القرائن": {{"كلمة1": 5, "كلمة2": 4, "كلمة3": 3}}
+    }}
+  ]
+}}
+اذكر على الأقل معنيين، وأعطِ لكل معنى من 6 إلى 10 قرائن سياقية مرجّحة (قيمة 1-5).
+أجب بـ JSON صالح فقط، بدون markdown أو backticks."""
+
+        response = groq_client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=600,
+            temperature=0.2
+        )
+        raw = response.choices[0].message.content.strip()
+        # تنظيف أي backticks
+        raw = raw.replace("```json", "").replace("```", "").strip()
+        import json
+        data = json.loads(raw)
+        meanings = data.get("معاني", [])
+        if len(meanings) >= 2:
+            return meanings
+    except Exception:
+        pass
+    return None
 
 # =========================================
 # HERO SECTION
@@ -413,7 +462,6 @@ st.markdown("""
     <div class="hero-subtitle">المحلل الدلالي الذكي لفهم المعنى والسياق في اللغة العربية</div>
     <div class="hero-desc">منصة تعتمد على الذكاء الاصطناعي لفهم المعنى والسياق وتحليل الدلالة في اللغة العربية.</div>
     <div class="badge-student">© 2026 — هاجر الزواكي</div>
-    <div><span class="groq-badge">⚡ مدعوم بـ Groq — مجاني وسريع</span></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -440,178 +488,108 @@ submit_btn = st.button("⚡ تشغيل التحليل الذكي")
 # التحليل
 # =========================================
 if submit_btn and user_text.strip():
-    with st.spinner("⏳ يجري تحليل المتجهات والروابط السياقية..."):
-        time.sleep(0.5)
+    with st.spinner("⏳ يجري التحليل الدلالي..."):
 
-        # --- المرحلة 1: الخوارزمية المحلية (كل الكلمات المكتشفة) ---
-        detected_keywords = []
+        # -------------------------------------------------------
+        # البحث في القاعدة المحلية — للسياق فقط، لا للعرض
+        # -------------------------------------------------------
+        detected_keyword = None
+        db_context = ""
+
         for word in semantic_db.keys():
             variants = [word, word + "ه", word + "ها", word + "ي", "ال" + word]
             if any(v in user_text for v in variants):
-                detected_keywords.append(word)
+                # تحقق أن هناك قرينة واحدة على الأقل تطابق الجملة
+                tokens = set(user_text.replace("،","").replace(".","").split())
+                matched = False
+                for entry in semantic_db[word]:
+                    for clue in entry["القرائن"]:
+                        if clue in user_text or any(clue in t or t in clue for t in tokens):
+                            matched = True
+                            break
+                    if matched:
+                        break
+                if matched:
+                    detected_keyword = word
+                    # ابنِ سياقاً نصياً من القاعدة لتغذية Groq
+                    meanings_text = " | ".join(
+                        f"{e['المعنى']}: {', '.join(list(e['القرائن'].keys())[:5])}"
+                        for e in semantic_db[word]
+                    )
+                    db_context = ("[معلومة من القاعدة المحلية] الكلمة «" + word + "» لها المعاني التالية مع قرائنها: " + meanings_text + "\n\n")
+                    break
 
-        # اختر الكلمة التي تحصل على أعلى درجة إجمالية
-        detected_keyword = None
-        best_total = -1
-        for word in detected_keywords:
-            tokens = set(user_text.replace("،", "").replace(".", "").split())
-            total = 0
-            for entry in semantic_db[word]:
-                for clue, weight in entry["القرائن"].items():
-                    if clue in user_text:
-                        total += weight
-                    else:
-                        for token in tokens:
-                            if clue in token or token in clue:
-                                total += weight
-                                break
-            if total > best_total:
-                best_total = total
-                detected_keyword = word
-
-        local_result_html = ""
-        predicted_meaning = ""
-        highest_score = 0.0
-
-        if detected_keyword:
-            results_list = []
-            meanings = semantic_db[detected_keyword]
-            tokens = set(user_text.replace("،", "").replace(".", "").split())
-            raw_scores = []
-
-            for entry in meanings:
-                weighted_sum = 0
-                for clue, weight in entry["القرائن"].items():
-                    found = False
-                    if clue in user_text:
-                        found = True
-                    else:
-                        for token in tokens:
-                            if clue in token or token in clue:
-                                found = True
-                                break
-                        if not found and TASHAPHYNE_OK and stemmer:
-                            try:
-                                stemmer.light_stem(clue)
-                                c_stem = stemmer.get_stem()
-                                for token in tokens:
-                                    stemmer.light_stem(token)
-                                    t_stem = stemmer.get_stem()
-                                    if c_stem and t_stem and len(c_stem) >= 3 and c_stem == t_stem:
-                                        found = True
-                                        break
-                            except Exception:
-                                pass
-                    if found:
-                        weighted_sum += weight
-                raw_scores.append(float(weighted_sum))
-
-            all_zero = all(s == 0 for s in raw_scores)
-            if all_zero:
-                normalized = [1.0 / len(raw_scores)] * len(raw_scores)
-            else:
-                temp = 0.5
-                exp_scores = [math.exp(s / temp) for s in raw_scores]
-                total_exp = sum(exp_scores)
-                normalized = [e / total_exp for e in exp_scores]
-
-            for i, entry in enumerate(meanings):
-                score = normalized[i]
-                if score > highest_score:
-                    highest_score = score
-                    predicted_meaning = entry["المعنى"]
-                results_list.append({
-                    "المعنى المحتمل": entry["المعنى"],
-                    "نسبة القرب": f"{score * 100:.1f}%",
-                    "_raw": score
-                })
-
-            df = pd.DataFrame(results_list).sort_values("_raw", ascending=False).drop(columns=["_raw"])
-
-            local_result_html = f"""
-<div class="section-label">① نتيجة الخوارزمية المحلية</div>
-<div class="result-badge-container">
-    <div class="result-stat-box">
-        <div class="result-stat-label">الكلمة المرصودة</div>
-        <div class="result-stat-val">{detected_keyword}</div>
-    </div>
-    <div class="result-stat-box">
-        <div class="result-stat-label">المعنى الأقرب</div>
-        <div class="result-stat-val">{predicted_meaning}</div>
-    </div>
-    <div class="result-stat-box">
-        <div class="result-stat-label">نسبة القرب الدلالي</div>
-        <div class="result-stat-val">{highest_score * 100:.1f}%</div>
-    </div>
-</div>
-"""
-        else:
-            local_result_html = """
-<div class="section-label">① الخوارزمية المحلية</div>
-<div style="text-align:center; color:#94A3B8; font-size:15px; padding:16px 0;">
-    ⚠️ لم يُرصد لفظ مشترك في قاعدة البيانات — سيعتمد التحليل على الذكاء الاصطناعي فقط.
-</div>
-"""
-
-        # --- المرحلة 2: Groq AI ---
+        # -------------------------------------------------------
+        # Groq AI — المحلل الرئيسي والوحيد
+        # -------------------------------------------------------
         ai_analysis = ""
         if client:
             try:
-                context_hint = f"الكلمة المرصودة محلياً: «{detected_keyword}» — المعنى المرجّح: «{predicted_meaning}»\n\n" if detected_keyword else ""
                 response = client.chat.completions.create(
                     model=GROQ_MODEL,
                     messages=[
                         {
                             "role": "system",
-                            "content": """أنت محلل دلالي عربي متخصص.
-حلل الجملة اعتماداً على السياق الدلالي.
-أجب بهذا الشكل الثابت:
+                            "content": """أنت محلل دلالي عربي متخصص في علم الاشتراك اللفظي (Polysemy).
+مهمتك: تحديد المعنى الدقيق للكلمة المحورية في الجملة بناءً على السياق فقط.
+أجب دائماً بهذا الشكل الثابت:
 • اللفظ المحوري:
 • المعنى المقصود:
 • نوع الاستعمال: (حقيقي / مجازي)
 • التفسير:
 • نسبة الثقة:
-يجب أن يكون الجواب واضحاً، مختصراً، وأكاديمياً."""
+الجواب يجب أن يكون واضحاً، مختصراً، وأكاديمياً."""
                         },
                         {
                             "role": "user",
-                            "content": context_hint + user_text
+                            "content": db_context + user_text
                         }
                     ],
                     max_tokens=500,
-                    temperature=0.3
+                    temperature=0.2
                 )
                 ai_analysis = response.choices[0].message.content
             except Exception as e:
-                ai_analysis = f"حدث خطأ في الاتصال بـ Groq: {e}"
+                ai_analysis = f"حدث خطأ في الاتصال: {e}"
         else:
             ai_analysis = """⚠️ لم يتم العثور على مفتاح Groq.
 خطوات الإعداد:
 1. سجّلي على https://console.groq.com (مجاني)
 2. أنشئي API Key
 3. في Streamlit Cloud: Settings > Secrets أضيفي:
-   GROQ_API_KEY = \"gsk_xxxxxxxxxxxx\""""
+   GROQ_API_KEY = "gsk_xxxxxxxxxxxx" """
 
-        # --- حفظ في السجل ---
+        # -------------------------------------------------------
+        # استخراج اللفظ المحوري والمعنى من رد Groq للسجل
+        # -------------------------------------------------------
+        ai_keyword = detected_keyword or "—"
+        ai_meaning = "—"
+        for line in ai_analysis.splitlines():
+            if "اللفظ المحوري" in line and ":" in line:
+                ai_keyword = line.split(":", 1)[-1].strip().strip("«»")
+            if "المعنى المقصود" in line and ":" in line:
+                ai_meaning = line.split(":", 1)[-1].strip()
+
+        # حفظ في السجل
         st.session_state.history.append({
             "الجملة": user_text[:60] + ("..." if len(user_text) > 60 else ""),
-            "الكلمة": detected_keyword or "—",
-            "المعنى": predicted_meaning or "—",
+            "اللفظ المحوري": ai_keyword,
+            "المعنى": ai_meaning,
             "الوقت": pd.Timestamp.now().strftime("%H:%M:%S")
         })
 
-        # --- عرض النتائج ---
+        # -------------------------------------------------------
+        # عرض النتيجة — Groq فقط بدون نسب خاطئة
+        # -------------------------------------------------------
+        source_badge = (
+            f'<span style="background:#EDE9FE;color:#6D28D9;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;">📚 مدعوم بالقاعدة المحلية + الذكاء الاصطناعي</span>'
+            if detected_keyword else
+            f'<span style="background:#F0FDF4;color:#16A34A;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;">🤖 تحليل بالذكاء الاصطناعي</span>'
+        )
+
         st.markdown(f"""
 <div class="ai-result-box">
-    {local_result_html}
-""", unsafe_allow_html=True)
-
-        if detected_keyword:
-            st.table(df.reset_index(drop=True))
-
-        st.markdown(f"""
-    <div class="divider"></div>
-    <div class="section-label">② تحليل Groq AI المعمّق</div>
+    <div style="text-align:center;margin-bottom:18px;">{source_badge}</div>
     <div class="ai-result-content">{ai_analysis.replace("**", "")}</div>
 </div>
 """, unsafe_allow_html=True)
@@ -630,6 +608,16 @@ if st.session_state.history:
         if len(word_counts) > 1:
             st.markdown("**أكثر الكلمات تحليلاً:**")
             st.bar_chart(word_counts)
+
+# =========================================
+# الكلمات المتعلَّمة في هذه الجلسة
+# =========================================
+if st.session_state.learned_db:
+    st.markdown('<div class="section-main-title">🧬 كلمات تعلّمها لبيب في هذه الجلسة</div>', unsafe_allow_html=True)
+    with st.expander(f"عرض الكلمات المتعلَّمة ({len(st.session_state.learned_db)} كلمة)"):
+        for word, meanings in st.session_state.learned_db.items():
+            st.markdown(f"**• {word}** — المعاني المكتشفة: {', '.join([m['المعنى'] for m in meanings])}")
+        st.info("💡 هذه الكلمات ستُستخدم تلقائياً بالخوارزمية المحلية في باقي الجلسة.")
 
 # =========================================
 # كيف يعمل لبيب؟
@@ -676,4 +664,4 @@ st.markdown("""
 # =========================================
 # التذييل
 # =========================================
-st.markdown('<div class="footer-text">LABEEB AI © 2026 — مدعوم بـ Groq LLaMA 3.3 70B — هاجر الزواكي</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer-text">LABEEB AI © 2026 — هاجر الزواكي</div>', unsafe_allow_html=True)
