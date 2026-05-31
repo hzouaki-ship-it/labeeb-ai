@@ -220,9 +220,11 @@ section[data-testid="stSidebar"] > div {{
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 24px;
     flex-wrap: wrap; gap: 16px;
+    direction: rtl;
 }}
 .header-left {{
     display: flex; align-items: center; gap: 20px;
+    direction: rtl;
 }}
 .header-logo {{
     width: 70px; height: 70px; border-radius: 18px;
@@ -233,20 +235,13 @@ section[data-testid="stSidebar"] > div {{
 .header-title {{
     font-size: 36px; font-weight: 900; color: {accent};
     font-family: 'Space Grotesk', sans-serif; letter-spacing: 1px;
-    line-height: 1;
+    line-height: 1; text-align: right;
 }}
 .header-subtitle {{
-    font-size: 14px; font-weight: 700; color: {text_main}; margin-top: 4px;
+    font-size: 14px; font-weight: 700; color: {text_main}; margin-top: 4px; text-align: right;
 }}
 .header-desc {{
-    font-size: 12px; color: {text_muted}; margin-top: 2px;
-}}
-.header-badge {{
-    background: {accent_bg}; color: {accent};
-    border: 1px solid {accent}33;
-    padding: 6px 16px; border-radius: 999px;
-    font-size: 12px; font-weight: 700;
-    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: {text_muted}; margin-top: 2px; text-align: right;
 }}
 
 /* ---- Section title ---- */
@@ -588,7 +583,8 @@ def build_explanation(sentence: str, results: list, groq_client) -> str:
 with st.sidebar:
     st.markdown(f"""
     <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">🧠</div>
+        <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png"
+             style="width:70px;height:70px;border-radius:18px;object-fit:cover;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;">
         <div class="sidebar-brand">LABEEB AI</div>
         <div class="sidebar-tagline">Semantic Analyzer</div>
     </div>
@@ -628,14 +624,22 @@ with st.sidebar:
 st.markdown(f"""
 <div class="top-header">
     <div class="header-left">
-        <div class="header-logo">🧠</div>
-        <div>
+        <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/logo.png"
+             style="width:80px;height:80px;border-radius:20px;object-fit:cover;flex-shrink:0;">
+        <div style="text-align:right;">
             <div class="header-title">LABEEB AI - لبيب</div>
             <div class="header-subtitle">نظام ذكي لتحليل الألفاظ متعددة المعاني في اللغة العربية</div>
             <div class="header-desc">يعتمد على الذكاء الاصطناعي والنماذج اللغوية لفهم السياق واستخراج المعنى المقصود بدقة</div>
         </div>
     </div>
-    <div class="header-badge">🎓 مشروع تخرج – ماستر 2</div>
+    <div style="display:flex;align-items:center;gap:14px;">
+        <div style="text-align:right;">
+            <div style="font-size:15px;font-weight:800;color:{text_main};">هاجر الزواكي</div>
+            <div style="font-size:11px;color:{text_muted};margin-top:2px;">طالبة ماستر — اللسانيات الرقمية</div>
+        </div>
+        <img src="https://raw.githubusercontent.com/hzouaki-ship-it/labeeb-ai/main/hajar.jpg"
+             style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid {accent}44;flex-shrink:0;">
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
