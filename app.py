@@ -481,7 +481,7 @@ st.markdown("""
 
 user_text = st.text_area(
     "",
-    placeholder="مثال: كل نفس ذائقة الموت...",
+    placeholder="مثال: تدفقت عين بين الجبال...",
     height=180,
     label_visibility="collapsed"
 )
